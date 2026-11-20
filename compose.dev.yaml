@@ -1,0 +1,14 @@
+services:
+  frontend-dev:
+    build:
+      context: .
+      target: dev
+    volumes:
+      - ".:/app"
+      - "friday-node-modules:/app/frontend/node_modules"
+    ports:
+      - "127.0.0.1:5740:5740"
+    command: npm run dev
+
+volumes:
+  friday-node-modules:
