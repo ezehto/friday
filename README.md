@@ -18,3 +18,12 @@ does not exist.
 
 `docs/design-references/` holds third-party reference images. It is git-ignored
 and never committed.
+
+## Development
+
+Frontend commands run in the dev container, for example
+`docker compose -f compose.dev.yaml run --rm frontend-dev npm run check`.
+`npm ci` works with the container's own npm 10.9.4, but `npm install` crashes
+on this dependency set. To add or update a dependency, regenerate the lockfile
+with the npm version that produced it:
+`docker compose -f compose.dev.yaml run --rm frontend-dev npx -y npm@11.21.3 install`.
