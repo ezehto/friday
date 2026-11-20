@@ -3,7 +3,7 @@
 - Date: 2026-11-20
 - Status: draft for owner review, revision 8 (dashboard preview first on mock data, D28; revision 7 added containers and the host companion, owner answers and the final reviews)
 - Scope: architecture, MVP definition, layered roadmap. No code exists yet.
-- Location: `/mnt/d/Projects/Personal/projects/friday/docs/2026-11-20-friday-design.md`
+- Location: `/mnt/d/Projects/Personal/projects/friday/docs/specs/2026-11-20-friday-design.md`
 
 How to read the labels in this document:
 

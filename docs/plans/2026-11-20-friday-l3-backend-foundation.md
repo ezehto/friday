@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.12, uv 0.9.10, FastAPI, uvicorn, Typer, pydantic-settings, structlog, aiosqlite, claude-agent-sdk, pytest with pytest-asyncio, ruff, mypy strict, gitleaks, Docker 28.3.2 with Compose v2.39.1, GitHub Actions.
 
-**Spec:** `/mnt/d/Projects/Personal/projects/friday/docs/2026-11-20-friday-design.md` (revision 8; layer L3 "Backend foundation", the "L3 and L4 specification", D19, D25 to D28, A25, A29). "Spec N" below means section N of it.
+**Spec:** `/mnt/d/Projects/Personal/projects/friday/docs/specs/2026-11-20-friday-design.md` (revision 8; layer L3 "Backend foundation", the "L3 and L4 specification", D19, D25 to D28, A25, A29). "Spec N" below means section N of it.
 
 ## Global Constraints
 

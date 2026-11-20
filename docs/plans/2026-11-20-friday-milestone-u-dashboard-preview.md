@@ -150,7 +150,7 @@ docs/handoff/                    local onboarding file, uncommitted, no task tou
 - [ ] Write `.pre-commit-config.yaml` with repo `https://github.com/gitleaks/gitleaks`, `rev: v8.30.1`, hook id `gitleaks-docker` (the `golang` hook needs Go, which is not installed; the docker hook entry is `zricethezav/gitleaks git --pre-commit --redact --staged --verbose`, verified in the v8.30.1 hook file). `[host]` `pre-commit install && pre-commit run --all-files`. Expected: Passed.
 - [ ] Prove the hook bites: `[host]` write `scratch-leak.txt` containing `aws_secret_access_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"`, `git add scratch-leak.txt && git commit -m test`. Expected: commit refused by gitleaks. Then `git rm --cached scratch-leak.txt && rm scratch-leak.txt`. Nothing is committed.
 - [ ] Write `LICENSE` (MIT, year 2026, holder per Question Q3, default `the Friday authors`) and `README.md` skeleton: one paragraph on Friday, "Status: milestone U, dashboard preview on synthetic data", run instructions (`make preview`, open `http://127.0.0.1:8742`), a note that `docs/design-references/` is git-ignored and never committed. No em or en dashes.
-- [ ] `[host]` `git add .gitignore .gitattributes .pre-commit-config.yaml LICENSE README.md docs/2026-11-20-friday-design.md docs/2026-11-20-friday-milestone-u-dashboard-preview.md && git commit -m "Initialize repository with hygiene files and design docs"`. Leave `docs/ai-goal-prompt.md` untracked until Question Q2 is answered. Check `git ls-files docs/design-references` prints nothing.
+- [ ] `[host]` `git add .gitignore .gitattributes .pre-commit-config.yaml LICENSE README.md docs/specs/2026-11-20-friday-design.md docs/plans/2026-11-20-friday-milestone-u-dashboard-preview.md && git commit -m "Initialize repository with hygiene files and design docs"`. Leave `docs/specs/ai-goal-prompt.md` untracked until Question Q2 is answered. Check `git ls-files docs/design-references` prints nothing.
 
 > Complete (commit on `milestone-u-preview`). In practice: the repo already existed, so `git init` was skipped (Owner answers); gitleaks allowlists the sample AWS key in the planted-secret step, so the refusal was proven with a different secret; the `.gitignore` data entry is `/data/`.
 
@@ -623,7 +623,7 @@ Recorded after the plan was written. They override any conflicting line above.
 
 - The plan is approved. Execution is subagent-driven, with tasks tracked in beads.
 - The preview is the real frontend, not a throwaway mock-up (Q1).
-- `docs/ai-goal-prompt.md` is tracked and already public (Q2).
+- `docs/specs/ai-goal-prompt.md` is tracked and already public (Q2).
 - The MIT copyright line reads "the Friday authors" (Q3).
 - The repository already exists: `main` holds one commit with the docs and `.gitignore`, and the remote is `git@github.com:ezehto/friday.git`. Task 1 starts from that state: it creates the branch `milestone-u-preview` and skips `git init`.
 - `CLAUDE.md` at the repo root stays uncommitted. It is listed in `.git/info/exclude`. No task stages or commits it.
