@@ -2,7 +2,7 @@
 docs/design-references/
 secrets/
 *.env
-data/
+/data/
 frontend/node_modules/
 frontend/dist/
 .playwright-cli/
