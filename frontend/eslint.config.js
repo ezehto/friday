@@ -1,6 +1,7 @@
 import js from "@eslint/js";
 import { defineConfig } from "eslint/config";
 import reactHooks from "eslint-plugin-react-hooks";
+import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default defineConfig(
@@ -9,6 +10,8 @@ export default defineConfig(
   tseslint.configs.recommended,
   reactHooks.configs.flat.recommended,
   {
+    files: ["src/**/*.{ts,tsx}"],
+    languageOptions: { globals: globals.browser },
     rules: {
       "no-restricted-syntax": [
         "error",
@@ -30,5 +33,9 @@ export default defineConfig(
         { object: "navigator", property: "mediaDevices", message: "No media access." },
       ],
     },
+  },
+  {
+    files: ["scripts/**/*.{js,mjs}", "tests/**/*.{ts,tsx}", "vite.config.ts", "eslint.config.js"],
+    languageOptions: { globals: globals.node },
   },
 );
