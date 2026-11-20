@@ -8,7 +8,7 @@
 
 **Tech Stack:** Node 22.22.0, npm 10.9.4, React 19.3.1, TypeScript 6.0.3, Vite 8.3.8 with @vitejs/plugin-react 6.2.1, Vitest 5.1.0 with jsdom 30.1.3 and Testing Library (react 16.3.3, dom 10.4.2, user-event 14.6.8), Ajv 8.20.0 with ajv-formats 3.0.1, json-schema-to-typescript 16.0.0, ESLint 10.14.0 with @eslint/js 10.0.1, typescript-eslint 8.72.1, eslint-plugin-react-hooks 7.1.1, globals 17.14.0; Docker 28.3.2 with Compose v2.39.1, base image `node:22.22.0-bookworm-slim` pinned by digest; gitleaks v8.30.1 through pre-commit 3.6.2; Playwright CLI (`@playwright/cli`) 0.1.24; GitHub Actions `actions/checkout@v6`, `actions/setup-node@v6`.
 
-**Spec:** `/mnt/d/Projects/Personal/projects/friday/docs/superpowers/specs/2026-11-20-friday-design.md` (revision 8 content; sections 15, 16, 21, 24, 26, 28, 29 and D8, D18, D19, D23, D28).
+**Spec:** `/mnt/d/Projects/Personal/projects/friday/docs/2026-11-20-friday-design.md` (revision 8 content; sections 15, 16, 21, 24, 26, 28, 29 and D8, D18, D19, D23, D28).
 
 ---
 
@@ -116,7 +116,7 @@ frontend/
   tests/*.test.ts(x)             vitest specs; tests/helpers/schema.ts (Ajv loader)
   e2e/smoke.sh                   Playwright CLI smoke session (L2)
 docs/style-guide.md              token and widget rules, core labels, tone mapping
-docs/superpowers/plans/          this plan
+docs/          this plan
 ```
 
 ---
@@ -135,7 +135,7 @@ docs/superpowers/plans/          this plan
 - [ ] Write `.pre-commit-config.yaml` with repo `https://github.com/gitleaks/gitleaks`, `rev: v8.30.1`, hook id `gitleaks-docker` (the `golang` hook needs Go, which is not installed; the docker hook entry is `zricethezav/gitleaks git --pre-commit --redact --staged --verbose`, verified in the v8.30.1 hook file). `[host]` `pre-commit install && pre-commit run --all-files`. Expected: Passed.
 - [ ] Prove the hook bites: `[host]` write `scratch-leak.txt` containing `aws_secret_access_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"`, `git add scratch-leak.txt && git commit -m test`. Expected: commit refused by gitleaks. Then `git rm --cached scratch-leak.txt && rm scratch-leak.txt`. Nothing is committed.
 - [ ] Write `LICENSE` (MIT, year 2026, holder per Question Q3, default `the Friday authors`) and `README.md` skeleton: one paragraph on Friday, "Status: milestone U, dashboard preview on synthetic data", run instructions (`make preview`, open `http://127.0.0.1:8742`), a note that `docs/design-references/` is git-ignored and never committed. No em or en dashes.
-- [ ] `[host]` `git add .gitignore .gitattributes .pre-commit-config.yaml LICENSE README.md docs/superpowers/specs/2026-11-20-friday-design.md docs/superpowers/plans/2026-11-20-friday-milestone-u-dashboard-preview.md && git commit -m "Initialize repository with hygiene files and design docs"`. Leave `docs/superpowers/specs/ai-goal-prompt.md` untracked until Question Q2 is answered. Check `git ls-files docs/design-references` prints nothing.
+- [ ] `[host]` `git add .gitignore .gitattributes .pre-commit-config.yaml LICENSE README.md docs/2026-11-20-friday-design.md docs/2026-11-20-friday-milestone-u-dashboard-preview.md && git commit -m "Initialize repository with hygiene files and design docs"`. Leave `docs/ai-goal-prompt.md` untracked until Question Q2 is answered. Check `git ls-files docs/design-references` prints nothing.
 
 ### Task 2: Frontend package and dev container
 
@@ -560,7 +560,7 @@ Checks:
 **For the owner (please answer before Task 1):**
 
 - Q1 (design section 31, still open): do you object to the preview being the real frontend built against the shared schema rather than a throwaway mock-up? This plan assumes no objection; an objection would replace Tasks 3, 13 and 16 to 19 with a lighter mock-up.
-- Q2: should `docs/superpowers/specs/ai-goal-prompt.md` go into the public repo? Default: it stays untracked (the design's repository structure lists only the design document).
+- Q2: should `docs/ai-goal-prompt.md` go into the public repo? Default: it stays untracked (the design's repository structure lists only the design document).
 - Q3: which name goes on the MIT copyright line? Default: `the Friday authors`.
 
 **Ambiguities in the design for these layers, resolved conservatively (override any of them at the Task 8 checkpoint or before):**
@@ -587,7 +587,7 @@ Recorded after the plan was written. They override any conflicting line above.
 
 - The plan is approved. Execution is subagent-driven, with tasks tracked in beads.
 - The preview is the real frontend, not a throwaway mock-up (Q1).
-- `docs/superpowers/specs/ai-goal-prompt.md` is tracked and already public (Q2).
+- `docs/ai-goal-prompt.md` is tracked and already public (Q2).
 - The MIT copyright line reads "the Friday authors" (Q3).
 - The repository already exists: `main` holds one commit with the docs and `.gitignore`, and the remote is `git@github.com:ezehto/friday.git`. Task 1 starts from that state: it creates the branch `milestone-u-preview` and skips `git init`.
 - `CLAUDE.md` at the repo root stays uncommitted. It is listed in `.git/info/exclude`. No task stages or commits it.
