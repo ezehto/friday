@@ -1,2 +1,8 @@
 # Third-party reference images: never commit (public repo, design decision D18)
 docs/design-references/
+secrets/
+*.env
+data/
+frontend/node_modules/
+frontend/dist/
+.playwright-cli/

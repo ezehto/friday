@@ -580,3 +580,15 @@ Checks:
 - The Dockerfile gets a `dev` stage besides `spa-build` and `preview`, so the `node_modules` named volume is owned by the non-root user.
 
 **Verification record:** verified with documentation on 2026-11-20: Vite 8.3 preview and server options (`host`, `port`, `strictPort`, `headers`, `watch.usePolling`, `--configLoader native` and the bundle loader's temp directory), Ajv 8.20 draft 2020-12 entry (`ajv/dist/2020`, package listing) and `$ref` by `$id`, ajv-formats, json-schema-to-typescript 16 options and the `compile` API, Vitest 5 `environment` and fake timers, typescript-eslint 8.72 flat config and its TypeScript range (below 6.1), setup-node v6 caching inputs, the gitleaks v8.30.1 tag and hook ids, Playwright CLI 0.1.24 commands (`open` headless by default, `goto`, `eval`, `resize`, `requests`, `console`, `set-reduced-motion`, `run-code`, `install-browser`, `-s`, `--raw`) from the installed CLI's help, and npm versions and release dates. Unverified, confirm before running: the `node:22.22.0-bookworm-slim` tag and digest, the `zricethezav/gitleaks:v8.30.1` image tag and its positional path argument, the react-hooks flat preset name, Compose `read_only`, `tmpfs`, `cap_drop` and `security_opt` (confirmed by `docker compose config`), whether `playwright-cli eval` awaits a returned Promise, `run-code` argument form, and the browser's system packages on GitHub runners.
+
+## Owner answers (2026-11-20)
+
+Recorded after the plan was written. They override any conflicting line above.
+
+- The plan is approved. Execution is subagent-driven, with tasks tracked in beads.
+- The preview is the real frontend, not a throwaway mock-up (Q1).
+- `docs/superpowers/specs/ai-goal-prompt.md` is tracked and already public (Q2).
+- The MIT copyright line reads "the Friday authors" (Q3).
+- The repository already exists: `main` holds one commit with the docs and `.gitignore`, and the remote is `git@github.com:ezehto/friday.git`. Task 1 starts from that state: it creates the branch `milestone-u-preview` and skips `git init`.
+- `CLAUDE.md` at the repo root stays uncommitted. It is listed in `.git/info/exclude`. No task stages or commits it.
+- Commits are approved on the working branch. Nothing is pushed unless the owner asks.

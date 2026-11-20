@@ -442,3 +442,12 @@ New jobs, `ubuntu-latest`, same triggers as the existing workflow, `permissions:
 - **Q3. A25 restart case.** If a bind-mounted socket file breaks after a companion restart but a directory mount works. Recommended answer: accept a dedicated directory `~/.local/state/friday/channel/` that holds only `host.sock`, so the container sees nothing else from the state directory.
 
 Design calls made in this plan, for review (no answer needed unless you disagree): the `/data` check uses an allowlist of filesystem types, tighter than spec 27's "refuse 9p or drvfs" (Task 3); the CSRF token is derived from the session token so `GET /api/csrf` can return it while only its hash is stored (Task 7); the CSRF header is `X-CSRF-Token`; the channel MAC input joins fields with newlines (Task 8); `friday-host serve` creates both host key files on first run (Task 9); `friday-host login-url` mints the companion token in its database instead of the companion printing one at start (Task 10); `make check` builds the image to scan its history (Task 15); `make down` stops only the `friday` service so the preview keeps running; compose lint checks the preview service for ports only; `FRIDAY_HOST_KEY_FILE` is added to the settings table (Task 2); the startup query result shows in the trace and logs, not as a new `/api/health` field; ADR-3's stale Docker sentence is corrected in the ADR file (Task 17).
+
+## Owner answers (2026-11-20)
+
+Recorded after the plan was written. They override any conflicting line above.
+
+- Q1: no Node in the runtime image. Use the pinned native Claude Code CLI binary with `cli_path` pointing at it. Node stays in the `spa-build` stage.
+- Q2: if the container does not see a credential refresh made on the host, treat it as the D27 case: the lean agent runs through the companion.
+- Q3: if only a directory mount survives a companion restart, use the dedicated `~/.local/state/friday/channel/` directory holding only `host.sock`.
+- The two Part 1 spikes run now, in parallel with Milestone U.
