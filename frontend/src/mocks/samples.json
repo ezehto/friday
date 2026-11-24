@@ -1,0 +1,1454 @@
+{
+  "now": "2026-11-24T09:00:00Z",
+  "items": [
+    {
+      "widget": {
+        "type": "stat",
+        "title": "Open pull requests",
+        "label": "Open pull requests",
+        "value": "7",
+        "change": "-2 vs last week",
+        "hint": "Orchard repo",
+        "tone": "good"
+      },
+      "envelope": {
+        "widget_id": "w-stat",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Open pull requests",
+        "blocks": [
+          {
+            "kind": "value",
+            "label": "Open pull requests",
+            "value": "7",
+            "change": "-2 vs last week",
+            "hint": "Orchard repo",
+            "tone": "good"
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "chart",
+        "title": "Commits per day",
+        "kind": "bar",
+        "series": [
+          {
+            "name": "Orchard",
+            "points": [
+              {
+                "x": "Mon",
+                "y": 6
+              },
+              {
+                "x": "Tue",
+                "y": 9
+              },
+              {
+                "x": "Wed",
+                "y": 4
+              },
+              {
+                "x": "Thu",
+                "y": 11
+              },
+              {
+                "x": "Fri",
+                "y": 7
+              },
+              {
+                "x": "Sat",
+                "y": 2
+              },
+              {
+                "x": "Sun",
+                "y": 3
+              }
+            ]
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "w-chart",
+        "source": "sample",
+        "as_of": "2026-11-24T08:45:00Z",
+        "data_class": "personal",
+        "title": "Commits per day",
+        "blocks": [
+          {
+            "kind": "chart",
+            "chart": "bar",
+            "series": [
+              {
+                "name": "Orchard",
+                "points": [
+                  {
+                    "x": "Mon",
+                    "y": 6
+                  },
+                  {
+                    "x": "Tue",
+                    "y": 9
+                  },
+                  {
+                    "x": "Wed",
+                    "y": 4
+                  },
+                  {
+                    "x": "Thu",
+                    "y": 11
+                  },
+                  {
+                    "x": "Fri",
+                    "y": 7
+                  },
+                  {
+                    "x": "Sat",
+                    "y": 2
+                  },
+                  {
+                    "x": "Sun",
+                    "y": 3
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "table",
+        "title": "Service owners",
+        "columns": [
+          "Service",
+          "Owner",
+          "Tier"
+        ],
+        "rows": [
+          [
+            "orchard-api",
+            "Mira Okafor",
+            "1"
+          ],
+          [
+            "lantern-web",
+            "Tomas Reyes",
+            "2"
+          ],
+          [
+            "compass-sync",
+            "Ines Varga",
+            "2"
+          ]
+        ]
+      },
+      "envelope": {
+        "widget_id": "w-table",
+        "source": "sample",
+        "as_of": "2026-11-24T08:40:00Z",
+        "data_class": "personal",
+        "title": "Service owners",
+        "blocks": [
+          {
+            "kind": "table",
+            "columns": [
+              "Service",
+              "Owner",
+              "Tier"
+            ],
+            "rows": [
+              [
+                "orchard-api",
+                "Mira Okafor",
+                "1"
+              ],
+              [
+                "lantern-web",
+                "Tomas Reyes",
+                "2"
+              ],
+              [
+                "compass-sync",
+                "Ines Varga",
+                "2"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "task_list",
+        "title": "This week",
+        "items": [
+          {
+            "title": "Draft the Orchard release notes",
+            "status": "doing",
+            "due": "2026-11-26"
+          },
+          {
+            "title": "Review the Lantern theme PR",
+            "status": "todo",
+            "due": "2026-11-25"
+          },
+          {
+            "title": "Update the Compass tile cache docs",
+            "status": "todo"
+          },
+          {
+            "title": "Rotate the staging API keys",
+            "status": "blocked",
+            "due": "2026-11-27"
+          },
+          {
+            "title": "Close out the October retro actions",
+            "status": "done"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "w-task-list",
+        "source": "sample",
+        "as_of": "2026-11-24T08:30:00Z",
+        "data_class": "personal",
+        "title": "This week",
+        "blocks": [
+          {
+            "kind": "rows",
+            "items": [
+              {
+                "label": "Draft the Orchard release notes",
+                "meta": "2026-11-26",
+                "tone": "attention"
+              },
+              {
+                "label": "Review the Lantern theme PR",
+                "meta": "2026-11-25",
+                "tone": "neutral"
+              },
+              {
+                "label": "Update the Compass tile cache docs",
+                "tone": "neutral"
+              },
+              {
+                "label": "Rotate the staging API keys",
+                "meta": "2026-11-27",
+                "tone": "bad"
+              },
+              {
+                "label": "Close out the October retro actions",
+                "tone": "good"
+              }
+            ]
+          },
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "2 todo",
+                "tone": "neutral"
+              },
+              {
+                "label": "1 doing",
+                "tone": "attention"
+              },
+              {
+                "label": "1 done",
+                "tone": "good"
+              },
+              {
+                "label": "1 blocked",
+                "tone": "bad"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "progress",
+        "title": "Lantern beta checklist",
+        "label": "Beta checklist",
+        "done": 18,
+        "total": 24,
+        "tone": "attention"
+      },
+      "envelope": {
+        "widget_id": "w-progress",
+        "source": "sample",
+        "as_of": "2026-11-24T08:35:00Z",
+        "data_class": "personal",
+        "title": "Lantern beta checklist",
+        "blocks": [
+          {
+            "kind": "meter",
+            "items": [
+              {
+                "label": "Beta checklist",
+                "done": 18,
+                "total": 24,
+                "tone": "attention"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "daily_focus",
+        "title": "Today's focus",
+        "items": [
+          {
+            "title": "Finish the Orchard webhook retry tests",
+            "why": "The retry path is the last open item before the release candidate is cut.",
+            "source_ref": "Orchard/Plans/retry-tests"
+          },
+          {
+            "title": "Reply to the Lantern accessibility review",
+            "why": "The reviewer asked for contrast fixes by Wednesday.",
+            "source_ref": "Lantern/Reviews/a11y"
+          },
+          {
+            "title": "Plan the Compass offline cache spike",
+            "why": "Needed to size the December milestone.",
+            "source_ref": "Compass/Plans/offline-cache"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "w-daily-focus",
+        "source": "sample",
+        "as_of": "2026-11-24T08:20:00Z",
+        "data_class": "personal",
+        "title": "Today's focus",
+        "blocks": [
+          {
+            "kind": "rows",
+            "items": [
+              {
+                "label": "Finish the Orchard webhook retry tests",
+                "detail": "The retry path is the last open item before the release candidate is cut.",
+                "source_ref": "Orchard/Plans/retry-tests"
+              },
+              {
+                "label": "Reply to the Lantern accessibility review",
+                "detail": "The reviewer asked for contrast fixes by Wednesday.",
+                "source_ref": "Lantern/Reviews/a11y"
+              },
+              {
+                "label": "Plan the Compass offline cache spike",
+                "detail": "Needed to size the December milestone.",
+                "source_ref": "Compass/Plans/offline-cache"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "project_status",
+        "title": "Compass status",
+        "name": "Compass",
+        "status": "active",
+        "blockers": [
+          "Waiting on the staging key rotation"
+        ],
+        "risks": [
+          "Map tile quota may run out in December"
+        ],
+        "milestones": [
+          {
+            "name": "Offline route cache prototype for the Compass mobile client",
+            "due": "2026-12-05",
+            "status": "at_risk"
+          },
+          {
+            "name": "Beta invite list",
+            "due": "2026-12-19",
+            "status": "planned"
+          }
+        ],
+        "next": "Spike the offline cache on two devices",
+        "last_commit": "2026-11-23"
+      },
+      "envelope": {
+        "widget_id": "w-project-status",
+        "source": "sample",
+        "as_of": "2026-11-24T08:10:00Z",
+        "data_class": "work",
+        "title": "Compass status",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "active",
+                "tone": "neutral"
+              },
+              {
+                "label": "Offline route cache prototype for the Compass mobile client…",
+                "tone": "attention"
+              },
+              {
+                "label": "Beta invite list 2026-12-19",
+                "tone": "neutral"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Next",
+                "value": "Spike the offline cache on two devices"
+              },
+              {
+                "label": "Last commit",
+                "value": "2026-11-23"
+              }
+            ]
+          },
+          {
+            "kind": "rows",
+            "heading": "Blockers and risks",
+            "items": [
+              {
+                "label": "Waiting on the staging key rotation",
+                "tone": "bad"
+              },
+              {
+                "label": "Map tile quota may run out in December",
+                "tone": "attention"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "career_progress",
+        "title": "Career progress",
+        "target": "Staff engineer by 2027",
+        "week": 6,
+        "skills": [
+          {
+            "name": "System design",
+            "done": 5,
+            "total": 8
+          },
+          {
+            "name": "Technical writing",
+            "done": 3,
+            "total": 6
+          },
+          {
+            "name": "Mentoring",
+            "done": 2,
+            "total": 5
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "w-career-progress",
+        "source": "sample",
+        "as_of": "2026-11-24T08:00:00Z",
+        "data_class": "personal",
+        "title": "Career progress",
+        "blocks": [
+          {
+            "kind": "value",
+            "label": "Staff engineer by 2027",
+            "value": "Week 6 of 16"
+          },
+          {
+            "kind": "meter",
+            "items": [
+              {
+                "label": "System design",
+                "done": 5,
+                "total": 8
+              },
+              {
+                "label": "Technical writing",
+                "done": 3,
+                "total": 6
+              },
+              {
+                "label": "Mentoring",
+                "done": 2,
+                "total": 5
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "work_timeline",
+        "title": "Work timeline",
+        "items": [
+          {
+            "when": "Mon 09:30",
+            "title": "Orchard retry design review",
+            "detail": "Agreed on exponential backoff with a cap of five attempts."
+          },
+          {
+            "when": "Tue 14:00",
+            "title": "Lantern theme handoff",
+            "detail": "Design tokens handed to the web team."
+          },
+          {
+            "when": "Wed 11:15",
+            "title": "Compass tile quota check"
+          },
+          {
+            "when": "Thu 16:45",
+            "title": "Release candidate tagged",
+            "detail": "Orchard 2.4.0-rc1 went to the staging cluster."
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "w-work-timeline",
+        "source": "sample",
+        "as_of": "2026-11-24T08:55:00Z",
+        "data_class": "work",
+        "title": "Work timeline",
+        "blocks": [
+          {
+            "kind": "timeline",
+            "items": [
+              {
+                "when": "Mon 09:30",
+                "title": "Orchard retry design review",
+                "detail": "Agreed on exponential backoff with a cap of five attempts."
+              },
+              {
+                "when": "Tue 14:00",
+                "title": "Lantern theme handoff",
+                "detail": "Design tokens handed to the web team."
+              },
+              {
+                "when": "Wed 11:15",
+                "title": "Compass tile quota check"
+              },
+              {
+                "when": "Thu 16:45",
+                "title": "Release candidate tagged",
+                "detail": "Orchard 2.4.0-rc1 went to the staging cluster."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "learning_roadmap",
+        "title": "Learning roadmap",
+        "target": "Staff engineer by 2027",
+        "week": 6,
+        "weeks": [
+          {
+            "week": 4,
+            "theme": "Distributed systems basics",
+            "status": "done"
+          },
+          {
+            "week": 5,
+            "theme": "Consistency models",
+            "status": "done"
+          },
+          {
+            "week": 6,
+            "theme": "Event sourcing",
+            "status": "current"
+          },
+          {
+            "week": 7,
+            "theme": "Capacity planning",
+            "status": "next"
+          },
+          {
+            "week": 8,
+            "theme": "Writing design docs",
+            "status": "later"
+          }
+        ],
+        "next": [
+          {
+            "topic": "Event sourcing patterns",
+            "why": "Orchard's webhook log would benefit from an append-only design.",
+            "source_ref": "Career/Week6/event-sourcing"
+          },
+          {
+            "topic": "Capacity planning worksheet",
+            "why": "Compass needs a tile quota estimate.",
+            "source_ref": "Career/Week7/capacity"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "w-learning-roadmap",
+        "source": "sample",
+        "as_of": "2026-11-24T07:55:00Z",
+        "data_class": "personal",
+        "title": "Learning roadmap",
+        "blocks": [
+          {
+            "kind": "timeline",
+            "items": [
+              {
+                "when": "Week 4",
+                "title": "Distributed systems basics",
+                "tone": "good"
+              },
+              {
+                "when": "Week 5",
+                "title": "Consistency models",
+                "tone": "good"
+              },
+              {
+                "when": "Week 6",
+                "title": "Event sourcing",
+                "tone": "attention"
+              },
+              {
+                "when": "Week 7",
+                "title": "Capacity planning",
+                "tone": "neutral"
+              },
+              {
+                "when": "Week 8",
+                "title": "Writing design docs",
+                "tone": "neutral"
+              }
+            ]
+          },
+          {
+            "kind": "rows",
+            "heading": "Next",
+            "items": [
+              {
+                "label": "Event sourcing patterns",
+                "detail": "Orchard's webhook log would benefit from an append-only design.",
+                "source_ref": "Career/Week6/event-sourcing"
+              },
+              {
+                "label": "Capacity planning worksheet",
+                "detail": "Compass needs a tile quota estimate.",
+                "source_ref": "Career/Week7/capacity"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "standup",
+        "title": "Standup",
+        "yesterday": [
+          {
+            "text": "Merged the Orchard webhook retry change after two rounds of review and confirmed the backoff caps at five attempts in the staging cluster logs.",
+            "source_ref": "Orchard/pull/412"
+          },
+          {
+            "text": "Paired with Tomas Reyes on the Lantern theme tokens.",
+            "source_ref": "Lantern/Notes/pairing"
+          }
+        ],
+        "today": [
+          {
+            "text": "Write the retry integration tests, then run them against the staging cluster with the rotated keys once they are available to the whole team.",
+            "source_ref": "Orchard/Plans/retry-tests"
+          },
+          {
+            "text": "Review the Lantern accessibility fixes.",
+            "source_ref": "Lantern/pull/88"
+          }
+        ],
+        "blockers": [
+          {
+            "text": "Staging key rotation has not landed yet.",
+            "source_ref": "Compass/Tickets/DEMO-311"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "w-standup",
+        "source": "sample",
+        "as_of": "2026-11-24T08:15:00Z",
+        "data_class": "work",
+        "title": "Standup",
+        "blocks": [
+          {
+            "kind": "rows",
+            "heading": "Yesterday",
+            "items": [
+              {
+                "label": "Merged the Orchard webhook retry change after two rounds of review and confirme…",
+                "detail": "Merged the Orchard webhook retry change after two rounds of review and confirmed the backoff caps at five attempts in the staging cluster logs.",
+                "source_ref": "Orchard/pull/412"
+              },
+              {
+                "label": "Paired with Tomas Reyes on the Lantern theme tokens.",
+                "source_ref": "Lantern/Notes/pairing"
+              }
+            ]
+          },
+          {
+            "kind": "rows",
+            "heading": "Today",
+            "items": [
+              {
+                "label": "Write the retry integration tests, then run them against the staging cluster wi…",
+                "detail": "Write the retry integration tests, then run them against the staging cluster with the rotated keys once they are available to the whole team.",
+                "source_ref": "Orchard/Plans/retry-tests"
+              },
+              {
+                "label": "Review the Lantern accessibility fixes.",
+                "source_ref": "Lantern/pull/88"
+              }
+            ]
+          },
+          {
+            "kind": "rows",
+            "heading": "Blockers",
+            "items": [
+              {
+                "label": "Staging key rotation has not landed yet.",
+                "source_ref": "Compass/Tickets/DEMO-311",
+                "tone": "bad"
+              }
+            ]
+          },
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "2 yesterday"
+              },
+              {
+                "label": "2 today"
+              },
+              {
+                "label": "1 blockers"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "alert",
+        "title": "Alert",
+        "level": "attention",
+        "text": "Sample alert text"
+      },
+      "envelope": {
+        "widget_id": "w-alert",
+        "source": "sample",
+        "as_of": "2026-11-24T08:58:00Z",
+        "data_class": "personal",
+        "title": "Alert",
+        "blocks": [
+          {
+            "kind": "alert",
+            "level": "attention",
+            "text": "Sample alert text"
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "task_queue",
+        "title": "Task queue",
+        "items": [
+          {
+            "kind": "proposal",
+            "title": "Archive the old Orchard notes",
+            "status": "awaiting approval",
+            "since": "2026-11-24T08:10:00Z",
+            "view": "approvals"
+          },
+          {
+            "kind": "run",
+            "title": "Lantern theme refactor",
+            "status": "working",
+            "since": "2026-11-24T07:40:00Z",
+            "view": "sessions"
+          },
+          {
+            "kind": "session",
+            "title": "Compass cache spike",
+            "status": "idle",
+            "since": "2026-11-23T17:20:00Z",
+            "view": "sessions"
+          },
+          {
+            "kind": "task",
+            "title": "Draft the release notes",
+            "status": "queued",
+            "since": "2026-11-24T06:30:00Z",
+            "view": "board"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "w-task-queue",
+        "source": "sample",
+        "as_of": "2026-11-24T08:52:00Z",
+        "data_class": "personal",
+        "title": "Task queue",
+        "blocks": [
+          {
+            "kind": "rows",
+            "variant": "log",
+            "items": [
+              {
+                "label": "Archive the old Orchard notes",
+                "detail": "awaiting approval",
+                "meta": "2026-11-24T08:10:00Z"
+              },
+              {
+                "label": "Lantern theme refactor",
+                "detail": "working",
+                "meta": "2026-11-24T07:40:00Z"
+              },
+              {
+                "label": "Compass cache spike",
+                "detail": "idle",
+                "meta": "2026-11-23T17:20:00Z"
+              },
+              {
+                "label": "Draft the release notes",
+                "detail": "queued",
+                "meta": "2026-11-24T06:30:00Z"
+              }
+            ]
+          },
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "1 proposal"
+              },
+              {
+                "label": "1 run"
+              },
+              {
+                "label": "1 session"
+              },
+              {
+                "label": "1 task"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "claude_run",
+        "title": "Claude Code run",
+        "run_id": "run-0142",
+        "repo": "orchard-api",
+        "mode": "task",
+        "status": "working",
+        "started": "2026-11-24T08:20:00Z",
+        "duration": "12m 40s",
+        "usage": "18k tokens",
+        "excerpt": "Reading the webhook retry module and the existing tests before changing the backoff helper."
+      },
+      "envelope": {
+        "widget_id": "w-claude-run",
+        "source": "sample",
+        "as_of": "2026-11-24T08:53:00Z",
+        "data_class": "personal",
+        "title": "Claude Code run",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "working"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Run",
+                "value": "run-0142"
+              },
+              {
+                "label": "Repo",
+                "value": "orchard-api"
+              },
+              {
+                "label": "Mode",
+                "value": "task"
+              },
+              {
+                "label": "Started",
+                "value": "2026-11-24T08:20:00Z"
+              },
+              {
+                "label": "Duration",
+                "value": "12m 40s"
+              },
+              {
+                "label": "Usage",
+                "value": "18k tokens"
+              }
+            ]
+          },
+          {
+            "kind": "text",
+            "text": "Reading the webhook retry module and the existing tests before changing the backoff helper."
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "jira_ticket",
+        "title": "DEMO-142",
+        "key": "DEMO-142",
+        "summary": "Retry failed webhook deliveries with backoff",
+        "status": "In Progress",
+        "priority": "High",
+        "assignee": "Mira Okafor",
+        "updated": "2026-11-24T07:30:00Z",
+        "url": "https://example.com/browse/DEMO-142"
+      },
+      "envelope": {
+        "widget_id": "w-jira-ticket",
+        "source": "sample",
+        "as_of": "2026-11-24T08:05:00Z",
+        "data_class": "work",
+        "title": "DEMO-142",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "In Progress"
+              },
+              {
+                "label": "High"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Key",
+                "value": "DEMO-142"
+              },
+              {
+                "label": "Updated",
+                "value": "2026-11-24T07:30:00Z"
+              },
+              {
+                "label": "Ticket",
+                "value": "Retry failed webhook deliveries with backoff",
+                "link": {
+                  "text": "DEMO-142",
+                  "url": "https://example.com/browse/DEMO-142"
+                }
+              }
+            ]
+          },
+          {
+            "kind": "person",
+            "people": [
+              {
+                "name": "Mira Okafor"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "jira_attention",
+        "title": "Needs attention",
+        "items": [
+          {
+            "key": "DEMO-311",
+            "summary": "Rotate the staging API keys before the Compass beta invite list goes out",
+            "status": "Blocked",
+            "priority": "High",
+            "reason": "blocked"
+          },
+          {
+            "key": "DEMO-142",
+            "summary": "Retry failed webhook deliveries",
+            "status": "In Progress",
+            "priority": "High",
+            "reason": "assigned"
+          },
+          {
+            "key": "DEMO-207",
+            "summary": "Lantern contrast fixes",
+            "status": "In Review",
+            "priority": "Medium",
+            "reason": "mentioned"
+          },
+          {
+            "key": "DEMO-98",
+            "summary": "Orchard dashboard copy",
+            "status": "To Do",
+            "priority": "Low",
+            "reason": "due"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "w-jira-attention",
+        "source": "sample",
+        "as_of": "2026-11-24T08:25:00Z",
+        "data_class": "work",
+        "title": "Needs attention",
+        "blocks": [
+          {
+            "kind": "rows",
+            "items": [
+              {
+                "label": "DEMO-311 Rotate the staging API keys before the Compass beta invite list goes o…",
+                "meta": "blocked"
+              },
+              {
+                "label": "DEMO-142 Retry failed webhook deliveries",
+                "meta": "assigned"
+              },
+              {
+                "label": "DEMO-207 Lantern contrast fixes",
+                "meta": "mentioned"
+              },
+              {
+                "label": "DEMO-98 Orchard dashboard copy",
+                "meta": "due"
+              }
+            ]
+          },
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "1 blocked"
+              },
+              {
+                "label": "1 assigned"
+              },
+              {
+                "label": "1 mentioned"
+              },
+              {
+                "label": "1 due"
+              }
+            ]
+          },
+          {
+            "kind": "person",
+            "people": []
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "sprint",
+        "title": "Sprint 24",
+        "name": "Sprint 24",
+        "goal": "Ship the Orchard webhook retry path and finish the Lantern accessibility fixes before the December freeze.",
+        "start": "2026-11-16",
+        "end": "2026-11-27",
+        "columns": [
+          {
+            "status": "To Do",
+            "items": [
+              {
+                "key": "DEMO-98",
+                "summary": "Orchard dashboard copy"
+              }
+            ]
+          },
+          {
+            "status": "In Progress",
+            "items": [
+              {
+                "key": "DEMO-142",
+                "summary": "Retry failed webhook deliveries"
+              }
+            ]
+          },
+          {
+            "status": "Done",
+            "items": [
+              {
+                "key": "DEMO-207",
+                "summary": "Lantern contrast fixes"
+              },
+              {
+                "key": "DEMO-215",
+                "summary": "Compass tile cache docs"
+              }
+            ]
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "w-sprint",
+        "source": "sample",
+        "as_of": "2026-11-24T08:12:00Z",
+        "data_class": "work",
+        "title": "Sprint 24",
+        "blocks": [
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Name",
+                "value": "Sprint 24"
+              },
+              {
+                "label": "Goal",
+                "value": "Ship the Orchard webhook retry path and finish the Lantern accessibility fixes …"
+              },
+              {
+                "label": "Start",
+                "value": "2026-11-16"
+              },
+              {
+                "label": "End",
+                "value": "2026-11-27"
+              }
+            ]
+          },
+          {
+            "kind": "kanban",
+            "columns": [
+              {
+                "title": "To Do",
+                "items": [
+                  {
+                    "label": "DEMO-98 Orchard dashboard copy"
+                  }
+                ]
+              },
+              {
+                "title": "In Progress",
+                "items": [
+                  {
+                    "label": "DEMO-142 Retry failed webhook deliveries"
+                  }
+                ]
+              },
+              {
+                "title": "Done",
+                "items": [
+                  {
+                    "label": "DEMO-207 Lantern contrast fixes"
+                  },
+                  {
+                    "label": "DEMO-215 Compass tile cache docs"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "sprint_burndown",
+        "title": "Sprint 24 burndown",
+        "sprint": "Sprint 24",
+        "days": [
+          {
+            "date": "2026-11-16",
+            "remaining": 34
+          },
+          {
+            "date": "2026-11-17",
+            "remaining": 31
+          },
+          {
+            "date": "2026-11-18",
+            "remaining": 29
+          },
+          {
+            "date": "2026-11-19",
+            "remaining": 24
+          },
+          {
+            "date": "2026-11-20",
+            "remaining": 21
+          },
+          {
+            "date": "2026-11-23",
+            "remaining": 16
+          },
+          {
+            "date": "2026-11-24",
+            "remaining": 13
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "w-sprint-burndown",
+        "source": "sample",
+        "as_of": "2026-11-24T08:12:00Z",
+        "data_class": "work",
+        "title": "Sprint 24 burndown",
+        "blocks": [
+          {
+            "kind": "chart",
+            "chart": "line",
+            "series": [
+              {
+                "name": "Remaining",
+                "points": [
+                  {
+                    "x": "2026-11-16",
+                    "y": 34
+                  },
+                  {
+                    "x": "2026-11-17",
+                    "y": 31
+                  },
+                  {
+                    "x": "2026-11-18",
+                    "y": 29
+                  },
+                  {
+                    "x": "2026-11-19",
+                    "y": 24
+                  },
+                  {
+                    "x": "2026-11-20",
+                    "y": 21
+                  },
+                  {
+                    "x": "2026-11-23",
+                    "y": 16
+                  },
+                  {
+                    "x": "2026-11-24",
+                    "y": 13
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "schedule",
+        "title": "Today's schedule",
+        "day": "2026-11-24",
+        "items": [
+          {
+            "start": "09:30",
+            "end": "10:00",
+            "title": "Standup",
+            "kind": "meeting"
+          },
+          {
+            "start": "10:30",
+            "end": "12:00",
+            "title": "Retry tests",
+            "kind": "focus"
+          },
+          {
+            "start": "13:00",
+            "end": "13:45",
+            "title": "Compass design sync",
+            "kind": "meeting"
+          },
+          {
+            "start": "15:00",
+            "end": "16:00",
+            "title": "Lantern review",
+            "kind": "review"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "w-schedule",
+        "source": "sample",
+        "as_of": "2026-11-24T08:00:00Z",
+        "data_class": "work",
+        "title": "Today's schedule",
+        "blocks": [
+          {
+            "kind": "timeline",
+            "items": [
+              {
+                "when": "09:30-10:00",
+                "title": "Standup",
+                "detail": "meeting"
+              },
+              {
+                "when": "10:30-12:00",
+                "title": "Retry tests",
+                "detail": "focus"
+              },
+              {
+                "when": "13:00-13:45",
+                "title": "Compass design sync",
+                "detail": "meeting"
+              },
+              {
+                "when": "15:00-16:00",
+                "title": "Lantern review",
+                "detail": "review"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "meeting",
+        "title": "Compass design sync",
+        "start": "2026-11-24T13:00:00Z",
+        "end": "2026-11-24T13:45:00Z",
+        "attendees": [
+          "Mira Okafor",
+          "Tomas Reyes",
+          "Ines Varga"
+        ],
+        "location": "Room Fern",
+        "prep_ref": "Compass/Meetings/design-sync-prep-offline-cache-open-questions-and-tile-quota-review"
+      },
+      "envelope": {
+        "widget_id": "w-meeting",
+        "source": "sample",
+        "as_of": "2026-11-24T08:00:00Z",
+        "data_class": "work",
+        "title": "Compass design sync",
+        "blocks": [
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Start",
+                "value": "2026-11-24T13:00:00Z"
+              },
+              {
+                "label": "End",
+                "value": "2026-11-24T13:45:00Z"
+              },
+              {
+                "label": "Location",
+                "value": "Room Fern"
+              },
+              {
+                "label": "Prep",
+                "value": "Compass/Meetings/design-sync-prep-offline-cache-open-questions-and-tile-quota-r…"
+              }
+            ]
+          },
+          {
+            "kind": "person",
+            "people": [
+              {
+                "name": "Mira Okafor"
+              },
+              {
+                "name": "Tomas Reyes"
+              },
+              {
+                "name": "Ines Varga"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "focus_time",
+        "title": "Focus time",
+        "day": "2026-11-24",
+        "blocks": [
+          {
+            "start": "10:30",
+            "end": "12:00",
+            "label": "Retry tests"
+          },
+          {
+            "start": "14:00",
+            "end": "15:30",
+            "label": "Lantern fixes"
+          },
+          {
+            "start": "16:15",
+            "end": "17:30",
+            "label": "Compass spike"
+          }
+        ],
+        "total_minutes": 255
+      },
+      "envelope": {
+        "widget_id": "w-focus-time",
+        "source": "sample",
+        "as_of": "2026-11-24T08:00:00Z",
+        "data_class": "work",
+        "title": "Focus time",
+        "blocks": [
+          {
+            "kind": "timeline",
+            "items": [
+              {
+                "when": "10:30-12:00",
+                "title": "Retry tests"
+              },
+              {
+                "when": "14:00-15:30",
+                "title": "Lantern fixes"
+              },
+              {
+                "when": "16:15-17:30",
+                "title": "Compass spike"
+              }
+            ]
+          },
+          {
+            "kind": "meter",
+            "items": [
+              {
+                "label": "Focus time",
+                "done": 255,
+                "total": 480
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

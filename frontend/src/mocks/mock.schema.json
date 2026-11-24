@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/frontend/src/mocks/mock.schema.json",
+  "title": "Mock",
+  "$defs": {
+    "MockWidget": {
+      "title": "MockWidget",
+      "type": "object",
+      "properties": {
+        "widget": { "$ref": "../../../schema/widgets/widget.schema.json" },
+        "envelope": {
+          "allOf": [
+            { "$ref": "../../../schema/envelope.schema.json" },
+            { "type": "object", "properties": { "source": { "const": "sample" } } }
+          ]
+        }
+      },
+      "required": ["widget", "envelope"],
+      "additionalProperties": false
+    },
+    "SampleSet": {
+      "title": "SampleSet",
+      "type": "object",
+      "properties": {
+        "now": { "type": "string", "format": "date-time" },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/MockWidget" } }
+      },
+      "required": ["now", "items"],
+      "additionalProperties": false
+    }
+  }
+}

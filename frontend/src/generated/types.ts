@@ -538,3 +538,28 @@ export interface FocusTimeWidget {
 export interface Common {
   [k: string]: unknown;
 }
+/**
+ * This interface was referenced by `HttpsFridayInvalidFrontendScriptsGenRootJson`'s JSON-Schema
+ * via the `definition` "mock".
+ */
+export interface Mock {
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Mock`'s JSON-Schema
+ * via the `definition` "MockWidget".
+ */
+export interface MockWidget {
+  widget: Widget;
+  envelope: WidgetEnvelope & {
+    source?: "sample";
+  };
+}
+/**
+ * This interface was referenced by `Mock`'s JSON-Schema
+ * via the `definition` "SampleSet".
+ */
+export interface SampleSet {
+  now: string;
+  items: MockWidget[];
+}
