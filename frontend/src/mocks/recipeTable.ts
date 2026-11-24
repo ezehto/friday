@@ -19,7 +19,8 @@ export const RECIPE_BLOCKS: Record<Widget["type"], Recipe> = {
   task_queue: [{ kind: "rows" }, { kind: "chips" }],
   claude_run: [{ kind: "chips" }, { kind: "facts" }, { kind: "text", optional: true }],
   jira_ticket: [{ kind: "chips" }, { kind: "facts" }, { kind: "person" }],
-  jira_attention: [{ kind: "rows" }, { kind: "chips" }, { kind: "person" }],
+  // person has no source field until the L14 pack adds assignees.
+  jira_attention: [{ kind: "rows" }, { kind: "chips" }, { kind: "person", optional: true }],
   sprint: [{ kind: "facts" }, { kind: "kanban" }],
   sprint_burndown: [{ kind: "chart" }],
   schedule: [{ kind: "timeline" }],

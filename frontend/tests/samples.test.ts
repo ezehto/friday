@@ -21,18 +21,28 @@ describe("samples", () => {
   it("a text cut by the cut rule ends in … and is exactly at the block cap", () => {
     const cuts: string[] = [];
     const caps = { chips: { label: 60 }, rows: { label: 80 }, facts: { value: 80 } } as const;
-    for (const { envelope } of samples.items)
+    const cp = (s: string) => [...s].length;
+    const cutOf = (full: string, cap: number) => [...full].slice(0, cap - 1).join("") + "…";
+    for (const { widget, envelope } of samples.items) {
+      const strings: string[] = [];
+      JSON.stringify(widget, (_k, v) => (typeof v === "string" && strings.push(v), v));
+      for (const m of (widget as { milestones?: { name: string; due?: string }[] }).milestones ?? []) strings.push(`${m.name} ${m.due}`);
       for (const block of envelope.blocks as Block[]) {
         if (block.kind !== "chips" && block.kind !== "rows" && block.kind !== "facts") continue;
         const field = Object.keys(caps[block.kind])[0] as "label" | "value";
+        const cap = caps[block.kind][field as never] as number;
         for (const item of block.items as Record<string, string>[]) {
           const s = item[field] ?? "";
-          if (s.endsWith("…")) {
-            cuts.push(block.kind);
-            expect(s.length).toBe(caps[block.kind][field as never]);
-          }
+          if (!s.endsWith("…")) continue;
+          cuts.push(block.kind);
+          expect(cp(s)).toBe(cap);
+          if (block.kind === "rows") {
+            expect(item.detail, `${widget.type}: cut row needs detail`).toBeTruthy();
+            expect(cutOf(item.detail ?? "", cap)).toBe(s);
+          } else expect(strings.some((f) => cp(f) > cap && cutOf(f, cap) === s), `${widget.type}: ${s}`).toBe(true);
         }
       }
+    }
     expect(new Set(cuts)).toEqual(new Set(["chips", "rows", "facts"]));
   });
 
@@ -76,5 +86,14 @@ describe("samples", () => {
     const urls = text.match(/https?:\/\/[^\s"\\]+/g) ?? [];
     expect(urls.length).toBeGreaterThan(0);
     for (const url of urls) expect(url).toMatch(/^https?:\/\/(example\.com|example\.org|github\.com\/example)(\/|$)/);
+  });
+
+  it("no bare hostname other than example.com, example.org or github.com/example", () => {
+    const hosts = text.matchAll(/\b[a-z0-9-]+(\.[a-z0-9-]+)*\.(com|org|net|io|dev|app|co)\b(\/[^\s"\\]*)?/gi);
+    for (const [host, , , path] of hosts) {
+      const name = host.replace(/\/.*$/, "").toLowerCase();
+      if (name === "github.com") expect(path ?? "", host).toMatch(/^\/example(\/|$)/);
+      else expect(["example.com", "example.org"], host).toContain(name);
+    }
   });
 });

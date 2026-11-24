@@ -1033,6 +1033,7 @@
             "items": [
               {
                 "label": "DEMO-311 Rotate the staging API keys before the Compass beta invite list goes o…",
+                "detail": "DEMO-311 Rotate the staging API keys before the Compass beta invite list goes out",
                 "meta": "blocked"
               },
               {
@@ -1065,10 +1066,6 @@
                 "label": "1 due"
               }
             ]
-          },
-          {
-            "kind": "person",
-            "people": []
           }
         ]
       }
