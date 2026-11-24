@@ -97,6 +97,7 @@ export const FIXED = {
     send: "Send",
     textNeeded: "Type a message before you send.",
     attach: "claude attach ",
+    option: (n: number): string => `Session ${n}`,
   },
   tagline: "Quiet help, close at hand.",
   motionLabel: "Reduce motion",

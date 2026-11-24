@@ -504,6 +504,7 @@ p {
 /* Below the board breakpoint the document scrolls, so the banner sticks to it; above, .view scrolls. */
 @media (min-width: 1100px) { .view { overflow-y: auto; } }
 .span-list { margin: 0; padding-left: 1.1rem; list-style: none; display: grid; gap: 0.35rem; border-left: 1px solid var(--line-blueprint); }
+.span-flat { padding-left: 0; border-left: 0; }
 .span-list:first-child { padding-left: 0; border-left: 0; }
 .span-row { display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; align-items: baseline; min-width: 0; }
 .span-name { color: var(--text-primary); }

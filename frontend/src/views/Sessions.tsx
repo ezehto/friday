@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FIXED } from "../chrome/fixedText";
 import { HudFrame } from "../chrome/HudFrame";
 import { ToneIcon } from "../chrome/ToneIcon";
-import type { RunView, SessionView } from "../generated/types";
+import type { RunView, SessionView, Tone } from "../generated/types";
 import { formatTime } from "../lib/format";
 import type { AppState } from "../store";
 import type { SessionTransport } from "../transport/types";
@@ -10,6 +10,11 @@ import { PreviewBanner } from "./PreviewBanner";
 import { VisibleText, visibleString } from "./VisibleText";
 
 const T = FIXED.sessions;
+// Working and starting are neutral progress; waiting needs the owner; unlinked lost its session.
+const RUN_TONE: Record<RunView["status"], Tone> = {
+  proposed: "neutral", starting: "neutral", working: "neutral", waiting: "attention", done: "good",
+  failed: "bad", stopped: "neutral", timed_out: "bad", cancelled: "neutral", unlinked: "attention",
+};
 const CANCELABLE: readonly RunView["status"][] = ["starting", "working", "waiting"];
 
 /** Waiting sessions first, then the most recent activity. */
@@ -48,6 +53,8 @@ export function SessionsTable(props: { sessions: SessionView[] }) {
   );
 }
 
+export const RUN_STATUSES = Object.keys(RUN_TONE) as RunView["status"][];
+
 export function RunsList(props: { runs: RunView[]; act: SessionTransport["act"]; initialResult?: string }) {
   const [result, setResult] = useState(props.initialResult ?? "");
   const cancel = async (runId: string): Promise<void> => setResult((await props.act({ kind: "cancel_run", runId })).message);
@@ -73,11 +80,11 @@ export function RunsList(props: { runs: RunView[]; act: SessionTransport["act"];
                 <tr key={r.run_id}>
                   <td><VisibleText value={r.repo} /></td>
                   <td>{r.mode}</td>
-                  <td>{r.status}</td>
+                  <td><ToneIcon tone={RUN_TONE[r.status]} />{r.status}</td>
                   <td>{formatTime(r.started)}</td>
                   <td>
                     {CANCELABLE.includes(r.status) ? (
-                      <button type="button" className="chat-btn" onClick={() => void cancel(r.run_id)}>{T.cancel}</button>
+                      <button type="button" className="chat-btn" aria-label={`${T.cancel} ${visibleString(r.repo)}`} onClick={() => void cancel(r.run_id)}>{T.cancel}</button>
                     ) : null}
                   </td>
                 </tr>
@@ -106,11 +113,12 @@ export function MessagePanel(props: { sessions: SessionView[]; act: SessionTrans
       <label className="reason">
         <span className="label">{T.session}</span>
         <select className="chat-input" value={current.session_id} onChange={(e) => setSelected(e.target.value)}>
-          {props.sessions.map((s) => (
-            <option key={s.session_id} value={s.session_id}>{visibleString(s.project)} ({visibleString(s.session_id)})</option>
+          {props.sessions.map((s, i) => (
+            <option key={s.session_id} value={s.session_id}>{T.option(i + 1)}</option>
           ))}
         </select>
       </label>
+      <p className="attach-hint"><VisibleText value={current.project} /></p>
       <p className="attach-hint">{T.attach}<VisibleText value={current.session_id} /></p>
       <label className="reason">
         <span className="label">{T.text}</span>

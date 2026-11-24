@@ -12,11 +12,15 @@ import { VisibleText } from "./VisibleText";
 const T = FIXED.traces;
 const TONE: Record<SpanView["status"], Tone> = { ok: "good", error: "bad", timeout: "attention" };
 const usd = new Intl.NumberFormat("en", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 4 });
+/** A nonzero cost below the shown precision is never shown as zero. */
+export const formatCost = (c: number): string => (c > 0 && c < 0.0001 ? "<$0.0001" : usd.format(c));
+const MAX_INDENT = 8;
 const duration = (ms: number): string => (ms < 1000 ? `${ms} ms` : `${(ms / 1000).toFixed(1)} s`);
 
-function SpanItems(props: { nodes: SpanNode[] }) {
+function SpanItems(props: { nodes: SpanNode[]; depth?: number }) {
+  const depth = props.depth ?? 0;
   return (
-    <ul className="span-list">
+    <ul className={depth > MAX_INDENT ? "span-list span-flat" : "span-list"}>
       {props.nodes.map((n) => (
         <li key={n.span_id}>
           <div className="span-row">
@@ -28,7 +32,7 @@ function SpanItems(props: { nodes: SpanNode[] }) {
             ) : null}
             <span className="span-status"><ToneIcon tone={TONE[n.status]} />{T.spanStatus[n.status]}</span>
           </div>
-          {n.children.length > 0 ? <SpanItems nodes={n.children} /> : null}
+          {n.children.length > 0 ? <SpanItems nodes={n.children} depth={depth + 1} /> : null}
         </li>
       ))}
     </ul>
@@ -47,7 +51,7 @@ export function RequestList(props: { traces: TraceView[]; selected: string; onSe
           <button type="button" className="proposal-item" aria-pressed={t.trace_id === props.selected} onClick={() => props.onSelect?.(t.trace_id)}>
             <span><VisibleText value={t.label} /></span>
             <span className="label">{formatTime(t.started)} / {duration(t.duration_ms)}</span>
-            <span className="label">{T.tokensIn} {formatNumber(t.tokens_in)} / {T.tokensOut} {formatNumber(t.tokens_out)} / {usd.format(t.cost_usd)}</span>
+            <span className="label">{T.tokensIn} {formatNumber(t.tokens_in)} / {T.tokensOut} {formatNumber(t.tokens_out)} / {formatCost(t.cost_usd)}</span>
           </button>
         </li>
       ))}

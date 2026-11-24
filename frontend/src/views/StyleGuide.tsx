@@ -19,7 +19,7 @@ import { BlockBoundary } from "../blocks/BlockBoundary";
 import { BlockRenderer } from "../blocks/BlockRenderer";
 import { Approvals, ProposalPreview } from "./Approvals";
 import { PermissionCard, Permissions } from "./Permissions";
-import { MessagePanel, RunsList, SessionsTable } from "./Sessions";
+import { MessagePanel, RUN_STATUSES, RunsList, SessionsTable } from "./Sessions";
 import { RequestList, SpanTree } from "./Traces";
 import { PreviewBanner } from "./PreviewBanner";
 import { RawField } from "./RawField";
@@ -337,6 +337,9 @@ export function StyleGuide() {
           </HudFrame>
           <HudFrame title="Sessions, runs" kicker="Cancel on a live run" headingLevel={3}>
             <RunsList runs={[...SPECIMEN_RUNS]} act={specimenAct} />
+          </HudFrame>
+          <HudFrame title="Sessions, runs, every status" kicker="One run per status" headingLevel={3}>
+            <RunsList runs={RUN_STATUSES.map((status) => ({ run_id: `s-${status}`, repo: `specimen-${status}`, mode: "task" as const, status, started: "2026-11-24T08:20:00Z" }))} act={specimenAct} />
           </HudFrame>
           <HudFrame title="Sessions, runs, result" kicker="After Cancel" headingLevel={3}>
             <RunsList runs={[...SPECIMEN_RUNS]} act={specimenAct} initialResult={FIXED.previewResult} />
