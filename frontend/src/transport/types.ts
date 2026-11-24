@@ -13,3 +13,5 @@ export interface SessionTransport {
   act(action: TransportAction): Promise<ActionResult>; // L8: the HTTP routes of section 15
   close(): void;
 }
+/** The seam L11 implements from real audio: level is finite, 0 to 1. */
+export type VoiceLevelSource = { onLevel(listener: (level: number) => void): () => void };

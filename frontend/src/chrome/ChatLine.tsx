@@ -1,13 +1,18 @@
 import { useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import type { AppState } from "../store";
-import type { SessionTransport } from "../transport/types";
+import type { SessionTransport, VoiceLevelSource } from "../transport/types";
+import { useVoiceLevel } from "./Core";
+import type { CoreState } from "./coreStates";
 import { FIXED } from "./fixedText";
 
-const BARS = [0, 1, 2, 3, 4, 5, 6] as const;
+// Per-bar gain, so equal levels still read as a waveform.
+const GAINS = [0.5, 0.8, 1, 0.7, 0.95, 0.6, 0.85] as const;
 
 /** Hold with the pointer or Space. A visual only: no audio or media API is touched. */
-export function PushToTalk(props: { pressed: boolean; onChange(pressed: boolean): void }) {
+export function PushToTalk(props: { pressed: boolean; onChange(pressed: boolean): void; level?: VoiceLevelSource; core?: CoreState }) {
   const { pressed, onChange } = props;
+  const wave = useRef<HTMLSpanElement>(null);
+  useVoiceLevel(wave, props.level);
   return (
     <div className="ptt">
       <button
@@ -32,10 +37,9 @@ export function PushToTalk(props: { pressed: boolean; onChange(pressed: boolean)
       >
         {FIXED.chat.pushToTalk}
       </button>
-      {/* One root: Task 21a only has to write --voice-level (0 to 1) on it. */}
-      <span className="ptt-wave" aria-hidden="true">
-        {BARS.map((i) => (
-          <span key={i} className="ptt-bar" style={{ "--bar": i } as CSSProperties} />
+      <span ref={wave} className="ptt-wave" data-core-state={props.core} aria-hidden="true">
+        {GAINS.map((gain, i) => (
+          <span key={i} className="ptt-bar" style={{ "--bar": i, "--gain": gain } as CSSProperties} />
         ))}
       </span>
       <span className="ptt-label label" aria-live="polite">
@@ -45,7 +49,7 @@ export function PushToTalk(props: { pressed: boolean; onChange(pressed: boolean)
   );
 }
 
-export function ChatLine(props: { state: AppState; request: string | null; onAct: SessionTransport["act"]; defaultOpen?: boolean; initialResult?: string }) {
+export function ChatLine(props: { state: AppState; request: string | null; onAct: SessionTransport["act"]; defaultOpen?: boolean; initialResult?: string; level?: VoiceLevelSource }) {
   const [open, setOpen] = useState(props.defaultOpen ?? false);
   const [text, setText] = useState("");
   const [result, setResult] = useState<string | null>(props.initialResult ?? null);
@@ -99,7 +103,7 @@ export function ChatLine(props: { state: AppState; request: string | null; onAct
             <button type="submit" className="chat-btn label">{FIXED.chat.send}</button>
             <button type="button" className="chat-btn label" onClick={() => setResult(FIXED.previewResult)}>{FIXED.chat.new}</button>
           </form>
-          <PushToTalk pressed={talking} onChange={setTalking} />
+          <PushToTalk pressed={talking} onChange={setTalking} level={props.level} core={props.state.core} />
           <p className="chat-result" role="status">{result}</p>
         </section>
       )}

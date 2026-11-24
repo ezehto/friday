@@ -3,7 +3,7 @@ import { BASE_VIEWS, loadScenarios } from "./mocks";
 import { toHash, useRoute, type Route, type View } from "./router";
 import { createStore, initialState, useStore, type AppState } from "./store";
 import { MockTransport } from "./transport/mock";
-import type { SessionTransport } from "./transport/types";
+import type { SessionTransport, VoiceLevelSource } from "./transport/types";
 import { Board } from "./views/Board";
 import { ScenarioSwitcher } from "./views/ScenarioSwitcher";
 import { StyleGuide } from "./views/StyleGuide";
@@ -17,13 +17,14 @@ const SCENARIOS = loadScenarios();
 const CLOCK_MS = 30_000;
 
 type Store = ReturnType<typeof createStore>;
-type Live = { id: string; runs: number; instant: boolean; store: Store };
+type Live = { id: string; runs: number; instant: boolean; store: Store; level: VoiceLevelSource };
 
 const idleAct: SessionTransport["act"] = async () => ({ ok: false, preview: true, message: FIXED.previewResult });
 
 type PageProps = {
   state: AppState;
   act: SessionTransport["act"];
+  level?: VoiceLevelSource;
   now: string;
   nowMs: number;
   request: string | null;
@@ -39,10 +40,10 @@ function Page(props: PageProps) {
     <>
       <Background />
       <div className="board-page">
-        <TopBar state={props.state} nowMs={props.nowMs} onNavigate={props.onNavigate} />
+        <TopBar state={props.state} nowMs={props.nowMs} onNavigate={props.onNavigate} level={props.level} />
         <ScenarioSwitcher scenarios={SCENARIOS} current={props.current} onSelect={props.onSelect} onRestart={props.onRestart} />
-        <Board state={props.state} now={props.now} />
-        <ChatLine state={props.state} request={props.request} onAct={props.act} />
+        <Board state={props.state} now={props.now} level={props.level} />
+        <ChatLine state={props.state} request={props.request} onAct={props.act} level={props.level} />
       </div>
     </>
   );
@@ -77,7 +78,7 @@ export function App() {
     const next = createStore(transport, transport);
     // The store owns a live transport, so it is created here and handed to state.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLive({ id: scenario.id, runs, instant: route.instant, store: next });
+    setLive({ id: scenario.id, runs, instant: route.instant, store: next, level: transport });
     return () => {
       next.dispose();
       setLive(null);
@@ -99,7 +100,7 @@ export function App() {
   // A disposed store from the previous scenario is never rendered: it must match the current route.
   const current = live && live.id === id && live.runs === runs && live.instant === route.instant ? live : null;
   return current && scenario ? (
-    <LivePage {...shared} now={scenario.now} store={current.store} />
+    <LivePage {...shared} now={scenario.now} store={current.store} level={current.level} />
   ) : (
     <Page {...shared} now={new Date(nowMs).toISOString()} state={initialState} act={idleAct} />
   );

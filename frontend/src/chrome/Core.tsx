@@ -1,3 +1,5 @@
+import { useEffect, useRef, type RefObject } from "react";
+import type { VoiceLevelSource } from "../transport/types";
 import { coreLabels, type CoreState } from "./coreStates";
 
 const C = 200;
@@ -24,11 +26,37 @@ const TICKS = Array.from({ length: 72 }, (_, i) => {
 const OUTER_SEGMENTS = [[14, 104], [118, 196], [226, 292], [304, 338]] as const;
 const NOTCH_DOTS = [346, 352, 358] as const;
 
-export function Core(props: { state: CoreState; size: "full" | "compact" }) {
+/**
+ * Writes the source's level to --voice-level on the element, and data-live while a level above 0 is
+ * flowing. Never React state: the per-tick cost is one style write.
+ */
+export function useVoiceLevel(ref: RefObject<Element | null>, level?: VoiceLevelSource): void {
+  useEffect(() => {
+    const el = ref.current;
+    if (!level || !el) return;
+    const off = level.onLevel((v) => {
+      if (!Number.isFinite(v)) return;
+      (el as SVGElement | HTMLElement).style.setProperty("--voice-level", String(Math.min(1, Math.max(0, v))));
+      if (v > 0) {
+        if (!el.hasAttribute("data-live")) el.setAttribute("data-live", "true");
+      } else el.removeAttribute("data-live");
+    });
+    return () => {
+      off();
+      (el as SVGElement | HTMLElement).style.removeProperty("--voice-level");
+      el.removeAttribute("data-live");
+    };
+  }, [ref, level]);
+}
+
+export function Core(props: { state: CoreState; size: "full" | "compact"; level?: VoiceLevelSource }) {
+  const root = useRef<SVGSVGElement>(null);
+  useVoiceLevel(root, props.level);
   const { disc, pill } = coreLabels(props.state);
   const compact = props.size === "compact";
   return (
     <svg
+      ref={root}
       className={`core core-${props.size}`}
       data-core-state={props.state}
       viewBox="0 0 400 400"
@@ -36,14 +64,23 @@ export function Core(props: { state: CoreState; size: "full" | "compact" }) {
       aria-label={pill}
     >
       <circle className="core-line core-hair" cx={C} cy={C} r="192" />
-      <g className="core-ring core-ring-a">
-        {OUTER_SEGMENTS.map(([a, b]) => (
-          <path key={a} className="core-seg" d={arc(172, a, b)} />
-        ))}
-        {NOTCH_DOTS.map((d) => {
-          const [x, y] = point(172, d);
-          return <circle key={d} className="core-dot" cx={x} cy={y} r="3.2" />;
-        })}
+      {/* Voice-level parts: hidden unless the core listens or speaks with a live level. */}
+      <g aria-hidden="true">
+        <circle className="core-ripple" cx={C} cy={C} r="172" />
+        <circle className="core-halo" cx={C} cy={C} r="76" />
+        <circle className="core-pulse" cx={C} cy={C} r="72" />
+        <circle className="core-pulse core-pulse-late" cx={C} cy={C} r="72" />
+      </g>
+      <g className="core-contract">
+        <g className="core-ring core-ring-a">
+          {OUTER_SEGMENTS.map(([a, b]) => (
+            <path key={a} className="core-seg" d={arc(172, a, b)} />
+          ))}
+          {NOTCH_DOTS.map((d) => {
+            const [x, y] = point(172, d);
+            return <circle key={d} className="core-dot" cx={x} cy={y} r="3.2" />;
+          })}
+        </g>
       </g>
       <path className="core-tick" d={TICKS} />
       <g className="core-ring core-ring-b">

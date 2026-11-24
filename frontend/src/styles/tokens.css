@@ -64,6 +64,8 @@
   --motion-ring-duration: 48s;
   --motion-pulse-duration: 2.6s;
   --motion-panel-entry-duration: 0.45s;
+  --motion-voice-duration: 1.4s;
+  --motion-voice-ease: 50ms;
   --motion-easing: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
@@ -72,6 +74,8 @@
     --motion-ring-duration: 0s;
     --motion-pulse-duration: 0s;
     --motion-panel-entry-duration: 0s;
+    --motion-voice-duration: 0s;
+    --motion-voice-ease: 0s;
   }
 }
 
@@ -79,4 +83,6 @@
   --motion-ring-duration: 0s;
   --motion-pulse-duration: 0s;
   --motion-panel-entry-duration: 0s;
+  --motion-voice-duration: 0s;
+  --motion-voice-ease: 0s;
 }

@@ -61,7 +61,7 @@ export function applyFrame(state: AppState, frame: ServerFrame): AppState {
       return { ...state, requestOpen: false };
     case "alert.raised": {
       const kind = data.kind as AlertKind;
-      const source = ALERT_SOURCE[kind];
+      const source = Object.hasOwn(ALERT_SOURCE, kind) ? ALERT_SOURCE[kind] : undefined;
       return source ? { ...state, tray: [...state.tray, { kind, source }] } : state;
     }
     default:
@@ -69,7 +69,7 @@ export function applyFrame(state: AppState, frame: ServerFrame): AppState {
   }
 }
 
-export type PreviewFeed = Pick<MockTransport, "onCore" | "onDone">;
+export type PreviewFeed = Pick<MockTransport, "onCore" | "onDone" | "onLevel">;
 
 export function createStore(transport: SessionTransport, preview?: PreviewFeed) {
   let state = initialState;
@@ -77,7 +77,15 @@ export function createStore(transport: SessionTransport, preview?: PreviewFeed) 
   const set = (next: AppState): void => {
     if (next === state) return;
     state = next;
-    for (const l of [...listeners]) l();
+    for (const l of [...listeners]) {
+      try {
+        l();
+      } catch (e) {
+        queueMicrotask(() => {
+          throw e;
+        });
+      }
+    }
   };
   const unsubs = [
     transport.subscribe((frame) => set(applyFrame(state, frame))),

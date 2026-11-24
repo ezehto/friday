@@ -1,3 +1,4 @@
+import type { VoiceLevelSource } from "../transport/types";
 import { Fragment, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { formatTime } from "../lib/format";
 import { toHash, useRoute, type View } from "../router";
@@ -42,8 +43,8 @@ const Gear = () => (
   </svg>
 );
 
-export function TopBar(props: { state: AppState; nowMs: number; timeZone?: string; onNavigate(v: View): void; headingLevel?: 1 | 4; open?: "tray" | "settings" }) {
-  const { state } = props;
+export function TopBar(props: { state: AppState; nowMs: number; timeZone?: string; onNavigate(v: View): void; headingLevel?: 1 | 4; open?: "tray" | "settings"; level?: VoiceLevelSource }) {
+  const { state, level } = props;
   const route = useRoute();
   const Title = props.headingLevel === 4 ? "h4" : "h1";
   const iso = new Date(props.nowMs).toISOString();
@@ -104,7 +105,7 @@ export function TopBar(props: { state: AppState; nowMs: number; timeZone?: strin
           <MotionSetting />
         </Popover>
         <span className="topbar-user label">{FIXED.chrome.userChip}</span>
-        <Core state={state.core} size="compact" />
+        <Core state={state.core} size="compact" level={level} />
       </div>
     </header>
   );

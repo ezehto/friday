@@ -177,6 +177,60 @@ p {
   50% { stroke-opacity: 0.35; }
 }
 
+/* Voice level (Task 21a). --voice-level is written on the core and waveform roots, 0 to 1.
+   Registered so a change eases over one tick instead of stepping. Every rule that reads the
+   level lives in the no-preference block below, so reduced motion keeps the static look. */
+@property --voice-level {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+.core-ripple, .core-halo, .core-pulse { display: none; fill: none; transform-box: view-box; transform-origin: 50% 50%; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="reduced"]) {
+    .core, .ptt-wave { transition: --voice-level var(--motion-voice-ease) linear; }
+    .core[data-live] .core-contract { transform-box: view-box; transform-origin: 50% 50%; }
+    .core[data-core-state="listening"][data-live] {
+      .core-contract { transform: scale(calc(1 - var(--voice-level) * 0.08)); }
+      .core-ripple {
+        display: inline;
+        stroke: var(--accent-secondary);
+        stroke-width: 3;
+        opacity: var(--voice-level);
+        animation: core-ripple-in var(--motion-voice-duration) ease-in infinite;
+      }
+    }
+    .core[data-core-state="speaking"][data-live] {
+      .core-halo {
+        display: inline;
+        stroke: var(--accent-primary);
+        stroke-opacity: 0.45;
+        stroke-width: calc(var(--voice-level) * 22px);
+      }
+      .core-pulse {
+        display: inline;
+        stroke: var(--accent-primary);
+        stroke-width: 3;
+        opacity: var(--voice-level);
+        animation: core-pulse-out var(--motion-voice-duration) ease-out infinite;
+      }
+      .core-pulse-late { animation-delay: calc(var(--motion-voice-duration) / -2); }
+    }
+    .ptt-wave[data-live] .ptt-bar {
+      height: calc(4px + var(--voice-level) * var(--gain) * 26px);
+      animation: none;
+    }
+  }
+}
+@keyframes core-ripple-in {
+  from { transform: scale(1); stroke-opacity: 0.8; }
+  to { transform: scale(0.45); stroke-opacity: 0; }
+}
+@keyframes core-pulse-out {
+  from { transform: scale(1); stroke-opacity: 0.8; }
+  to { transform: scale(2.1); stroke-opacity: 0; }
+}
+
 /* Status pill */
 .status-pill {
   display: inline-block;
@@ -411,14 +465,18 @@ p {
 .ptt-button { touch-action: none; user-select: none; }
 .ptt-button[aria-pressed="true"] { background: var(--accent-primary); border-color: var(--accent-primary-strong); color: var(--text-on-accent); }
 .ptt-wave { --voice-level: 0; display: inline-flex; align-items: center; gap: 3px; height: 2rem; }
-.ptt-bar { width: 3px; height: calc(4px + var(--voice-level) * 24px); background: var(--text-muted); transform-origin: center; }
-.ptt-button[aria-pressed="true"] ~ .ptt-wave .ptt-bar { background: var(--accent-secondary); animation: ptt-rest var(--motion-pulse-duration) ease-in-out infinite alternate; animation-delay: calc(var(--bar) * 0.12s); }
+.ptt-bar { width: 3px; height: 8px; background: var(--text-muted); transform-origin: center; }
+.ptt-button[aria-pressed="true"] ~ .ptt-wave:not([data-live]) .ptt-bar { background: var(--accent-secondary); animation: ptt-rest var(--motion-pulse-duration) ease-in-out infinite alternate; animation-delay: calc(var(--bar) * 0.12s); }
 .ptt-label { min-height: 1.4em; color: var(--text-secondary); }
+.ptt-wave[data-live] .ptt-bar { background: var(--accent-secondary); }
+.ptt-wave[data-live][data-core-state="speaking"] .ptt-bar { background: var(--accent-primary); }
 @keyframes ptt-rest {
   from { transform: scaleY(1); }
   to { transform: scaleY(2.6); }
 }
 .sg .chat { position: static; padding: 0; align-items: stretch; }
 .sg .topbar { border: 1px solid var(--line-panel-border); }
+.sg-voice-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.75rem; margin-top: 1rem; }
+.sg-voice { display: grid; justify-items: center; gap: 1rem; }
 .sg-ptt { display: grid; gap: 1rem; }
 .sg-menu-open { min-height: 13rem; }

@@ -65,3 +65,16 @@ values never use it.
 
 Ring rotation and the disc pulse run only through the `--motion-*` tokens. The
 "Reduce motion" setting and the operating-system preference both set them to `0s`.
+
+## Voice level
+
+While the core is listening or speaking, the core and the chat-line waveform
+move with a voice level (0 to 1) written to `--voice-level` on their own root
+element, never through React state. Listening draws inward in teal (rings
+contract, a ripple travels toward the disc). Speaking radiates outward in orange
+(pulses leave the disc edge and a halo grows). The waveform bars follow the same
+level and take the same colour. The preview scripts the level from a
+deterministic curve; real audio replaces the source later through
+`VoiceLevelSource`. With "Reduce motion" or the operating-system preference,
+nothing reads the level and the static core is shown. The Voice level section of
+the style guide page shows both states.

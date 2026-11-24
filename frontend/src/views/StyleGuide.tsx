@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Background } from "../chrome/Background";
 import { Core } from "../chrome/Core";
 import { ChatLine, PushToTalk } from "../chrome/ChatLine";
@@ -12,7 +12,8 @@ import { Tray } from "../chrome/Tray";
 import { ToneIcon } from "../chrome/ToneIcon";
 import type { AlertKind, Block, ChartBlock, SampleSet, Tone } from "../generated/types";
 import { initialState, type AppState } from "../store";
-import type { SessionTransport } from "../transport/types";
+import { voiceLevel } from "../transport/mock";
+import type { SessionTransport, VoiceLevelSource } from "../transport/types";
 import samplesJson from "../mocks/samples.json";
 import { BlockBoundary } from "../blocks/BlockBoundary";
 import { BlockRenderer } from "../blocks/BlockRenderer";
@@ -69,6 +70,39 @@ const TRAY_SPECIMEN = TRAY_KINDS.map((kind) => ({ kind, source: "health" as cons
 const SPECIMEN_NOW_MS = Date.UTC(2026, 10, 24, 9, 30);
 const specimenAct: SessionTransport["act"] = async () => ({ ok: false, preview: true, message: FIXED.previewResult });
 const noop = (): void => undefined;
+
+/** A local stand-in for the voice level, so the specimens move without a transport. One timer for all listeners. */
+function demoLevel(kind: "listening" | "speaking"): VoiceLevelSource {
+  const listeners = new Set<(level: number) => void>();
+  let timer: ReturnType<typeof setInterval> | undefined;
+  let n = 0;
+  return {
+    onLevel(listener) {
+      listeners.add(listener);
+      timer ??= setInterval(() => {
+        const level = voiceLevel(kind, n++);
+        for (const l of listeners) l(level);
+      }, 50);
+      return () => {
+        listeners.delete(listener);
+        if (listeners.size === 0) {
+          clearInterval(timer);
+          timer = undefined;
+        }
+      };
+    },
+  };
+}
+
+function VoiceSpecimen(props: { kind: "listening" | "speaking" }) {
+  const level = useMemo(() => demoLevel(props.kind), [props.kind]);
+  return (
+    <div className="sg-voice">
+      <Core state={props.kind} size="full" level={level} />
+      <PushToTalk pressed={false} onChange={noop} level={level} core={props.kind} />
+    </div>
+  );
+}
 
 const TONES: Tone[] = ["good", "attention", "bad", "neutral"];
 
@@ -144,6 +178,14 @@ export function StyleGuide() {
                 </label>
               ))}
             </fieldset>
+          </div>
+        </HudFrame>
+
+        <HudFrame title="Voice level" kicker="Listening and speaking">
+          <p>Listening draws inward in teal and speaking radiates outward in orange. The core and the waveform follow one level. Reduce motion shows the static core.</p>
+          <div className="sg-voice-pair">
+            <VoiceSpecimen kind="listening" />
+            <VoiceSpecimen kind="speaking" />
           </div>
         </HudFrame>
 

@@ -4,6 +4,7 @@ import { FIXED } from "../chrome/fixedText";
 import { StatusPill } from "../chrome/StatusPill";
 import type { WidgetEnvelope } from "../generated/types";
 import type { AppState } from "../store";
+import type { VoiceLevelSource } from "../transport/types";
 import { WidgetPanel } from "../widgets/WidgetPanel";
 
 const PANEL_MAX = 12;
@@ -39,7 +40,7 @@ function Column(props: { name: string; items: WidgetEnvelope[]; indexes: number[
   );
 }
 
-export function Board(props: { state: AppState; now: string }) {
+export function Board(props: { state: AppState; now: string; level?: VoiceLevelSource }) {
   const { state, now } = props;
   const board = state.board.slice(0, PANEL_MAX);
   const { left, right } = splitColumns(board);
@@ -49,7 +50,7 @@ export function Board(props: { state: AppState; now: string }) {
       <Column name="left" items={left} indexes={left.map((_, i) => i * 2)} now={now} />
       <div className="board-core">
         <div className="core-full-wrap">
-          <Core state={state.core} size="full" />
+          <Core state={state.core} size="full" level={props.level} />
         </div>
         <StatusPill state={state.core} />
         {note && <p className="board-note">{note}</p>}

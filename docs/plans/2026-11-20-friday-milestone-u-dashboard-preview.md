@@ -678,4 +678,5 @@ From the independent cross-check (`.superpowers/sdd/2026-11-20-friday-milestone-
 | Defect 7 repeated planted-hex demo in Task 15 | rejected: it is the L1 gate's own evidence for its acceptance row | none |
 | Defect 8 Deny position untested | accepted | Task 22 |
 | Owner instruction: documents in subfolders of `docs/` | applied | Global Constraints, File structure, Spec line, Task 8 (`docs/guides/style-guide.md`), Out of scope |
+| Owner request 2026-11-24: voice-level animation | added | Task 21a |
 
