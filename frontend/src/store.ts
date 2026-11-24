@@ -29,7 +29,7 @@ const ALERT_SOURCE: Record<AlertKind, TrayItem["source"]> = {
   over_budget: "health",
 };
 
-const initialState: AppState = {
+export const initialState: AppState = {
   approvals: [], runs: [], sessions: [], permissions: [], traces: [], tray: [], board: [],
   core: "idle", reply: null, requestOpen: false, done: false,
 };
