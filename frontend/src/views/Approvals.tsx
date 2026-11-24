@@ -6,22 +6,27 @@ import type { AppState } from "../store";
 import type { SessionTransport } from "../transport/types";
 import { PreviewBanner } from "./PreviewBanner";
 import { RawField } from "./RawField";
+import { VisibleText } from "./VisibleText";
 
 const T = FIXED.approvals;
 
-export function ProposalPreview(props: { proposal: ProposalView; act: SessionTransport["act"] }) {
+export function ProposalPreview(props: { proposal: ProposalView; act: SessionTransport["act"]; initialResult?: string }) {
   const { proposal: p, act } = props;
-  const [result, setResult] = useState("");
+  const [result, setResult] = useState(props.initialResult ?? "");
   const run = async (kind: "approve" | "reject" | "open_confirm"): Promise<void> => {
     setResult((await act({ kind, proposalId: p.proposal_id })).message);
   };
   return (
-    <HudFrame title={p.title} kicker={p.tool} headingLevel={3}>
+    <HudFrame title={T.proposal} kicker={p.host_action ? T.hostAction : T.container} headingLevel={3}>
       <dl className="facts">
+        <dt>{T.subject}</dt>
+        <dd><VisibleText value={p.title} /></dd>
+        <dt>{T.tool}</dt>
+        <dd><VisibleText value={p.tool} /></dd>
         <dt>{T.target}</dt>
-        <dd>{p.target ?? T.none}</dd>
+        <dd>{p.target === undefined ? T.none : <VisibleText value={p.target} />}</dd>
         <dt>{T.targetFolder}</dt>
-        <dd>{p.target_folder ?? T.none}</dd>
+        <dd>{p.target_folder === undefined ? T.none : <VisibleText value={p.target_folder} />}</dd>
         <dt>{T.dataClass}</dt>
         <dd>{p.data_class}</dd>
         <dt>{T.secretScan}</dt>
@@ -58,7 +63,7 @@ export function Approvals(props: { state: AppState; act: SessionTransport["act"]
             {approvals.map((a) => (
               <li key={a.proposal_id}>
                 <button type="button" className="proposal-item" aria-pressed={a.proposal_id === current.proposal_id} onClick={() => setSelected(a.proposal_id)}>
-                  <span>{a.title}</span>
+                  <span><VisibleText value={a.title} /></span>
                   <span className="label">{a.host_action ? T.hostAction : T.container}</span>
                 </button>
               </li>

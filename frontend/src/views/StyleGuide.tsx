@@ -17,8 +17,8 @@ import type { SessionTransport, VoiceLevelSource } from "../transport/types";
 import samplesJson from "../mocks/samples.json";
 import { BlockBoundary } from "../blocks/BlockBoundary";
 import { BlockRenderer } from "../blocks/BlockRenderer";
-import { ProposalPreview } from "./Approvals";
-import { PermissionCard } from "./Permissions";
+import { Approvals, ProposalPreview } from "./Approvals";
+import { PermissionCard, Permissions } from "./Permissions";
 import { PreviewBanner } from "./PreviewBanner";
 import { RawField } from "./RawField";
 import { WidgetPanel } from "../widgets/WidgetPanel";
@@ -294,8 +294,18 @@ export function StyleGuide() {
             <PreviewBanner />
           </HudFrame>
           <ProposalPreview proposal={SPECIMEN_PROPOSAL} act={specimenAct} />
+          <ProposalPreview proposal={{ ...SPECIMEN_PROPOSAL, proposal_id: "specimen-result", title: "Save the specimen checklist, result shown" }} act={specimenAct} initialResult={FIXED.previewResult} />
           <ProposalPreview proposal={{ ...SPECIMEN_PROPOSAL, proposal_id: "specimen-host", host_action: true, title: "Record the specimen decision", target_folder: "Specimen/Decisions" }} act={specimenAct} />
           <PermissionCard request={SPECIMEN_PERMISSION} position="Request 1 of 1" act={specimenAct} />
+          <PermissionCard request={SPECIMEN_PERMISSION} position="Request 2 of 3" onPrev={noop} onNext={noop} act={specimenAct} />
+          <PermissionCard request={SPECIMEN_PERMISSION} position="Deny without a reason" act={specimenAct} initialResult={FIXED.permissions.reasonNeeded} />
+          <PermissionCard request={SPECIMEN_PERMISSION} position="Deny result" act={specimenAct} initialResult={FIXED.previewResult} />
+          <HudFrame title="Approvals, empty" kicker="No proposals" headingLevel={3}>
+            <Approvals state={initialState} act={specimenAct} />
+          </HudFrame>
+          <HudFrame title="Permissions, empty" kicker="No requests" headingLevel={3}>
+            <Permissions state={initialState} act={specimenAct} />
+          </HudFrame>
         </section>
       </main>
     </>

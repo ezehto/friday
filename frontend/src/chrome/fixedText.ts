@@ -16,9 +16,13 @@ export const FIXED = {
   previewStatus: "Preview: no backend",
   previewBanner: "PREVIEW, NOT LIVE",
   homoglyph: "Contains non-ASCII characters. Check for look-alike letters.",
+  invisible: "Contains hidden characters, shown as markers.",
   raw: { counts: (lines: number, bytes: number): string => `${lines} lines, ${bytes} bytes` },
   approvals: {
     list: "Proposals",
+    proposal: "Proposal",
+    subject: "Title",
+    tool: "Tool",
     empty: "No proposals are waiting.",
     container: "Container",
     hostAction: "Host action",
@@ -37,6 +41,7 @@ export const FIXED = {
   },
   permissions: {
     empty: "No permission requests are waiting.",
+    request: "Permission request",
     position: (n: number, total: number): string => `Request ${n} of ${total}`,
     previous: "Previous",
     next: "Next",

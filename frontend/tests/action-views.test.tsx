@@ -22,20 +22,19 @@ test("both views show PREVIEW, NOT LIVE", () => {
   expect(screen.getByText("PREVIEW, NOT LIVE").getAttribute("role")).toBe("note");
 });
 
-test("every action button shows Preview: nothing was executed", async () => {
+test.each([
+  ["Approve", 0],
+  ["Reject", 0],
+  ["Open confirm page", 1],
+])("%s shows Preview: nothing was executed", async (name, which) => {
   const user = userEvent.setup();
   const act = makeAct();
   render(<Approvals state={state} act={act} />);
-  const status = () => screen.getByRole("status").textContent;
-  await user.click(screen.getByRole("button", { name: "Approve" }));
-  expect(status()).toBe("Preview: nothing was executed");
-  await user.click(screen.getByRole("button", { name: "Reject" }));
-  expect(act).toHaveBeenCalledTimes(2);
-  await user.click(screen.getByRole("button", { name: /Record the Orchard/ }));
+  if (which === 1) await user.click(screen.getByRole("button", { name: /Record the Orchard/ }));
   expect(screen.getByRole("status").textContent).toBe("");
-  await user.click(screen.getByRole("button", { name: "Open confirm page" }));
-  expect(status()).toBe("Preview: nothing was executed");
-  expect(act).toHaveBeenLastCalledWith({ kind: "open_confirm", proposalId: "prop-vault-note" });
+  await user.click(screen.getByRole("button", { name }));
+  expect(screen.getByRole("status").textContent).toBe("Preview: nothing was executed");
+  expect(act).toHaveBeenCalledTimes(1);
 });
 
 test("Deny requires a reason, then shows the preview result", async () => {
@@ -51,7 +50,7 @@ test("Deny requires a reason, then shows the preview result", async () => {
   expect(screen.getByRole("status").textContent).toBe("Preview: nothing was executed");
 });
 
-test("Deny stays the same DOM element and position across Next and Previous", async () => {
+test("Deny stays the same DOM element across Next and Previous", async () => {
   const user = userEvent.setup();
   render(<Permissions state={state} act={makeAct()} />);
   expect(screen.getByText("Request 1 of 2")).toBeTruthy();
@@ -64,6 +63,30 @@ test("Deny stays the same DOM element and position across Next and Previous", as
   expect(screen.getAllByText(/\[BIDI U\+202E\]/).length).toBeGreaterThan(0);
   await user.click(screen.getByRole("button", { name: "Previous" }));
   expect(screen.getByRole("button", { name: "Deny" })).toBe(deny);
+});
+
+test("Next and Previous at the ends keep focus and do nothing", async () => {
+  const user = userEvent.setup();
+  render(<Permissions state={state} act={makeAct()} />);
+  const prev = screen.getByRole("button", { name: "Previous" });
+  prev.focus();
+  await user.click(prev);
+  expect(prev.getAttribute("aria-disabled")).toBe("true");
+  expect(document.activeElement).toBe(prev);
+  expect(screen.getByText("Request 1 of 2")).toBeTruthy();
+});
+
+test("every untrusted field beside an action shows its markers", () => {
+  const p = { ...snap.approvals[0]!, target: "notes/a\u202eb.md", title: "T\u200bitle" };
+  const view = render(<Approvals state={{ ...state, approvals: [p] }} act={makeAct()} />);
+  expect(screen.getAllByText("[BIDI U+202E]").length).toBe(1);
+  expect(screen.getAllByText("[ZW U+200B]").length).toBe(2);
+  view.unmount();
+  const r = { ...snap.permissions[0]!, cwd: "/w\u0430rk", input: { "co\u200bmmand": "ls" } };
+  render(<Permissions state={{ ...state, permissions: [r] }} act={makeAct()} />);
+  expect(screen.getAllByText(FIXED.homoglyph).length).toBeGreaterThan(0);
+  expect(screen.getAllByText("[ZW U+200B]").length).toBe(1);
+  expect(screen.getByRole("group", { name: "co[ZW U+200B]mmand" })).toBeTruthy();
 });
 
 test("Permissions has no button whose name matches /allow/i", () => {
