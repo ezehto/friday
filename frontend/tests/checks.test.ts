@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -56,5 +57,10 @@ describe("check:dashes", () => {
   it("fails a U+2014 in docs/guides/x.md", () => {
     put("docs/guides/x.md", EM);
     expect(checkDashes(dir)).toEqual(["docs/guides/x.md:1"]);
+  });
+  it("CLI scans the given root and exits 1 on a dash under docs/", () => {
+    put("docs/x.md", EM);
+    const script = join(import.meta.dirname, "../scripts/check-dashes.mjs");
+    expect(spawnSync(process.execPath, [script, dir]).status).toBe(1);
   });
 });

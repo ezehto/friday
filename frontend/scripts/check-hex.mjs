@@ -1,5 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { extname, join, relative, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const exts = new Set([".ts", ".tsx", ".css", ".svg", ".html"]);
 const allow = new Set(["styles/tokens.css"]);
@@ -32,7 +33,7 @@ export function checkHex(root) {
   return found;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const found = checkHex(resolve(import.meta.dirname, "../src"));
   if (found.length) {
     console.error(`raw colour literals (use design tokens):\n${found.join("\n")}`);

@@ -1,5 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const skipDirs = new Set(["node_modules", "dist", ".git", ".beads", ".superpowers", ".playwright-cli"]);
 const skipPaths = new Set(["docs/design-references"]);
@@ -31,8 +32,8 @@ export function checkDashes(root) {
   return found;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  const found = checkDashes(resolve(import.meta.dirname, ".."));
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const found = checkDashes(process.argv[2] ?? resolve(import.meta.dirname, "../.."));
   if (found.length) {
     console.error(`en or em dashes found:\n${found.join("\n")}`);
     process.exit(1);
