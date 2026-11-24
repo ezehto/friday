@@ -282,14 +282,17 @@ p {
 .person-name { font-weight: 600; }
 
 .block-rows li, .block-timeline li, .block-meter li { padding: 0.5rem 0; border-bottom: 1px solid var(--line-blueprint); }
-.row-main { display: flex; align-items: center; gap: 0.6rem; }
+.row-main { display: flex; align-items: center; flex-wrap: wrap; gap: 0.25rem 0.6rem; }
 .row-main .row-meta { margin-left: auto; }
-/* Dates wrap at spaces first and split mid-word only when nothing else fits; "anywhere" would split them early. */
-.block-rows .row-meta, .block-timeline .row-meta { overflow-wrap: break-word; }
+/* A date keeps its full width beside the label, drops to its own line when it does not fit, and wraps inside itself only when longer than the row. */
+.block-rows .row-meta, .block-timeline .row-meta { flex: 0 0 auto; max-width: 100%; overflow-wrap: break-word; }
+.block-rows .row-label { flex: 1 1 12ch; min-width: 0; }
 .block-rows-log li { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; padding: 0.3rem 0; }
 .block-rows-log .row-source { flex-basis: 100%; }
 
-.block-timeline li { display: grid; grid-template-columns: 6rem 1fr; gap: 0.75rem; }
+.block-timeline li { display: flex; flex-wrap: wrap; gap: 0.25rem 0.75rem; }
+.block-timeline .row-meta { min-width: 6rem; }
+.block-timeline li > div { flex: 1 1 12ch; min-width: 0; }
 .timeline-title { display: flex; align-items: center; gap: 0.5rem; }
 
 .meter-head { display: flex; align-items: center; gap: 0.6rem; }
