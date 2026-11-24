@@ -284,6 +284,8 @@ p {
 .block-rows li, .block-timeline li, .block-meter li { padding: 0.5rem 0; border-bottom: 1px solid var(--line-blueprint); }
 .row-main { display: flex; align-items: center; gap: 0.6rem; }
 .row-main .row-meta { margin-left: auto; }
+/* Dates wrap at spaces first and split mid-word only when nothing else fits; "anywhere" would split them early. */
+.block-rows .row-meta, .block-timeline .row-meta { overflow-wrap: break-word; }
 .block-rows-log li { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; padding: 0.3rem 0; }
 .block-rows-log .row-source { flex-basis: 100%; }
 
