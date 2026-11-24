@@ -12,8 +12,8 @@ import { Tray } from "../chrome/Tray";
 import { ToneIcon } from "../chrome/ToneIcon";
 import type { AlertKind, Block, ChartBlock, SampleSet, Tone } from "../generated/types";
 import { initialState, type AppState } from "../store";
-import { guarded, voiceLevel } from "../transport/mock";
-import type { SessionTransport, VoiceLevelSource } from "../transport/types";
+import { demoLevel } from "../transport/mock";
+import type { SessionTransport } from "../transport/types";
 import samplesJson from "../mocks/samples.json";
 import { BlockBoundary } from "../blocks/BlockBoundary";
 import { BlockRenderer } from "../blocks/BlockRenderer";
@@ -104,29 +104,6 @@ const SPECIMEN_PERMISSION = {
   request_id: "specimen-permission", session_id: "00000000-0000-4000-8000-000000000000", project: "Specimen", data_class: "work", permission_mode: "default",
   friday_started: false, cwd: "/work/specimen", tool: "Bash", input: { command: SPECIMEN_HIDDEN },
 } as const;
-
-/** A local stand-in for the voice level, so the specimens move without a transport. One timer for all listeners. */
-function demoLevel(kind: "listening" | "speaking"): VoiceLevelSource {
-  const listeners = new Set<(level: number) => void>();
-  let timer: ReturnType<typeof setInterval> | undefined;
-  let n = 0;
-  return {
-    onLevel(listener) {
-      listeners.add(listener);
-      timer ??= setInterval(() => {
-        const level = voiceLevel(kind, n++);
-        for (const l of [...listeners]) guarded(l, level);
-      }, 50);
-      return () => {
-        listeners.delete(listener);
-        if (listeners.size === 0) {
-          clearInterval(timer);
-          timer = undefined;
-        }
-      };
-    },
-  };
-}
 
 function VoiceSpecimen(props: { kind: "listening" | "speaking" }) {
   const level = useMemo(() => demoLevel(props.kind), [props.kind]);
@@ -269,7 +246,7 @@ export function StyleGuide() {
         </HudFrame>
 
         <HudFrame title="Voice level" kicker="Listening and speaking">
-          <p>Listening draws inward in teal and speaking radiates outward in orange. The core and the waveform follow one level. Reduce motion shows the static core.</p>
+          <p>Listening draws inward in teal and speaking radiates outward in orange. The core and the waveform follow one level. Holding push to talk in the preview puts the board core in the listening state, with its disc and pill labels, until release. Reduce motion shows the static core.</p>
           <div className="sg-voice-pair">
             <VoiceSpecimen kind="listening" />
             <VoiceSpecimen kind="speaking" />

@@ -85,6 +85,9 @@ contract, a ripple travels toward the disc). Speaking radiates outward in orange
 (pulses leave the disc edge and a halo grows). The waveform bars follow the same
 level and take the same colour. The preview scripts the level from a
 deterministic curve; real audio replaces the source later through
-`VoiceLevelSource`. With "Reduce motion" or the operating-system preference,
+`VoiceLevelSource`. While push to talk is held in the preview, the board core
+shows the listening state (disc and pill labels included) on a demo level, and
+returns to the scenario's state on release; this override is never written to
+the store. With "Reduce motion" or the operating-system preference,
 nothing reads the level and the static core is shown. The Voice level section of
 the style guide page shows both states.

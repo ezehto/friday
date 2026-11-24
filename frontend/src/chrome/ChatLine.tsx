@@ -49,7 +49,7 @@ export function PushToTalk(props: { pressed: boolean; onChange(pressed: boolean)
   );
 }
 
-export function ChatLine(props: { state: AppState; request: string | null; onAct: SessionTransport["act"]; defaultOpen?: boolean; initialResult?: string; level?: VoiceLevelSource }) {
+export function ChatLine(props: { state: AppState; request: string | null; onAct: SessionTransport["act"]; defaultOpen?: boolean; initialResult?: string; level?: VoiceLevelSource; onTalk?(pressed: boolean): void }) {
   const [open, setOpen] = useState(props.defaultOpen ?? false);
   const [text, setText] = useState("");
   const [result, setResult] = useState<string | null>(props.initialResult ?? null);
@@ -59,7 +59,12 @@ export function ChatLine(props: { state: AppState; request: string | null; onAct
   const toggle = useRef<HTMLButtonElement>(null);
   const { reply } = props.state;
 
+  const talk = (pressed: boolean): void => {
+    setTalking(pressed);
+    props.onTalk?.(pressed);
+  };
   const close = (): void => {
+    talk(false);
     setOpen(false);
     toggle.current?.focus();
   };
@@ -103,7 +108,7 @@ export function ChatLine(props: { state: AppState; request: string | null; onAct
             <button type="submit" className="chat-btn label">{FIXED.chat.send}</button>
             <button type="button" className="chat-btn label" onClick={() => setResult(FIXED.previewResult)}>{FIXED.chat.new}</button>
           </form>
-          <PushToTalk pressed={talking} onChange={setTalking} level={props.level} core={props.state.core} />
+          <PushToTalk pressed={talking} onChange={talk} level={props.level} core={props.state.core} />
           <p className="chat-result" role="status">{result}</p>
         </section>
       )}

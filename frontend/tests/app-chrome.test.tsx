@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { App } from "../src/app";
 import { FIXED } from "../src/chrome/fixedText";
@@ -109,4 +109,20 @@ test("the clock ticks and its interval is cleared on unmount", async () => {
   expect(vi.getTimerCount()).toBeGreaterThan(0);
   unmount();
   expect(vi.getTimerCount()).toBe(0);
+});
+
+test("holding push-to-talk shows the listening core and releasing restores the scenario state", async () => {
+  window.location.hash = "#/board?scenario=focus-today&instant=1";
+  render(<App />);
+  await settle();
+  const core = (): string | undefined => document.querySelector<SVGElement>(".core-full")?.dataset.coreState;
+  const before = core();
+  expect(before).not.toBe("listening");
+  fireEvent.click(screen.getByRole("button", { name: FIXED.chat.open }));
+  const ptt = screen.getByRole("button", { name: FIXED.chat.pushToTalk });
+  fireEvent.keyDown(ptt, { key: " " });
+  expect(core()).toBe("listening");
+  expect(document.querySelector(".status-pill")?.textContent).toContain(FIXED.core.listening.pill);
+  fireEvent.keyUp(ptt, { key: " " });
+  expect(core()).toBe(before);
 });

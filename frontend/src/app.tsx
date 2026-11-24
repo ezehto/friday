@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { BASE_VIEWS, loadScenarios } from "./mocks";
 import { toHash, useRoute, type Route, type View } from "./router";
 import { createStore, initialState, useStore, type AppState } from "./store";
-import { MockTransport } from "./transport/mock";
+import { demoLevel, MockTransport } from "./transport/mock";
 import type { SessionTransport, VoiceLevelSource } from "./transport/types";
 import { Approvals } from "./views/Approvals";
 import { Permissions } from "./views/Permissions";
@@ -23,6 +23,9 @@ const CLOCK_MS = 30_000;
 type Store = ReturnType<typeof createStore>;
 type Live = { id: string; runs: number; instant: boolean; store: Store; level: VoiceLevelSource };
 
+// While push-to-talk is held the preview core listens, driven by this level. Never written to the store.
+const PTT_LEVEL = demoLevel("listening");
+
 const idleAct: SessionTransport["act"] = async () => ({ ok: false, preview: true, message: FIXED.previewResult });
 
 type PageProps = {
@@ -40,24 +43,27 @@ type PageProps = {
 };
 
 function Page(props: PageProps) {
+  const [talking, setTalking] = useState(false);
+  const state: AppState = talking ? { ...props.state, core: "listening" } : props.state;
+  const level = talking ? PTT_LEVEL : props.level;
   return (
     <>
       <Background />
       <div className="board-page">
-        <TopBar state={props.state} nowMs={props.nowMs} onNavigate={props.onNavigate} level={props.level} />
+        <TopBar state={state} nowMs={props.nowMs} onNavigate={props.onNavigate} level={level} />
         <ScenarioSwitcher scenarios={SCENARIOS} current={props.current} onSelect={props.onSelect} onRestart={props.onRestart} />
         {props.route.view === "approvals" ? (
-          <Approvals state={props.state} act={props.act} />
+          <Approvals state={state} act={props.act} />
         ) : props.route.view === "permissions" ? (
-          <Permissions state={props.state} act={props.act} />
+          <Permissions state={state} act={props.act} />
         ) : props.route.view === "sessions" ? (
-          <Sessions state={props.state} act={props.act} />
+          <Sessions state={state} act={props.act} />
         ) : props.route.view === "traces" ? (
-          <Traces state={props.state} />
+          <Traces state={state} />
         ) : (
-          <Board state={props.state} now={props.now} level={props.level} />
+          <Board state={state} now={props.now} level={level} />
         )}
-        <ChatLine state={props.state} request={props.request} onAct={props.act} level={props.level} />
+        <ChatLine state={state} request={props.request} onAct={props.act} level={level} onTalk={setTalking} />
       </div>
     </>
   );

@@ -41,6 +41,29 @@ export function voiceLevel(kind: VoiceKind, n: number, seed = 1): number {
   return Math.min(1, Math.max(0, raw));
 }
 
+/** A local stand-in for the voice level, so the preview moves without a transport. One timer for all listeners. */
+export function demoLevel(kind: VoiceKind): VoiceLevelSource {
+  const listeners = new Set<(level: number) => void>();
+  let timer: ReturnType<typeof setInterval> | undefined;
+  let n = 0;
+  return {
+    onLevel(listener) {
+      listeners.add(listener);
+      timer ??= setInterval(() => {
+        const level = voiceLevel(kind, n++);
+        for (const l of [...listeners]) guarded(l, level);
+      }, LEVEL_TICK_MS);
+      return () => {
+        listeners.delete(listener);
+        if (listeners.size === 0) {
+          clearInterval(timer);
+          timer = undefined;
+        }
+      };
+    },
+  };
+}
+
 /** One throwing listener must not skip the rest: the error is rethrown outside this call. */
 export function guarded<T>(l: (v: T) => void, value: T): void {
   try {
