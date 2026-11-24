@@ -22,7 +22,7 @@
         "widget_id": "ri-run",
         "source": "sample",
         "as_of": "2026-11-24T08:55:00Z",
-        "data_class": "personal",
+        "data_class": "work",
         "title": "Claude Code run",
         "blocks": [
           {
@@ -101,8 +101,8 @@
       "envelope": {
         "widget_id": "ri-queue",
         "source": "sample",
-        "as_of": "2026-11-24T08:58:00Z",
-        "data_class": "personal",
+        "as_of": "2026-11-24T09:00:00Z",
+        "data_class": "work",
         "title": "Task queue",
         "blocks": [
           {
@@ -130,7 +130,7 @@
             "kind": "chips",
             "items": [
               {
-                "label": "2 proposal"
+                "label": "2 proposals"
               },
               {
                 "label": "1 run"

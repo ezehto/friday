@@ -1,9 +1,10 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { FIXED } from "../src/chrome/fixedText";
 import type { Block, Scenario, ServerFrame, ViewSet } from "../src/generated/types";
 import { BASE_VIEWS, loadScenarios } from "../src/mocks";
+import samples from "../src/mocks/samples.json";
 import { RECIPE_BLOCKS } from "../src/mocks/recipeTable";
 import { MockTransport } from "../src/transport/mock";
 import { validateAgainst } from "./helpers/schema";
@@ -75,11 +76,35 @@ describe("scenarios", () => {
 
   it("every alert widget text is a FIXED.alert value", () => {
     const allowed = Object.values(FIXED.alert) as string[];
-    for (const s of scenarios)
-      for (const { widget, envelope } of s.widgets) {
-        if (widget.type === "alert") expect(allowed).toContain(widget.text);
-        for (const b of envelope.blocks as Block[]) if (b.kind === "alert") expect(allowed).toContain(b.text);
-      }
+    const pairs = [...scenarios.flatMap((s) => s.widgets), ...(samples.items as unknown as Scenario["widgets"])];
+    let checked = 0;
+    for (const { widget, envelope } of pairs) {
+      const texts = [...(widget.type === "alert" ? [widget.text] : []), ...(envelope.blocks as Block[]).flatMap((b) => (b.kind === "alert" ? [b.text] : []))];
+      for (const text of texts) expect(allowed).toContain(text);
+      checked += texts.length;
+    }
+    expect(checked).toBeGreaterThanOrEqual(8);
+  });
+
+  it("chip counts read with the right plural", () => {
+    const text = [...scenarioTexts, JSON.stringify(samples)].join("\n");
+    for (const [, n, word] of text.matchAll(/"label": "(\d+) ([a-z]+)"/g)) {
+      if (n === "1") expect(word, `1 ${word}`).not.toMatch(/^(proposals|runs|sessions|tasks|blockers)$/);
+      else expect(word, `${n} ${word}`).not.toMatch(/^(proposal|run|session|task|blocker)$/);
+    }
+  });
+
+  it("views.json permission inputs keep every control and lookalike character the marker rendering needs", () => {
+    const inputs = BASE_VIEWS.permissions.flatMap((p) => Object.values(p.input)).join("");
+    for (const ch of ["\r", "\t", "\u001b", "\u202e", "\u200b", "\u0430"]) expect(inputs, JSON.stringify(ch)).toContain(ch);
+  });
+
+  it("the review-implementation Orchard widgets are work data and the queue is no older than its items", () => {
+    const s = scenarios.find((x) => x.id === "review-implementation") as Scenario;
+    for (const id of ["ri-run", "ri-queue"]) expect(s.widgets.find((w) => w.envelope.widget_id === id)?.envelope.data_class, id).toBe("work");
+    const queue = s.widgets.find((w) => w.envelope.widget_id === "ri-queue") as Scenario["widgets"][number];
+    const since = (queue.widget as { items: { since: string }[] }).items.map((i) => Date.parse(i.since));
+    expect(Date.parse(queue.envelope.as_of)).toBeGreaterThanOrEqual(Math.max(...since));
   });
 
   it("FIXED.alert has one entry per AlertKind", () => {
@@ -97,11 +122,12 @@ describe("scenarios", () => {
     for (const s of scenarios) for (const board of boardSteps(s)) expect(board.length, s.id).toBeLessThanOrEqual(12);
   });
 
-  it("only the project-blockers scenario has a stale as_of", () => {
+  it("only the project-blockers and edge-slow-source scenarios have a stale as_of", () => {
     for (const s of scenarios)
       for (const { envelope } of s.widgets) {
         const age = Date.parse(s.now) - Date.parse(envelope.as_of);
         if (s.id === "project-blockers" && age > 24 * 3600_000) expect(age).toBe(3 * 24 * 3600_000);
+        else if (s.id === "edge-slow-source") expect(age).toBe(30 * 3600_000);
         else expect(age, `${s.id}/${envelope.widget_id}`).toBeLessThanOrEqual(24 * 3600_000);
       }
   });
@@ -133,6 +159,70 @@ describe("scenarios", () => {
       if (name === "github.com") expect(path ?? "", host).toMatch(/^\/example(\/|$)/);
       else expect(["example.com", "example.org"], host).toContain(name);
     }
+  });
+
+  const byId = (id: string) => scenarios.find((s) => s.id === id) as Scenario;
+  const cps = (s: string) => Array.from(s).length;
+  const strings = (v: unknown): string[] => (typeof v === "string" ? [v] : v && typeof v === "object" ? Object.values(v).flatMap(strings) : []);
+  const maxLengths = (v: unknown): number[] =>
+    v && typeof v === "object" ? Object.entries(v).flatMap(([k, x]) => (k === "maxLength" && typeof x === "number" ? [x] : maxLengths(x))) : [];
+
+  it("edge-board-full shows exactly 12", () => {
+    const s = byId("edge-board-full");
+    expect(boardSteps(s).map((b) => b.length)).toEqual([12]);
+    expect(new Set(s.widgets.map((w) => w.widget.type)).size).toBeGreaterThanOrEqual(10);
+  });
+
+  it("edge-caps contains at least one string at each cap of section 16", () => {
+    const blockDir = resolve(import.meta.dirname, "../../schema/blocks");
+    const common = JSON.parse(read("../../schema/common.schema.json")) as { $defs: { Link: unknown } };
+    const envelope = JSON.parse(read("../../schema/envelope.schema.json")) as { properties: { title: unknown } };
+    const caps = new Set([
+      ...readdirSync(blockDir).flatMap((f) => maxLengths(JSON.parse(readFileSync(resolve(blockDir, f), "utf8")))),
+      ...maxLengths(common.$defs.Link),
+      ...maxLengths(envelope.properties.title),
+    ]);
+    expect([...caps].sort((a, b) => a - b)).toEqual([40, 60, 80, 200, 400, 2048]);
+    const lengths = new Set(byId("edge-caps").widgets.flatMap((w) => strings(w.envelope.blocks).concat(w.envelope.title)).map(cps));
+    for (const cap of caps) expect(lengths.has(cap), `a string of ${cap} code points`).toBe(true);
+    const sc = byId("edge-caps");
+    expect(sc.widgets.some((w) => w.envelope.title.length === 80 && !/\s/.test(w.envelope.title))).toBe(true);
+    const chart = sc.widgets.flatMap((w) => w.envelope.blocks as Block[]).find((b) => b.kind === "chart");
+    expect(chart?.kind === "chart" && chart.series.map((x) => x.points.length)).toEqual([500, 500, 500, 500, 500]);
+    const table = sc.widgets.flatMap((w) => w.envelope.blocks as Block[]).find((b) => b.kind === "table");
+    expect(table?.kind === "table" && [table.rows.length, table.columns.length, table.rows[0]?.length]).toEqual([50, 8, 8]);
+  });
+
+  it("state-error and state-plan-limit drive the matching core state", () => {
+    for (const [id, state, kind] of [["state-error", "error", "adapter_degraded"], ["state-plan-limit", "plan_limit", "plan_limit"]] as const) {
+      const s = byId(id);
+      const cores = s.script.flatMap((st) => ("core" in st ? [st.core] : []));
+      expect(cores.at(-1), id).toBe(state);
+      const raised = s.script.find((st) => "event" in st && st.event === "alert.raised") as unknown as { data: { kind: string } };
+      expect(raised.data.kind).toBe(kind);
+      const alert = s.widgets.find((w) => w.widget.type === "alert")?.widget as { text: string };
+      expect(alert.text).toBe(FIXED.alert[kind]);
+    }
+    expect(byId("state-waiting-approval").script.some((st) => "core" in st && st.core === "awaiting_approval")).toBe(true);
+    expect(byId("state-waiting-approval").views?.tray).toEqual([{ kind: "approvals_waiting", count: 1, source: "approvals" }]);
+    expect(byId("state-empty-board").widgets).toEqual([]);
+  });
+
+  it("edge-slow-source envelope is stale relative to scenario now", () => {
+    const s = byId("edge-slow-source");
+    for (const { envelope } of s.widgets) expect(Date.parse(s.now) - Date.parse(envelope.as_of)).toBe(30 * 3600_000);
+    expect(s.script.find((st) => "board" in st)?.at_ms).toBe(4000);
+  });
+
+  it("edge-work-class shows personal and work project_status side by side", () => {
+    const s = byId("edge-work-class");
+    expect(s.widgets.map((w) => [w.widget.type, w.envelope.data_class])).toEqual([["project_status", "personal"], ["project_status", "work"]]);
+  });
+
+  it("edge-empty-widgets has one widget per MVP type with no list items", () => {
+    const s = byId("edge-empty-widgets");
+    expect(new Set(s.widgets.map((w) => w.widget.type)).size).toBe(14);
+    expect(s.widgets.every((w) => (w.envelope.blocks as Block[]).length >= 1)).toBe(true);
   });
 
   it("every scenario replays through MockTransport and every frame validates against ServerFrame", async () => {

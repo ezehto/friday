@@ -1,0 +1,591 @@
+{
+  "id": "edge-board-full",
+  "group": "edge",
+  "label": "Full board",
+  "request": "Show me everything",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "stat",
+        "title": "Open pull requests",
+        "label": "Open pull requests",
+        "value": "7",
+        "change": "-2 vs last week",
+        "hint": "Orchard repo",
+        "tone": "good"
+      },
+      "envelope": {
+        "widget_id": "bf-stat",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Open pull requests",
+        "blocks": [
+          {
+            "kind": "value",
+            "label": "Open pull requests",
+            "value": "7",
+            "change": "-2 vs last week",
+            "hint": "Orchard repo",
+            "tone": "good"
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "chart",
+        "title": "Commits this week",
+        "kind": "bar",
+        "series": [
+          {
+            "name": "Orchard",
+            "points": [
+              {
+                "x": "Mon",
+                "y": 6
+              },
+              {
+                "x": "Tue",
+                "y": 9
+              },
+              {
+                "x": "Wed",
+                "y": 4
+              },
+              {
+                "x": "Thu",
+                "y": 11
+              },
+              {
+                "x": "Fri",
+                "y": 7
+              }
+            ]
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "bf-chart",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Commits this week",
+        "blocks": [
+          {
+            "kind": "chart",
+            "chart": "bar",
+            "series": [
+              {
+                "name": "Orchard",
+                "points": [
+                  {
+                    "x": "Mon",
+                    "y": 6
+                  },
+                  {
+                    "x": "Tue",
+                    "y": 9
+                  },
+                  {
+                    "x": "Wed",
+                    "y": 4
+                  },
+                  {
+                    "x": "Thu",
+                    "y": 11
+                  },
+                  {
+                    "x": "Fri",
+                    "y": 7
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "table",
+        "title": "Services",
+        "columns": [
+          "Service",
+          "Owner",
+          "Tier"
+        ],
+        "rows": [
+          [
+            "orchard-api",
+            "Mira Okafor",
+            "1"
+          ],
+          [
+            "lantern-web",
+            "Tomas Reyes",
+            "2"
+          ]
+        ]
+      },
+      "envelope": {
+        "widget_id": "bf-table",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Services",
+        "blocks": [
+          {
+            "kind": "table",
+            "columns": [
+              "Service",
+              "Owner",
+              "Tier"
+            ],
+            "rows": [
+              [
+                "orchard-api",
+                "Mira Okafor",
+                "1"
+              ],
+              [
+                "lantern-web",
+                "Tomas Reyes",
+                "2"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "task_list",
+        "title": "Open tasks",
+        "items": [
+          {
+            "title": "Draft the release notes",
+            "status": "doing",
+            "due": "2026-11-26"
+          },
+          {
+            "title": "Rotate the staging keys",
+            "status": "blocked"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "bf-tasks",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Open tasks",
+        "blocks": [
+          {
+            "kind": "rows",
+            "items": [
+              {
+                "label": "Draft the release notes",
+                "meta": "2026-11-26",
+                "tone": "attention"
+              },
+              {
+                "label": "Rotate the staging keys",
+                "tone": "bad"
+              }
+            ]
+          },
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "1 doing",
+                "tone": "attention"
+              },
+              {
+                "label": "1 blocked",
+                "tone": "bad"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "progress",
+        "title": "Beta checklist",
+        "label": "Beta checklist",
+        "done": 18,
+        "total": 24,
+        "tone": "attention"
+      },
+      "envelope": {
+        "widget_id": "bf-progress",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Beta checklist",
+        "blocks": [
+          {
+            "kind": "meter",
+            "items": [
+              {
+                "label": "Beta checklist",
+                "done": 18,
+                "total": 24,
+                "tone": "attention"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "daily_focus",
+        "title": "Today's focus",
+        "items": [
+          {
+            "title": "Finish the retry tests",
+            "why": "Last open item before the release candidate.",
+            "source_ref": "Orchard/Plans/retry-tests"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "bf-focus",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Today's focus",
+        "blocks": [
+          {
+            "kind": "rows",
+            "items": [
+              {
+                "label": "Finish the retry tests",
+                "detail": "Last open item before the release candidate.",
+                "source_ref": "Orchard/Plans/retry-tests"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "project_status",
+        "title": "Compass status",
+        "name": "Compass",
+        "status": "active",
+        "risks": [
+          "Map tile quota may run out"
+        ],
+        "next": "Spike the offline cache",
+        "last_commit": "2026-11-23"
+      },
+      "envelope": {
+        "widget_id": "bf-project",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Compass status",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "active",
+                "tone": "neutral"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Next",
+                "value": "Spike the offline cache"
+              },
+              {
+                "label": "Last commit",
+                "value": "2026-11-23"
+              }
+            ]
+          },
+          {
+            "kind": "rows",
+            "heading": "Blockers and risks",
+            "items": [
+              {
+                "label": "Map tile quota may run out",
+                "tone": "attention"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "career_progress",
+        "title": "Career progress",
+        "target": "Staff engineer by 2027",
+        "week": 6,
+        "skills": [
+          {
+            "name": "System design",
+            "done": 5,
+            "total": 8
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "bf-career",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Career progress",
+        "blocks": [
+          {
+            "kind": "value",
+            "label": "Staff engineer by 2027",
+            "value": "Week 6 of 16"
+          },
+          {
+            "kind": "meter",
+            "items": [
+              {
+                "label": "System design",
+                "done": 5,
+                "total": 8
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "work_timeline",
+        "title": "Work timeline",
+        "items": [
+          {
+            "when": "Mon 09:30",
+            "title": "Retry design review",
+            "detail": "Agreed on a cap of five attempts."
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "bf-timeline",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Work timeline",
+        "blocks": [
+          {
+            "kind": "timeline",
+            "items": [
+              {
+                "when": "Mon 09:30",
+                "title": "Retry design review",
+                "detail": "Agreed on a cap of five attempts."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "standup",
+        "title": "Standup",
+        "yesterday": [
+          {
+            "text": "Merged the retry change.",
+            "source_ref": "Orchard/pull/412"
+          }
+        ],
+        "today": [
+          {
+            "text": "Write the integration tests.",
+            "source_ref": "Orchard/Plans/retry-tests"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "bf-standup",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Standup",
+        "blocks": [
+          {
+            "kind": "rows",
+            "heading": "Yesterday",
+            "items": [
+              {
+                "label": "Merged the retry change.",
+                "source_ref": "Orchard/pull/412"
+              }
+            ]
+          },
+          {
+            "kind": "rows",
+            "heading": "Today",
+            "items": [
+              {
+                "label": "Write the integration tests.",
+                "source_ref": "Orchard/Plans/retry-tests"
+              }
+            ]
+          },
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "1 yesterday"
+              },
+              {
+                "label": "1 today"
+              },
+              {
+                "label": "0 blockers"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "alert",
+        "title": "Alert",
+        "level": "attention",
+        "text": "Approvals are waiting"
+      },
+      "envelope": {
+        "widget_id": "bf-alert",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Alert",
+        "blocks": [
+          {
+            "kind": "alert",
+            "level": "attention",
+            "text": "Approvals are waiting"
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "claude_run",
+        "title": "Claude Code run",
+        "run_id": "run-0150",
+        "repo": "orchard-api",
+        "mode": "ask",
+        "status": "working",
+        "started": "2026-11-24T08:20:00Z",
+        "duration": "12m 40s",
+        "usage": "18k tokens",
+        "excerpt": "Reading the retry module."
+      },
+      "envelope": {
+        "widget_id": "bf-run",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Claude Code run",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "working"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Run",
+                "value": "run-0150"
+              },
+              {
+                "label": "Repo",
+                "value": "orchard-api"
+              },
+              {
+                "label": "Mode",
+                "value": "ask"
+              },
+              {
+                "label": "Started",
+                "value": "2026-11-24T08:20:00Z"
+              },
+              {
+                "label": "Duration",
+                "value": "12m 40s"
+              },
+              {
+                "label": "Usage",
+                "value": "18k tokens"
+              }
+            ]
+          },
+          {
+            "kind": "text",
+            "text": "Reading the retry module."
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 100,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-edge-board-full"
+      }
+    },
+    {
+      "at_ms": 1500,
+      "board": [
+        "bf-stat",
+        "bf-chart",
+        "bf-table",
+        "bf-tasks",
+        "bf-progress",
+        "bf-focus",
+        "bf-project",
+        "bf-career",
+        "bf-timeline",
+        "bf-standup",
+        "bf-alert",
+        "bf-run"
+      ]
+    },
+    {
+      "at_ms": 1800,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-edge-board-full"
+      }
+    },
+    {
+      "at_ms": 1850,
+      "core": "idle"
+    }
+  ]
+}
