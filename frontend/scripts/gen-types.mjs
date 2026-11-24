@@ -18,6 +18,7 @@ const ts = await compile(root, "GenRoot", {
   cwd: here,
   unreachableDefinitions: true,
   additionalProperties: false,
+  maxItems: -1, // -1 stops tuple unions per cap (47k lines otherwise); caps are enforced by Ajv
   bannerComment: "/* Generated from schema/ by scripts/gen-types.mjs. Do not edit. */",
 });
 
