@@ -48,7 +48,7 @@ export function easePlaybackRate(anims: Animation[], to: number, ms: number): ()
  */
 export function useGhost<T>(value: T): T | null {
   const [track, setTrack] = useState<{ value: T; ghost: T | null }>({ value, ghost: null });
-  if (track.value !== value) setTrack({ value, ghost: motionReduced() || tokenMs("--motion-state-duration") <= 0 ? null : track.value });
+  if (track.value !== value) setTrack({ value, ghost: motionOff() || tokenMs("--motion-state-duration") <= 0 ? null : track.value });
   const { ghost } = track;
   useLayoutEffect(() => {
     if (ghost === null) return;
@@ -60,19 +60,19 @@ export function useGhost<T>(value: T): T | null {
 
 /** motionReduced() as a subscription, so effects rerun when the setting or the OS preference changes. */
 export function useMotionReduced(): boolean {
-  return useSyncExternalStore(
-    (onChange) => {
-      const mq = typeof window.matchMedia === "function" ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
-      mq?.addEventListener?.("change", onChange);
-      const mo = new MutationObserver(onChange);
-      mo.observe(root(), { attributes: true, attributeFilter: ["data-motion"] });
-      return () => {
-        mq?.removeEventListener?.("change", onChange);
-        mo.disconnect();
-      };
-    },
-    motionReduced,
-  );
+  return useSyncExternalStore(subscribeMotion, motionReduced);
+}
+
+// At module scope, so the subscription is stable and no observer is made per render.
+function subscribeMotion(onChange: () => void): () => void {
+  const mq = typeof window.matchMedia === "function" ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+  mq?.addEventListener?.("change", onChange);
+  const mo = new MutationObserver(onChange);
+  mo.observe(root(), { attributes: true, attributeFilter: ["data-motion"] });
+  return () => {
+    mq?.removeEventListener?.("change", onChange);
+    mo.disconnect();
+  };
 }
 
 /** The translation a running glide adds to the element, read from its computed transform. */

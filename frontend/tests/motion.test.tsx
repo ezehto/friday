@@ -325,3 +325,51 @@ test("panels glide only when the order or identity changes", () => {
   expect(animate).not.toHaveBeenCalled();
   delete (HTMLElement.prototype as { animate?: unknown }).animate;
 });
+
+test("a ring that starts later gets the state's rate (core shown after a resize)", () => {
+  stubMatchMedia(false);
+  stubComputed();
+  tokens["--core-speed"] = "0.5";
+  const anims: { animationName: string; playbackRate: number; cancel: () => void }[] = [];
+  Object.defineProperty(SVGElement.prototype, "getAnimations", { configurable: true, value: () => anims });
+  const { container } = render(<Core state="thinking" size="full" />);
+  // The core was display:none, so no ring existed when the rate effect ran.
+  anims.push({ animationName: "core-spin", playbackRate: 1, cancel: vi.fn() });
+  const event = new Event("animationstart");
+  Object.defineProperty(event, "animationName", { value: "core-spin" });
+  container.querySelector(".core")!.dispatchEvent(event);
+  expect(anims[0]!.playbackRate).toBeCloseTo(2);
+  noAnims();
+});
+
+test("instant mode eases nothing: ring rate and labels change at once", () => {
+  vi.useFakeTimers();
+  stubMatchMedia(false);
+  stubComputed();
+  document.documentElement.dataset.instant = "1";
+  tokens["--motion-state-duration"] = "600ms";
+  const anims = ringAnims();
+  tokens["--core-speed"] = "1";
+  const { container, rerender } = render(<Core state="idle" size="full" />);
+  tokens["--core-speed"] = "0.2";
+  rerender(<Core state="thinking" size="full" />);
+  expect(anims[0]!.playbackRate).toBeCloseTo(5);
+  expect(container.querySelector(".core-disc-ghost")).toBeNull();
+  noAnims();
+});
+
+test("a held voice level is cleared when the hook turns active again", () => {
+  vi.useFakeTimers();
+  stubMatchMedia(false);
+  stubComputed();
+  tokens["--motion-state-duration"] = "600ms";
+  const listeners = new Set<(v: number) => void>();
+  const source: VoiceLevelSource = { onLevel: (l) => (listeners.add(l), () => void listeners.delete(l)) };
+  const { container, rerender } = render(<Core state="speaking" size="full" level={source} />);
+  const el = container.querySelector(".core") as SVGElement;
+  act(() => listeners.forEach((l) => l(0.7)));
+  rerender(<Core state="idle" size="full" level={source} />);
+  expect(el.style.getPropertyValue("--voice-level")).toBe("0.7");
+  rerender(<Core state="listening" size="full" level={source} />);
+  expect(el.style.getPropertyValue("--voice-level")).toBe("");
+});

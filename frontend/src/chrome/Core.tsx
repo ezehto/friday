@@ -1,6 +1,6 @@
 import { useEffect, useRef, type RefObject } from "react";
 import type { VoiceLevelSource } from "../transport/types";
-import { easePlaybackRate, motionReduced, tokenMs, useGhost, useMotionReduced } from "../lib/motion";
+import { easePlaybackRate, motionOff, motionReduced, tokenMs, useGhost, useMotionReduced } from "../lib/motion";
 import { coreLabels, type CoreState } from "./coreStates";
 
 const C = 200;
@@ -39,6 +39,9 @@ export function useVoiceLevel(ref: RefObject<Element | null>, level: VoiceLevelS
     if (!level || !el) return;
     if (active) {
       clearTimeout(hold.current);
+      // A level held from the last live state must not show as this one's start.
+      recent.current = 0;
+      el.style.removeProperty("--voice-level");
       el.setAttribute("data-live", "true");
     }
     const off = level.onLevel((v) => {
@@ -79,11 +82,20 @@ function useRingSpeed(ref: RefObject<SVGSVGElement | null>, state: CoreState): v
     const svg = ref.current;
     if (!svg || typeof svg.getAnimations !== "function") return;
     const speed = parseFloat(getComputedStyle(svg).getPropertyValue("--core-speed"));
-    const rings = svg.getAnimations({ subtree: true }).filter((a) => (a as CSSAnimation).animationName === "core-spin");
+    const rings = (): Animation[] => svg.getAnimations({ subtree: true }).filter((a) => (a as CSSAnimation).animationName === "core-spin");
     const to = 1 / (Number.isFinite(speed) && speed > 0 ? speed : 1);
-    const ms = settled.current && !reduced ? tokenMs("--motion-state-duration") : 0;
+    const ms = settled.current && !reduced && !motionOff() ? tokenMs("--motion-state-duration") : 0;
     settled.current = true;
-    return easePlaybackRate(rings, to, ms);
+    const stop = easePlaybackRate(rings(), to, ms);
+    // A core that was display:none (below the board breakpoint) has no rings yet: set the rate when they start.
+    const onStart = (e: Event): void => {
+      if ((e as AnimationEvent).animationName === "core-spin") for (const a of rings()) a.playbackRate = to;
+    };
+    svg.addEventListener("animationstart", onStart);
+    return () => {
+      stop();
+      svg.removeEventListener("animationstart", onStart);
+    };
   }, [ref, state, reduced]);
 }
 

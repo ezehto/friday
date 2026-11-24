@@ -12,8 +12,7 @@ import { Tray } from "../chrome/Tray";
 import { ToneIcon } from "../chrome/ToneIcon";
 import type { AlertKind, Block, ChartBlock, SampleSet, Tone } from "../generated/types";
 import { initialState, type AppState } from "../store";
-import { demoLevel } from "../transport/mock";
-import type { SessionTransport } from "../transport/types";
+import { demoLevel, previewAct } from "../transport/mock";
 import samplesJson from "../mocks/samples.json";
 import { BlockBoundary } from "../blocks/BlockBoundary";
 import { BlockRenderer } from "../blocks/BlockRenderer";
@@ -74,7 +73,6 @@ const CHROME_STATE: AppState = {
 const TRAY_KINDS = Object.keys(FIXED.tray) as AlertKind[];
 const TRAY_SPECIMEN = TRAY_KINDS.map((kind) => ({ kind, source: "health" as const, ...(kind === "approvals_waiting" ? { count: 3 } : {}) }));
 const SPECIMEN_NOW_MS = Date.UTC(2026, 10, 24, 9, 30);
-const specimenAct: SessionTransport["act"] = async () => ({ ok: false, preview: true, message: FIXED.previewResult });
 const SPECIMEN_TRACES = [
   { trace_id: "sp-1", label: "Plan the specimen week", started: "2026-11-24T08:30:00Z", duration_ms: 4200, tokens_in: 5200, tokens_out: 640, cost_usd: 0.031, spans: [] },
   { trace_id: "sp-2", label: "Check the specimen notes", started: "2026-11-24T09:10:00Z", duration_ms: 850, tokens_in: 900, tokens_out: 120, cost_usd: 0.004, spans: [] },
@@ -315,16 +313,16 @@ export function StyleGuide() {
             <Tray items={[]} />
           </HudFrame>
           <HudFrame title={FIXED.chrome.specimens.chatClosed} kicker="Chat" headingLevel={3}>
-            <ChatLine state={initialState} request={null} onAct={specimenAct} />
+            <ChatLine state={initialState} request={null} onAct={previewAct} />
           </HudFrame>
           <HudFrame title="Chat line" kicker="Open" headingLevel={3}>
-            <ChatLine state={CHROME_STATE} request="What is due today?" onAct={specimenAct} defaultOpen />
+            <ChatLine state={CHROME_STATE} request="What is due today?" onAct={previewAct} defaultOpen />
           </HudFrame>
           <HudFrame title={FIXED.chrome.specimens.chatEmpty} kicker="Chat" headingLevel={3}>
-            <ChatLine state={initialState} request={null} onAct={specimenAct} defaultOpen />
+            <ChatLine state={initialState} request={null} onAct={previewAct} defaultOpen />
           </HudFrame>
           <HudFrame title={FIXED.chrome.specimens.chatResult} kicker="Chat" headingLevel={3}>
-            <ChatLine state={CHROME_STATE} request="What is due today?" onAct={specimenAct} defaultOpen initialResult={FIXED.previewResult} />
+            <ChatLine state={CHROME_STATE} request="What is due today?" onAct={previewAct} defaultOpen initialResult={FIXED.previewResult} />
           </HudFrame>
           <HudFrame title={FIXED.chrome.specimens.ptt} kicker="Chat" headingLevel={3}>
             <div className="sg-ptt">
@@ -345,24 +343,24 @@ export function StyleGuide() {
           <HudFrame title="Preview banner" kicker="Sticky at the top of a view" headingLevel={3}>
             <PreviewBanner />
           </HudFrame>
-          <ProposalPreview proposal={SPECIMEN_PROPOSAL} act={specimenAct} />
-          <ProposalPreview proposal={{ ...SPECIMEN_PROPOSAL, proposal_id: "specimen-result", title: "Save the specimen checklist, result shown" }} act={specimenAct} initialResult={FIXED.previewResult} />
-          <ProposalPreview proposal={{ ...SPECIMEN_PROPOSAL, proposal_id: "specimen-host", host_action: true, title: "Record the specimen decision", target_folder: "Specimen/Decisions" }} act={specimenAct} />
-          <PermissionCard request={SPECIMEN_PERMISSION} position="Request 1 of 1" act={specimenAct} />
-          <PermissionCard request={SPECIMEN_PERMISSION} position="Request 2 of 3" onPrev={noop} onNext={noop} act={specimenAct} />
-          <PermissionCard request={SPECIMEN_PERMISSION} position="Deny without a reason" act={specimenAct} initialResult={FIXED.permissions.reasonNeeded} />
-          <PermissionCard request={SPECIMEN_PERMISSION} position="Deny result" act={specimenAct} initialResult={FIXED.previewResult} />
+          <ProposalPreview proposal={SPECIMEN_PROPOSAL} act={previewAct} />
+          <ProposalPreview proposal={{ ...SPECIMEN_PROPOSAL, proposal_id: "specimen-result", title: "Save the specimen checklist, result shown" }} act={previewAct} initialResult={FIXED.previewResult} />
+          <ProposalPreview proposal={{ ...SPECIMEN_PROPOSAL, proposal_id: "specimen-host", host_action: true, title: "Record the specimen decision", target_folder: "Specimen/Decisions" }} act={previewAct} />
+          <PermissionCard request={SPECIMEN_PERMISSION} position="Request 1 of 1" act={previewAct} />
+          <PermissionCard request={SPECIMEN_PERMISSION} position="Request 2 of 3" onPrev={noop} onNext={noop} act={previewAct} />
+          <PermissionCard request={SPECIMEN_PERMISSION} position="Deny without a reason" act={previewAct} initialResult={FIXED.permissions.reasonNeeded} />
+          <PermissionCard request={SPECIMEN_PERMISSION} position="Deny result" act={previewAct} initialResult={FIXED.previewResult} />
           <HudFrame title="Approvals, empty" kicker="No proposals" headingLevel={3}>
-            <Approvals state={initialState} act={specimenAct} />
+            <Approvals state={initialState} act={previewAct} />
           </HudFrame>
           <HudFrame title="Permissions, empty" kicker="No requests" headingLevel={3}>
-            <Permissions state={initialState} act={specimenAct} />
+            <Permissions state={initialState} act={previewAct} />
           </HudFrame>
           <HudFrame title="Traces, empty" kicker="No requests" headingLevel={3}>
             <Traces state={initialState} />
           </HudFrame>
           <HudFrame title="Sessions, empty" kicker="No sessions" headingLevel={3}>
-            <Sessions state={initialState} act={specimenAct} />
+            <Sessions state={initialState} act={previewAct} />
           </HudFrame>
           <HudFrame title="Traces, request list" kicker="Selected request pressed" headingLevel={3}>
             <RequestList traces={SPECIMEN_TRACES} selected="sp-1" />
@@ -374,28 +372,28 @@ export function StyleGuide() {
             <SessionsTable sessions={[...SPECIMEN_SESSIONS]} />
           </HudFrame>
           <HudFrame title="Sessions, runs" kicker="Cancel on a live run" headingLevel={3}>
-            <RunsList runs={[...SPECIMEN_RUNS]} act={specimenAct} />
+            <RunsList runs={[...SPECIMEN_RUNS]} act={previewAct} />
           </HudFrame>
           <HudFrame title="Sessions, runs, every status" kicker="One run per status" headingLevel={3}>
-            <RunsList runs={RUN_STATUSES.map((status) => ({ run_id: `s-${status}`, repo: `specimen-${status}`, mode: "task" as const, status, started: "2026-11-24T08:20:00Z" }))} act={specimenAct} />
+            <RunsList runs={RUN_STATUSES.map((status) => ({ run_id: `s-${status}`, repo: `specimen-${status}`, mode: "task" as const, status, started: "2026-11-24T08:20:00Z" }))} act={previewAct} />
           </HudFrame>
           <HudFrame title="Sessions, runs, result" kicker="After Cancel" headingLevel={3}>
-            <RunsList runs={[...SPECIMEN_RUNS]} act={specimenAct} initialResult={FIXED.previewResult} />
+            <RunsList runs={[...SPECIMEN_RUNS]} act={previewAct} initialResult={FIXED.previewResult} />
           </HudFrame>
           <HudFrame title="Sessions, runs, empty" kicker="No runs" headingLevel={3}>
-            <RunsList runs={[]} act={specimenAct} />
+            <RunsList runs={[]} act={previewAct} />
           </HudFrame>
           <HudFrame title="Sessions, message panel" kicker="With the attach hint" headingLevel={3}>
-            <MessagePanel sessions={[...SPECIMEN_SESSIONS]} act={specimenAct} />
+            <MessagePanel sessions={[...SPECIMEN_SESSIONS]} act={previewAct} />
           </HudFrame>
           <HudFrame title="Sessions, message panel, empty text" kicker="Hint after Send" headingLevel={3}>
-            <MessagePanel sessions={[...SPECIMEN_SESSIONS]} act={specimenAct} initialResult={FIXED.sessions.textNeeded} />
+            <MessagePanel sessions={[...SPECIMEN_SESSIONS]} act={previewAct} initialResult={FIXED.sessions.textNeeded} />
           </HudFrame>
           <HudFrame title="Sessions, message panel, result" kicker="After Send" headingLevel={3}>
-            <MessagePanel sessions={[...SPECIMEN_SESSIONS]} act={specimenAct} initialText="Continue with the plan." initialResult={FIXED.previewResult} />
+            <MessagePanel sessions={[...SPECIMEN_SESSIONS]} act={previewAct} initialText="Continue with the plan." initialResult={FIXED.previewResult} />
           </HudFrame>
           <HudFrame title="Sessions, message panel, no sessions" kicker="Empty" headingLevel={3}>
-            <MessagePanel sessions={[]} act={specimenAct} />
+            <MessagePanel sessions={[]} act={previewAct} />
           </HudFrame>
         </section>
       </main>

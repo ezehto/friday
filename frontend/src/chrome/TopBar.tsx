@@ -1,14 +1,12 @@
 import type { VoiceLevelSource } from "../transport/types";
 import { Fragment, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { formatTime } from "../lib/format";
-import { toHash, useRoute, type View } from "../router";
+import { toHash, useRoute, VIEWS, type View } from "../router";
 import type { AppState } from "../store";
 import { Core } from "./Core";
 import { FIXED } from "./fixedText";
 import { MotionSetting } from "./MotionSetting";
 import { Tray } from "./Tray";
-
-const VIEWS: readonly View[] = ["board", "approvals", "traces", "sessions", "permissions", "style-guide"];
 
 /** A button with a small panel under it. Escape closes it and returns focus to the button. */
 function Popover(props: { label: string; button: ReactNode; defaultOpen?: boolean; children: ReactNode }) {

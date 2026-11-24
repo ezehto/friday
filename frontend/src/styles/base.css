@@ -192,8 +192,8 @@ html[data-instant] .hud-frame { animation: none; }
 }
 .core-ripple, .core-halo, .core-pulse { display: none; fill: none; transform-box: view-box; transform-origin: 50% 50%; }
 @media (prefers-reduced-motion: no-preference) {
-  html:not([data-motion="reduced"]) .core,
-  html:not([data-motion="reduced"]) .ptt-wave { transition: --voice-level var(--motion-voice-ease) linear; }
+  html:not([data-motion="reduced"]):not([data-instant]) .core,
+  html:not([data-motion="reduced"]):not([data-instant]) .ptt-wave { transition: --voice-level var(--motion-voice-ease) linear; }
   html:not([data-motion="reduced"]) .core[data-live] .core-contract { transform-box: view-box; transform-origin: 50% 50%; }
   html:not([data-motion="reduced"]) .core[data-live] .core-contract { transform: scale(calc(1 - var(--voice-level) * var(--gate-l) * 0.08)); }
   html:not([data-motion="reduced"]) .core[data-live] .core-ripple {
@@ -628,25 +628,25 @@ html[data-instant] .hud-frame { animation: none; }
     animation-delay: calc(var(--motion-panel-entry-duration) * 0.4 + var(--motion-chart-draw-duration) * var(--ss, 0));
   }
   /* Changed data on a mounted chart eases to the new path where the browser can interpolate it. */
-  html:not([data-motion="reduced"]) .chart-line,
-  html:not([data-motion="reduced"]) .chart-area-fill,
-  html:not([data-motion="reduced"]) .chart-slice {
+  html:not([data-motion="reduced"]):not([data-instant]) .chart-line,
+  html:not([data-motion="reduced"]):not([data-instant]) .chart-area-fill,
+  html:not([data-motion="reduced"]):not([data-instant]) .chart-slice {
     transition: d var(--motion-state-duration) var(--motion-easing);
   }
 
   /* Core: colour, label and voice parts cross-fade over the state duration. */
-  html:not([data-motion="reduced"]) .core {
+  html:not([data-motion="reduced"]):not([data-instant]) .core {
     transition:
       --voice-level var(--motion-voice-ease) linear,
       --core-accent var(--motion-state-duration) var(--motion-easing),
       --gate-l var(--motion-state-duration) var(--motion-easing),
       --gate-s var(--motion-state-duration) var(--motion-easing);
   }
-  html:not([data-motion="reduced"]) .core-arc-secondary { transition: stroke var(--motion-state-duration) var(--motion-easing); }
-  html:not([data-motion="reduced"]) .core-disc-label,
-  html:not([data-motion="reduced"]) .pill-text { animation: fade-in var(--motion-state-duration) var(--motion-easing) backwards; }
-  html:not([data-motion="reduced"]) .core-disc-ghost { animation: fade-out var(--motion-state-duration) var(--motion-easing) forwards; }
-  html:not([data-motion="reduced"]) .pill-ghost {
+  html:not([data-motion="reduced"]):not([data-instant]) .core-arc-secondary { transition: stroke var(--motion-state-duration) var(--motion-easing); }
+  html:not([data-motion="reduced"]):not([data-instant]) .core-disc-label,
+  html:not([data-motion="reduced"]):not([data-instant]) .pill-text { animation: fade-in var(--motion-state-duration) var(--motion-easing) backwards; }
+  html:not([data-motion="reduced"]):not([data-instant]) .core-disc-ghost { animation: fade-out var(--motion-state-duration) var(--motion-easing) forwards; }
+  html:not([data-motion="reduced"]):not([data-instant]) .pill-ghost {
     position: absolute;
     left: 1rem;
     animation: fade-out var(--motion-state-duration) var(--motion-easing) forwards;

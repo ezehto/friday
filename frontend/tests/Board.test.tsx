@@ -36,6 +36,10 @@ test("empty and loading texts", () => {
   rerender(<Board state={withBoard([], { requestOpen: true })} now={NOW} />);
   expect(screen.getByText(FIXED.loadingBoard)).toBeTruthy();
   expect(screen.queryByText(FIXED.emptyBoard)).toBeNull();
+  // A busy core means a request is in progress even before request.started arrives.
+  rerender(<Board state={withBoard([], { core: "thinking" })} now={NOW} />);
+  expect(screen.getByText(FIXED.loadingBoard)).toBeTruthy();
+  expect(screen.queryByText(FIXED.emptyBoard)).toBeNull();
 });
 
 test("a broken envelope leaves its neighbours and the core standing", () => {

@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { BASE_VIEWS, loadScenarios } from "./mocks";
 import { toHash, useRoute, type Route, type View } from "./router";
 import { createStore, initialState, useStore, type AppState } from "./store";
-import { demoLevel, MockTransport } from "./transport/mock";
+import { demoLevel, MockTransport, previewAct } from "./transport/mock";
 import type { SessionTransport, VoiceLevelSource } from "./transport/types";
 import { Approvals } from "./views/Approvals";
 import { Permissions } from "./views/Permissions";
@@ -13,7 +13,6 @@ import { ScenarioSwitcher } from "./views/ScenarioSwitcher";
 import { StyleGuide } from "./views/StyleGuide";
 import { Background } from "./chrome/Background";
 import { ChatLine } from "./chrome/ChatLine";
-import { FIXED } from "./chrome/fixedText";
 import { TopBar } from "./chrome/TopBar";
 import type { Scenario } from "./generated/types";
 
@@ -25,8 +24,6 @@ type Live = { id: string; runs: number; instant: boolean; store: Store; level: V
 
 // While push-to-talk is held the preview core listens, driven by this level. Never written to the store.
 const PTT_LEVEL = demoLevel("listening");
-
-const idleAct: SessionTransport["act"] = async () => ({ ok: false, preview: true, message: FIXED.previewResult });
 
 type PageProps = {
   state: AppState;
@@ -79,7 +76,7 @@ function LivePage(props: Omit<PageProps, "state" | "act"> & { store: Store | nul
   useEffect(() => {
     if (state.done) document.body.dataset.scenarioDone = "true";
   }, [state.done]);
-  return <Page {...rest} state={state} act={store ? store.act : idleAct} />;
+  return <Page {...rest} state={state} act={store ? store.act : previewAct} />;
 }
 
 export function App() {

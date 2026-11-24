@@ -23,6 +23,8 @@ and never committed.
 
 ## Development
 
+Run `pre-commit install` once after cloning, so the commit and push checks run.
+
 Frontend commands run in the dev container, for example
 `docker compose -f compose.dev.yaml run --rm frontend-dev npm run check`.
 `npm ci` works with the container's own npm 10.9.4, but `npm install` crashes

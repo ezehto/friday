@@ -74,7 +74,8 @@ lines draw, bars grow from the zero line, donut slices sweep, meters fill. The c
 cross-fades colour, disc label and pill text, and eases ring speed through `playbackRate`
 so the angle never jumps. Only opacity, transform, stroke-dashoffset and colour move. Reduced
 motion shows the final state at once; instant mode (`?instant=1`) skips entry, exit and
-draw-in. The "Motion specimens" section of the style guide page has a Replay button.
+draw-in, and every transition (chart paths, core colour and level, label and pill cross-fades,
+ring speed easing) is off in it too. The "Motion specimens" section of the style guide page has a Replay button.
 
 ## Voice level
 

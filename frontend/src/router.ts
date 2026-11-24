@@ -3,7 +3,7 @@ import { useSyncExternalStore } from "react";
 export type View = "board" | "approvals" | "traces" | "sessions" | "permissions" | "style-guide";
 export type Route = { view: View; scenario: string | null; instant: boolean };
 
-const VIEWS: readonly View[] = ["board", "approvals", "traces", "sessions", "permissions", "style-guide"];
+export const VIEWS: readonly View[] = ["board", "approvals", "traces", "sessions", "permissions", "style-guide"];
 const SCENARIO_ID = /^[a-z0-9-]{1,40}$/;
 
 export function parseHash(hash: string): Route {

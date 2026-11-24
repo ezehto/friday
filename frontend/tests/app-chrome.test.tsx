@@ -126,3 +126,25 @@ test("holding push-to-talk shows the listening core and releasing restores the s
   fireEvent.keyUp(ptt, { key: " " });
   expect(core()).toBe(before);
 });
+
+test("every view has a heading walk with no skipped level", async () => {
+  for (const view of ["board", "approvals", "traces", "sessions", "permissions"]) {
+    window.location.hash = `#/${view}?scenario=focus-today&instant=1`;
+    const { unmount } = render(<App />);
+    await settle(4000);
+    const levels = [...document.querySelectorAll("h1, h2, h3, h4")].map((h) => Number(h.tagName[1]));
+    expect(levels[0], view).toBe(1);
+    levels.forEach((l, i) => expect(i === 0 || l <= levels[i - 1]! + 1, `${view}: h${levels[i - 1]} then h${l}`).toBe(true));
+    unmount();
+  }
+});
+
+test("an empty view shows one frame with the fixed empty text", async () => {
+  for (const [view, text] of [["approvals", FIXED.approvals.empty], ["permissions", FIXED.permissions.empty], ["traces", FIXED.traces.empty], ["sessions", FIXED.sessions.empty]] as const) {
+    window.location.hash = `#/${view}`;
+    const { unmount } = render(<App />);
+    const frame = screen.getAllByText(text)[0]!.closest(".hud-frame");
+    expect(frame, view).toBeTruthy();
+    unmount();
+  }
+});

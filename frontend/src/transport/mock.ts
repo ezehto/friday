@@ -41,6 +41,9 @@ export function voiceLevel(kind: VoiceKind, n: number, seed = 1): number {
   return Math.min(1, Math.max(0, raw));
 }
 
+/** The preview's one answer to every action: nothing is executed. */
+export const previewAct: SessionTransport["act"] = async () => ({ ok: false, preview: true, message: FIXED.previewResult });
+
 /** A local stand-in for the voice level, so the preview moves without a transport. One timer for all listeners. */
 export function demoLevel(kind: VoiceKind): VoiceLevelSource {
   const listeners = new Set<(level: number) => void>();
@@ -129,8 +132,7 @@ export class MockTransport implements SessionTransport, VoiceLevelSource {
   }
 
   act(action: TransportAction): Promise<ActionResult> {
-    void action;
-    return Promise.resolve({ ok: false, preview: true, message: FIXED.previewResult });
+    return previewAct(action);
   }
 
   close(): void {

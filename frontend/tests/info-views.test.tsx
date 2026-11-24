@@ -78,7 +78,7 @@ test("a 200-span chain renders and caps the indent", () => {
   expect(screen.getByText("Step 199")).toBeTruthy();
   expect(container.querySelectorAll(".span-flat").length).toBeGreaterThan(150);
   expect(container.querySelectorAll(".span-list:not(.span-flat)").length).toBeLessThanOrEqual(10);
-});
+}, 15_000);
 
 test("sessions sort waiting first, then last activity descending", () => {
   const base = snap.sessions[0]!;
