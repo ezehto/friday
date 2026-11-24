@@ -503,6 +503,12 @@ p {
 .raw-homoglyph { display: block; color: var(--tone-attention); font-size: 0.8125rem; }
 /* Below the board breakpoint the document scrolls, so the banner sticks to it; above, .view scrolls. */
 @media (min-width: 1100px) { .view { overflow-y: auto; } }
+.span-list { margin: 0; padding-left: 1.1rem; list-style: none; display: grid; gap: 0.35rem; border-left: 1px solid var(--line-blueprint); }
+.span-list:first-child { padding-left: 0; border-left: 0; }
+.span-row { display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; align-items: baseline; min-width: 0; }
+.span-name { color: var(--text-primary); }
+.span-status { display: inline-flex; align-items: center; gap: 0.3rem; }
+.attach-hint { margin: 0.5rem 0; font-family: var(--font-label); overflow-wrap: anywhere; }
 .sg-raw { display: grid; gap: 1.25rem; }
 .facts { display: grid; grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr); gap: 0.3rem 0.75rem; margin: 0 0 0.75rem; }
 .facts dt { color: var(--text-muted); }

@@ -19,6 +19,8 @@ import { BlockBoundary } from "../blocks/BlockBoundary";
 import { BlockRenderer } from "../blocks/BlockRenderer";
 import { Approvals, ProposalPreview } from "./Approvals";
 import { PermissionCard, Permissions } from "./Permissions";
+import { MessagePanel, RunsList, SessionsTable } from "./Sessions";
+import { RequestList, SpanTree } from "./Traces";
 import { PreviewBanner } from "./PreviewBanner";
 import { RawField } from "./RawField";
 import { WidgetPanel } from "../widgets/WidgetPanel";
@@ -73,6 +75,24 @@ const TRAY_KINDS = Object.keys(FIXED.tray) as AlertKind[];
 const TRAY_SPECIMEN = TRAY_KINDS.map((kind) => ({ kind, source: "health" as const, ...(kind === "approvals_waiting" ? { count: 3 } : {}) }));
 const SPECIMEN_NOW_MS = Date.UTC(2026, 10, 24, 9, 30);
 const specimenAct: SessionTransport["act"] = async () => ({ ok: false, preview: true, message: FIXED.previewResult });
+const SPECIMEN_TRACES = [
+  { trace_id: "sp-1", label: "Plan the specimen week", started: "2026-11-24T08:30:00Z", duration_ms: 4200, tokens_in: 5200, tokens_out: 640, cost_usd: 0.031, spans: [] },
+  { trace_id: "sp-2", label: "Check the specimen notes", started: "2026-11-24T09:10:00Z", duration_ms: 850, tokens_in: 900, tokens_out: 120, cost_usd: 0.004, spans: [] },
+];
+const SPECIMEN_SPANS = [
+  { span_id: "a", parent_span_id: null, name: "Request", kind: "request", duration_ms: 4200, tokens_in: 5200, tokens_out: 640, status: "ok" },
+  { span_id: "b", parent_span_id: "a", name: "Search the notes", kind: "retrieval", duration_ms: 820, status: "ok" },
+  { span_id: "c", parent_span_id: "a", name: "Call the calendar", kind: "external_call", duration_ms: 3000, status: "timeout" },
+  { span_id: "d", parent_span_id: "c", name: "Retry the calendar", kind: "external_call", duration_ms: 900, status: "error" },
+] as const;
+const SPECIMEN_SESSIONS = [
+  { session_id: "00000000-0000-4000-8000-000000000001", project: "Specimen", data_class: "work", kind: "terminal", state: "waiting", waiting: true, last_activity: "2026-11-24T08:57:00Z" },
+  { session_id: "00000000-0000-4000-8000-000000000002", project: "Sample", data_class: "personal", kind: "background", state: "working", waiting: false, last_activity: "2026-11-24T08:40:00Z" },
+] as const;
+const SPECIMEN_RUNS = [
+  { run_id: "r1", repo: "specimen-api", mode: "task", status: "working", started: "2026-11-24T08:20:00Z" },
+  { run_id: "r2", repo: "sample-web", mode: "ask", status: "done", started: "2026-11-24T06:00:00Z" },
+] as const;
 const noop = (): void => undefined;
 const SPECIMEN_HIDDEN = "echo start\r\n\tprintf '\u001b[31mdone\u001b[0m'\necho \u202edetaN\u200b noitcurtsed\nexport p\u0430ssword=demo";
 const SPECIMEN_PROPOSAL = {
@@ -283,7 +303,7 @@ export function StyleGuide() {
         </section>
 
         <section className="sg-section" aria-labelledby="sg-actions">
-          <h2 id="sg-actions" className="sg-section-title">Approvals and permissions</h2>
+          <h2 id="sg-actions" className="sg-section-title">Approvals, permissions, traces and sessions</h2>
           <HudFrame title="Raw field" kicker="Hidden characters and a look-alike letter" headingLevel={3}>
             <div className="sg-raw">
               <RawField name="command" value={SPECIMEN_HIDDEN} />
@@ -305,6 +325,36 @@ export function StyleGuide() {
           </HudFrame>
           <HudFrame title="Permissions, empty" kicker="No requests" headingLevel={3}>
             <Permissions state={initialState} act={specimenAct} />
+          </HudFrame>
+          <HudFrame title="Traces, request list" kicker="Selected request pressed" headingLevel={3}>
+            <RequestList traces={SPECIMEN_TRACES} selected="sp-1" />
+          </HudFrame>
+          <HudFrame title="Traces, span tree" kicker="With error and timeout spans" headingLevel={3}>
+            <SpanTree spans={[...SPECIMEN_SPANS]} />
+          </HudFrame>
+          <HudFrame title="Sessions, table" kicker="Waiting session first" headingLevel={3}>
+            <SessionsTable sessions={[...SPECIMEN_SESSIONS]} />
+          </HudFrame>
+          <HudFrame title="Sessions, runs" kicker="Cancel on a live run" headingLevel={3}>
+            <RunsList runs={[...SPECIMEN_RUNS]} act={specimenAct} />
+          </HudFrame>
+          <HudFrame title="Sessions, runs, result" kicker="After Cancel" headingLevel={3}>
+            <RunsList runs={[...SPECIMEN_RUNS]} act={specimenAct} initialResult={FIXED.previewResult} />
+          </HudFrame>
+          <HudFrame title="Sessions, runs, empty" kicker="No runs" headingLevel={3}>
+            <RunsList runs={[]} act={specimenAct} />
+          </HudFrame>
+          <HudFrame title="Sessions, message panel" kicker="With the attach hint" headingLevel={3}>
+            <MessagePanel sessions={[...SPECIMEN_SESSIONS]} act={specimenAct} />
+          </HudFrame>
+          <HudFrame title="Sessions, message panel, empty text" kicker="Hint after Send" headingLevel={3}>
+            <MessagePanel sessions={[...SPECIMEN_SESSIONS]} act={specimenAct} initialResult={FIXED.sessions.textNeeded} />
+          </HudFrame>
+          <HudFrame title="Sessions, message panel, result" kicker="After Send" headingLevel={3}>
+            <MessagePanel sessions={[...SPECIMEN_SESSIONS]} act={specimenAct} initialText="Continue with the plan." initialResult={FIXED.previewResult} />
+          </HudFrame>
+          <HudFrame title="Sessions, message panel, no sessions" kicker="Empty" headingLevel={3}>
+            <MessagePanel sessions={[]} act={specimenAct} />
           </HudFrame>
         </section>
       </main>

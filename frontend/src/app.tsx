@@ -6,6 +6,8 @@ import { MockTransport } from "./transport/mock";
 import type { SessionTransport, VoiceLevelSource } from "./transport/types";
 import { Approvals } from "./views/Approvals";
 import { Permissions } from "./views/Permissions";
+import { Sessions } from "./views/Sessions";
+import { Traces } from "./views/Traces";
 import { Board } from "./views/Board";
 import { ScenarioSwitcher } from "./views/ScenarioSwitcher";
 import { StyleGuide } from "./views/StyleGuide";
@@ -48,6 +50,10 @@ function Page(props: PageProps) {
           <Approvals state={props.state} act={props.act} />
         ) : props.route.view === "permissions" ? (
           <Permissions state={props.state} act={props.act} />
+        ) : props.route.view === "sessions" ? (
+          <Sessions state={props.state} act={props.act} />
+        ) : props.route.view === "traces" ? (
+          <Traces state={props.state} />
         ) : (
           <Board state={props.state} now={props.now} level={props.level} />
         )}
