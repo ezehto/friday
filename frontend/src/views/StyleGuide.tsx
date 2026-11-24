@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { Background } from "../chrome/Background";
 import { Core } from "../chrome/Core";
+import { ChatLine, PushToTalk } from "../chrome/ChatLine";
 import { CORE_STATES, coreLabels, type CoreState } from "../chrome/coreStates";
 import { FIXED } from "../chrome/fixedText";
 import { HudFrame } from "../chrome/HudFrame";
 import { MotionSetting } from "../chrome/MotionSetting";
 import { StatusPill } from "../chrome/StatusPill";
+import { TopBar } from "../chrome/TopBar";
+import { Tray } from "../chrome/Tray";
 import { ToneIcon } from "../chrome/ToneIcon";
-import type { Block, ChartBlock, SampleSet, Tone } from "../generated/types";
+import type { AlertKind, Block, ChartBlock, SampleSet, Tone } from "../generated/types";
+import { initialState, type AppState } from "../store";
+import type { SessionTransport } from "../transport/types";
 import samplesJson from "../mocks/samples.json";
 import { BlockBoundary } from "../blocks/BlockBoundary";
 import { BlockRenderer } from "../blocks/BlockRenderer";
@@ -50,6 +55,20 @@ const chartBlock = (chart: ChartBlock["chart"]): ChartBlock => {
   const base = chartSample.block as ChartBlock;
   return { ...base, chart, series: chart === "donut" ? base.series.slice(0, 1) : base.series };
 };
+
+// Fixed specimen data for the Chrome section. Only the lengths of the two lists are read.
+const CHROME_STATE: AppState = {
+  ...initialState,
+  approvals: Array.from({ length: 2 }) as AppState["approvals"],
+  permissions: Array.from({ length: 1 }) as AppState["permissions"],
+  tray: [{ kind: "approvals_waiting", count: 2, source: "approvals" }],
+  reply: { requestId: "specimen", text: "Three things are due today. The first is the weekly review.", done: true },
+};
+const TRAY_KINDS = Object.keys(FIXED.tray) as AlertKind[];
+const TRAY_SPECIMEN = TRAY_KINDS.map((kind) => ({ kind, source: "health" as const, ...(kind === "approvals_waiting" ? { count: 3 } : {}) }));
+const SPECIMEN_NOW_MS = Date.UTC(2026, 10, 24, 9, 30);
+const specimenAct: SessionTransport["act"] = async () => ({ ok: false, preview: true, message: FIXED.previewResult });
+const noop = (): void => undefined;
 
 const TONES: Tone[] = ["good", "attention", "bad", "neutral"];
 
@@ -164,6 +183,25 @@ export function StyleGuide() {
               </div>
             </div>
           ))}
+        </section>
+
+        <section className="sg-section" aria-labelledby="sg-chrome">
+          <h2 id="sg-chrome" className="sg-section-title">{FIXED.styleGuide.chrome}</h2>
+          <HudFrame title="Top bar" kicker="Chrome" headingLevel={3}>
+            <TopBar state={CHROME_STATE} nowMs={SPECIMEN_NOW_MS} timeZone="UTC" onNavigate={noop} headingLevel={4} />
+          </HudFrame>
+          <HudFrame title="Tray" kicker="Every alert kind" headingLevel={3}>
+            <Tray items={TRAY_SPECIMEN} />
+          </HudFrame>
+          <HudFrame title="Chat line" kicker="Open" headingLevel={3}>
+            <ChatLine state={CHROME_STATE} request="What is due today?" onAct={specimenAct} defaultOpen />
+          </HudFrame>
+          <HudFrame title="Push to talk" kicker="Unpressed and pressed" headingLevel={3}>
+            <div className="sg-ptt">
+              <PushToTalk pressed={false} onChange={noop} />
+              <PushToTalk pressed onChange={noop} />
+            </div>
+          </HudFrame>
         </section>
       </main>
     </>
