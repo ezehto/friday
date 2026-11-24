@@ -3,3 +3,10 @@ repos:
     rev: v8.30.1
     hooks:
       - id: gitleaks-docker
+  - repo: local
+    hooks:
+      - id: no-local-mocks
+        name: no local mock overlay
+        entry: frontend/src/mocks/local is the owner's private overlay and must never be committed
+        language: fail
+        files: ^frontend/src/mocks/local/

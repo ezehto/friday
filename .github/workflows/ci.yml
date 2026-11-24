@@ -15,6 +15,9 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v6
+      - name: Local mock overlay must not be tracked
+        working-directory: .
+        run: test -z "$(git ls-files frontend/src/mocks/local)"
       - uses: actions/setup-node@v6
         with:
           node-version: 22.22.0

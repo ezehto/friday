@@ -10,6 +10,7 @@ preview-local:
 	@echo "Friday local preview (with the git-ignored overlay): http://127.0.0.1:5740"
 
 check-frontend:
+	@test -z "$$(git ls-files frontend/src/mocks/local)" || { echo "frontend/src/mocks/local must never be tracked"; exit 1; }
 	docker compose config --quiet
 	docker compose -f compose.dev.yaml config --quiet
 	docker compose -f compose.dev.yaml run --rm frontend-dev npm run check
