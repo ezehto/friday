@@ -36,3 +36,19 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - run: docker build --target preview .
+
+  e2e:
+    needs: image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22.22.0
+      - run: docker compose up --build -d --wait preview
+      - run: npm install -g @playwright/cli@0.1.24
+      # Linux system packages for the browser are unverified on the runner; confirm on the first CI run.
+      - run: playwright-cli install-browser chromium
+      - run: frontend/e2e/smoke.sh
+      - if: always()
+        run: docker compose down
