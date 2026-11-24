@@ -12,7 +12,7 @@ const GAINS = [0.5, 0.8, 1, 0.7, 0.95, 0.6, 0.85] as const;
 export function PushToTalk(props: { pressed: boolean; onChange(pressed: boolean): void; level?: VoiceLevelSource; core?: CoreState }) {
   const { pressed, onChange } = props;
   const wave = useRef<HTMLSpanElement>(null);
-  useVoiceLevel(wave, props.level);
+  useVoiceLevel(wave, props.level, props.core === "listening" || props.core === "speaking");
   return (
     <div className="ptt">
       <button

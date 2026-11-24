@@ -27,31 +27,30 @@ const OUTER_SEGMENTS = [[14, 104], [118, 196], [226, 292], [304, 338]] as const;
 const NOTCH_DOTS = [346, 352, 358] as const;
 
 /**
- * Writes the source's level to --voice-level on the element, and data-live while a level above 0 is
- * flowing. Never React state: the per-tick cost is one style write.
+ * Writes the source's level to --voice-level on the element, via ref (never React state). While
+ * subscribed and `active`, data-live marks the element; a level of 0 does not clear it.
  */
-export function useVoiceLevel(ref: RefObject<Element | null>, level?: VoiceLevelSource): void {
+export function useVoiceLevel(ref: RefObject<Element | null>, level: VoiceLevelSource | undefined, active: boolean): void {
   useEffect(() => {
-    const el = ref.current;
+    const el = ref.current as SVGElement | HTMLElement | null;
     if (!level || !el) return;
+    if (active) el.setAttribute("data-live", "true");
     const off = level.onLevel((v) => {
-      if (!Number.isFinite(v)) return;
-      (el as SVGElement | HTMLElement).style.setProperty("--voice-level", String(Math.min(1, Math.max(0, v))));
-      if (v > 0) {
-        if (!el.hasAttribute("data-live")) el.setAttribute("data-live", "true");
-      } else el.removeAttribute("data-live");
+      if (Number.isFinite(v)) el.style.setProperty("--voice-level", String(Math.min(1, Math.max(0, v))));
     });
     return () => {
       off();
-      (el as SVGElement | HTMLElement).style.removeProperty("--voice-level");
+      el.style.removeProperty("--voice-level");
       el.removeAttribute("data-live");
     };
-  }, [ref, level]);
+  }, [ref, level, active]);
 }
+
+const VOICE_STATES: readonly CoreState[] = ["listening", "speaking"];
 
 export function Core(props: { state: CoreState; size: "full" | "compact"; level?: VoiceLevelSource }) {
   const root = useRef<SVGSVGElement>(null);
-  useVoiceLevel(root, props.level);
+  useVoiceLevel(root, props.level, VOICE_STATES.includes(props.state));
   const { disc, pill } = coreLabels(props.state);
   const compact = props.size === "compact";
   return (

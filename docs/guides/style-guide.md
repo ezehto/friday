@@ -11,7 +11,7 @@ MVP; every colour sits in one `:root` block so a light set can follow.
 |---|---|---|
 | Background | `--bg-canvas`, `--bg-panel`, `--bg-raised` | Warm near-black layers: page, panel, raised surface or disc. |
 | Primary accent | `--accent-primary`, `-strong`, `-dim` | Saturated orange for strokes, ring arcs, kickers and large type. |
-| Secondary accent | `--accent-secondary`, `-dim` | Muted teal-green for the secondary arc and listening or speaking states. |
+| Secondary accent | `--accent-secondary`, `-dim` | Muted teal-green for the secondary arc and the listening state. Speaking uses the primary orange. |
 | Text | `--text-primary`, `--text-secondary`, `--text-muted`, `--text-on-accent` | Near-white values, softer body, quiet metadata, dark text on orange. |
 | Lines and frames | `--line-grid`, `--line-blueprint`, `--line-panel-border`, `--line-corner-bracket` | Faint grey-brown linework: grid, blueprint lines, panel border, brackets. |
 | Glow | `--glow-color`, `--glow-radius`, `--glow-strength` | One soft halo on frames and the core. |

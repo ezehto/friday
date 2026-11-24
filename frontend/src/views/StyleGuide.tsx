@@ -12,7 +12,7 @@ import { Tray } from "../chrome/Tray";
 import { ToneIcon } from "../chrome/ToneIcon";
 import type { AlertKind, Block, ChartBlock, SampleSet, Tone } from "../generated/types";
 import { initialState, type AppState } from "../store";
-import { voiceLevel } from "../transport/mock";
+import { guarded, voiceLevel } from "../transport/mock";
 import type { SessionTransport, VoiceLevelSource } from "../transport/types";
 import samplesJson from "../mocks/samples.json";
 import { BlockBoundary } from "../blocks/BlockBoundary";
@@ -81,7 +81,7 @@ function demoLevel(kind: "listening" | "speaking"): VoiceLevelSource {
       listeners.add(listener);
       timer ??= setInterval(() => {
         const level = voiceLevel(kind, n++);
-        for (const l of listeners) l(level);
+        for (const l of [...listeners]) guarded(l, level);
       }, 50);
       return () => {
         listeners.delete(listener);

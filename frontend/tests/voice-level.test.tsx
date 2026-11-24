@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render } from "@testing-library/react";
 import { act } from "react";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
@@ -33,7 +35,10 @@ async function collect(script: ScriptStep[], opts?: { instant?: boolean }, until
 }
 
 beforeEach(() => vi.useFakeTimers());
-afterEach(() => vi.useRealTimers());
+afterEach(() => {
+  vi.useRealTimers();
+  vi.restoreAllMocks();
+});
 
 test("MockTransport emits levels only while listening or speaking", async () => {
   const { log } = await collect(SCRIPT);
@@ -99,7 +104,7 @@ test("Core writes --voice-level from the source and unsubscribes on unmount", as
   expect(el.style.getPropertyValue("--voice-level")).toBe("0.4");
   expect(el.getAttribute("data-live")).toBe("true");
   await f.emit(0);
-  expect(el.hasAttribute("data-live")).toBe(false);
+  expect(el.getAttribute("data-live")).toBe("true"); // silence mid-listen keeps the rings
   unmount();
   expect(f.listeners.size).toBe(0);
 });
@@ -144,7 +149,6 @@ test("carry: one throwing listener does not skip the rest, and is rethrown async
   expect(seen.length).toBeGreaterThan(0);
   expect(queued.length).toBeGreaterThan(0);
   expect(() => queued[0]!()).toThrow("boom");
-  vi.restoreAllMocks();
 });
 
 test("carry: the store keeps notifying after a listener throws", async () => {
@@ -161,11 +165,71 @@ test("carry: the store keeps notifying after a listener throws", async () => {
   expect(seen).toContain("thinking");
   expect(queued.some((q) => { try { q(); return false; } catch { return true; } })).toBe(true);
   store.dispose();
-  vi.restoreAllMocks();
 });
 
 test("carry: inherited keys are not alert kinds", () => {
   const frame = (kind: string): ServerFrame => ({ v: 1, type: "event", id: "f000001", ts: "2026-11-24T09:00:00.000Z", name: "alert.raised", data: { kind, level: "bad" } });
   for (const kind of ["constructor", "toString", "__proto__"]) expect(applyFrame(initialState, frame(kind)).tray).toEqual([]);
   expect(applyFrame(initialState, frame("run_failed")).tray).toHaveLength(1);
+});
+
+test("Core with a new level source: old unsubscribed, new has one listener, property reset", async () => {
+  const a = fake();
+  const b = fake();
+  const { container, rerender } = render(<Core state="speaking" size="full" level={a.source} />);
+  await a.emit(0.5);
+  rerender(<Core state="speaking" size="full" level={b.source} />);
+  const el = container.querySelector(".core") as SVGElement;
+  expect(a.listeners.size).toBe(0);
+  expect(b.listeners.size).toBe(1);
+  expect(el.style.getPropertyValue("--voice-level")).toBe("");
+});
+
+test("data-live is cleared when the state leaves listening or speaking", () => {
+  const f = fake();
+  const { container, rerender } = render(<Core state="listening" size="full" level={f.source} />);
+  const el = container.querySelector(".core") as SVGElement;
+  expect(el.getAttribute("data-live")).toBe("true");
+  rerender(<Core state="thinking" size="full" level={f.source} />);
+  expect(el.hasAttribute("data-live")).toBe(false);
+});
+
+test("the curves never modulate faster than 3 per second (6 direction reversals per second)", () => {
+  for (const kind of ["listening", "speaking"] as const) {
+    for (const seed of [1, 2, 3]) {
+      const v = Array.from({ length: 200 }, (_, n) => voiceLevel(kind, n, seed)); // 10 s at 50 ms
+      let reversals = 0;
+      let dir = 0;
+      for (let i = 1; i < v.length; i++) {
+        const d = Math.sign(v[i]! - v[i - 1]!);
+        if (d !== 0 && dir !== 0 && d !== dir) reversals++;
+        if (d !== 0) dir = d;
+      }
+      expect(reversals, `${kind} seed ${seed}`).toBeLessThanOrEqual(60);
+    }
+  }
+});
+
+test("every rule that reads --voice-level is guarded against reduced motion", () => {
+  const css = readFileSync(join(import.meta.dirname, "../src/styles/base.css"), "utf8");
+  const start = css.indexOf("@media (prefers-reduced-motion: no-preference) {");
+  expect(start).toBeGreaterThan(-1);
+  let depth = 0;
+  let end = start;
+  for (let i = css.indexOf("{", start); i < css.length; i++) {
+    if (css[i] === "{") depth++;
+    if (css[i] === "}" && --depth === 0) {
+      end = i + 1;
+      break;
+    }
+  }
+  const block = css.slice(start, end);
+  expect(css.slice(0, start) + css.slice(end)).not.toMatch(/var\(--voice-level/);
+  const rules = block.slice(block.indexOf("{") + 1, block.lastIndexOf("}")).split("}").filter((r) => r.includes("var(--voice-level"));
+  expect(rules.length).toBeGreaterThan(0);
+  for (const rule of rules) {
+    const selectors = rule.slice(0, rule.indexOf("{")).split(",").map((x) => x.trim());
+    for (const sel of selectors) expect(sel.startsWith('html:not([data-motion="reduced"])')).toBe(true);
+  }
+  expect(block.slice(block.indexOf("{") + 1)).not.toMatch(/&|\{[^}]*\{/); // flat selectors, no nesting
 });

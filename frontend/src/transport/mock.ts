@@ -11,24 +11,38 @@ const LEVEL_TICK_MS = 50;
 
 type VoiceKind = "listening" | "speaking";
 
+/** Integer hash to 0..1, seeded per kind. */
+function hash01(k: number, kind: VoiceKind, seed: number): number {
+  const h = Math.imul(k + 1, 0x9e3779b1) ^ Math.imul(seed + (kind === "speaking" ? 7 : 3), 0x85ebca6b);
+  return (((h ^ (h >>> 15)) >>> 0) % 1000) / 1000;
+}
+
+/** Value noise: one knot per second, smoothstep between knots, so it never modulates faster than 1 Hz. */
+function smoothNoise(t: number, kind: VoiceKind, seed: number): number {
+  const k = Math.floor(t);
+  const f = t - k;
+  const e = f * f * (3 - 2 * f);
+  return hash01(k, kind, seed) * (1 - e) + hash01(k + 1, kind, seed) * e - 0.5;
+}
+
 /**
- * Deterministic scripted level, 0..1, for tick n. Two or three sines plus seeded noise; the
- * listening curve is slow and uneven, the speaking curve is a syllable beat under a phrase envelope.
+ * Deterministic scripted level, 0..1, for tick n. Sines plus smoothed seeded noise, every component
+ * at 3 Hz or less (no flashing above 3 per second). The listening curve is slow and uneven, the
+ * speaking curve is a syllable beat under a phrase envelope.
  */
 export function voiceLevel(kind: VoiceKind, n: number, seed = 1): number {
   const t = (n * LEVEL_TICK_MS) / 1000;
-  const h = Math.imul(n + 1, 0x9e3779b1) ^ Math.imul(seed + (kind === "speaking" ? 7 : 3), 0x85ebca6b);
-  const noise = (((h ^ (h >>> 15)) >>> 0) % 1000) / 1000 - 0.5;
+  const noise = smoothNoise(t, kind, seed);
   const w = Math.PI * 2;
   const raw =
     kind === "listening"
-      ? 0.4 + 0.22 * Math.sin(w * 0.9 * t + seed) + 0.14 * Math.sin(w * 2.1 * t + 1.1 * seed) + 0.12 * noise
-      : 0.5 + 0.3 * Math.sin(w * 2.4 * t + seed) * (0.6 + 0.4 * Math.sin(w * 0.55 * t)) + 0.1 * Math.sin(w * 4.6 * t) + 0.08 * noise;
+      ? 0.4 + 0.22 * Math.sin(w * 0.9 * t + seed) + 0.14 * Math.sin(w * 2.1 * t + 1.1 * seed) + 0.25 * noise
+      : 0.5 + 0.3 * Math.sin(w * 2.4 * t + seed) * (0.6 + 0.4 * Math.sin(w * 0.55 * t)) + 0.1 * Math.sin(w * 1.3 * t) + 0.2 * noise;
   return Math.min(1, Math.max(0, raw));
 }
 
 /** One throwing listener must not skip the rest: the error is rethrown outside this call. */
-function guarded<T>(l: (v: T) => void, value: T): void {
+export function guarded<T>(l: (v: T) => void, value: T): void {
   try {
     l(value);
   } catch (e) {

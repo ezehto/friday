@@ -127,7 +127,7 @@ p {
 .core[data-core-state="transcribing"] { --core-accent: var(--accent-secondary); --core-speed: 0.5; }
 .core[data-core-state="thinking"] { --core-speed: 0.2; }
 .core[data-core-state="running_tools"] { --core-accent: var(--accent-primary-strong); --core-speed: 0.3; }
-.core[data-core-state="speaking"] { --core-accent: var(--accent-secondary); --core-speed: 0.6; }
+.core[data-core-state="speaking"] { --core-accent: var(--accent-primary); --core-speed: 0.6; }
 .core[data-core-state="awaiting_approval"] { --core-accent: var(--tone-attention); --core-speed: 2; }
 .core[data-core-state="error"] { --core-accent: var(--tone-bad); --core-speed: 2; }
 .core[data-core-state="plan_limit"] { --core-accent: var(--tone-attention); --core-speed: 3; }
@@ -138,6 +138,7 @@ p {
 .core-dot { fill: var(--core-accent); }
 .core-tick { fill: none; stroke: var(--accent-primary-dim); stroke-width: 1.6; }
 .core-arc-secondary { fill: none; stroke: var(--accent-secondary); stroke-width: 4; }
+.core[data-core-state="speaking"] .core-arc-secondary { stroke: var(--accent-primary); }
 .core-band {
   fill: none;
   stroke: var(--core-accent);
@@ -187,39 +188,34 @@ p {
 }
 .core-ripple, .core-halo, .core-pulse { display: none; fill: none; transform-box: view-box; transform-origin: 50% 50%; }
 @media (prefers-reduced-motion: no-preference) {
-  html:not([data-motion="reduced"]) {
-    .core, .ptt-wave { transition: --voice-level var(--motion-voice-ease) linear; }
-    .core[data-live] .core-contract { transform-box: view-box; transform-origin: 50% 50%; }
-    .core[data-core-state="listening"][data-live] {
-      .core-contract { transform: scale(calc(1 - var(--voice-level) * 0.08)); }
-      .core-ripple {
-        display: inline;
-        stroke: var(--accent-secondary);
-        stroke-width: 3;
-        opacity: var(--voice-level);
-        animation: core-ripple-in var(--motion-voice-duration) ease-in infinite;
-      }
-    }
-    .core[data-core-state="speaking"][data-live] {
-      .core-halo {
-        display: inline;
-        stroke: var(--accent-primary);
-        stroke-opacity: 0.45;
-        stroke-width: calc(var(--voice-level) * 22px);
-      }
-      .core-pulse {
-        display: inline;
-        stroke: var(--accent-primary);
-        stroke-width: 3;
-        opacity: var(--voice-level);
-        animation: core-pulse-out var(--motion-voice-duration) ease-out infinite;
-      }
-      .core-pulse-late { animation-delay: calc(var(--motion-voice-duration) / -2); }
-    }
-    .ptt-wave[data-live] .ptt-bar {
-      height: calc(4px + var(--voice-level) * var(--gain) * 26px);
-      animation: none;
-    }
+  html:not([data-motion="reduced"]) .core,
+  html:not([data-motion="reduced"]) .ptt-wave { transition: --voice-level var(--motion-voice-ease) linear; }
+  html:not([data-motion="reduced"]) .core[data-live] .core-contract { transform-box: view-box; transform-origin: 50% 50%; }
+  html:not([data-motion="reduced"]) .core[data-core-state="listening"][data-live] .core-contract { transform: scale(calc(1 - var(--voice-level) * 0.08)); }
+  html:not([data-motion="reduced"]) .core[data-core-state="listening"][data-live] .core-ripple {
+    display: inline;
+    stroke: var(--accent-secondary);
+    stroke-width: 3;
+    opacity: var(--voice-level);
+    animation: core-ripple-in var(--motion-voice-duration) ease-in infinite;
+  }
+  html:not([data-motion="reduced"]) .core[data-core-state="speaking"][data-live] .core-halo {
+    display: inline;
+    stroke: var(--accent-primary);
+    stroke-opacity: 0.45;
+    stroke-width: calc(var(--voice-level) * 22px);
+  }
+  html:not([data-motion="reduced"]) .core[data-core-state="speaking"][data-live] .core-pulse {
+    display: inline;
+    stroke: var(--accent-primary);
+    stroke-width: 3;
+    opacity: var(--voice-level);
+    animation: core-pulse-out var(--motion-voice-duration) ease-out infinite;
+  }
+  html:not([data-motion="reduced"]) .core[data-core-state="speaking"][data-live] .core-pulse-late { animation-delay: calc(var(--motion-voice-duration) / -2); }
+  html:not([data-motion="reduced"]) .ptt-wave[data-live] .ptt-bar {
+    height: calc(4px + var(--voice-level) * var(--gain) * 26px);
+    animation: none;
   }
 }
 @keyframes core-ripple-in {
@@ -465,7 +461,7 @@ p {
 .ptt-button { touch-action: none; user-select: none; }
 .ptt-button[aria-pressed="true"] { background: var(--accent-primary); border-color: var(--accent-primary-strong); color: var(--text-on-accent); }
 .ptt-wave { --voice-level: 0; display: inline-flex; align-items: center; gap: 3px; height: 2rem; }
-.ptt-bar { width: 3px; height: 8px; background: var(--text-muted); transform-origin: center; }
+.ptt-bar { width: 3px; height: 4px; background: var(--text-muted); transform-origin: center; }
 .ptt-button[aria-pressed="true"] ~ .ptt-wave:not([data-live]) .ptt-bar { background: var(--accent-secondary); animation: ptt-rest var(--motion-pulse-duration) ease-in-out infinite alternate; animation-delay: calc(var(--bar) * 0.12s); }
 .ptt-label { min-height: 1.4em; color: var(--text-secondary); }
 .ptt-wave[data-live] .ptt-bar { background: var(--accent-secondary); }
