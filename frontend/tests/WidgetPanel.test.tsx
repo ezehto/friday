@@ -72,3 +72,8 @@ test("timeZone shifts the as of time", () => {
   const { container } = render(<WidgetPanel envelope={{ ...base, as_of: "2026-11-20T08:14:00Z" }} now={now} timeZone="Asia/Manila" />);
   expect(container.textContent).toContain("as of 16:14");
 });
+
+test("an envelope whose blocks is not an array still renders its title", () => {
+  const { container } = panel({ blocks: null as unknown as WidgetEnvelope["blocks"] });
+  expect(container.textContent).toContain("Panel");
+});

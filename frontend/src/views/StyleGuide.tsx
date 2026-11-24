@@ -7,8 +7,9 @@ import { HudFrame } from "../chrome/HudFrame";
 import { MotionSetting } from "../chrome/MotionSetting";
 import { StatusPill } from "../chrome/StatusPill";
 import { ToneIcon } from "../chrome/ToneIcon";
-import type { Block, SampleSet, Tone } from "../generated/types";
+import type { Block, ChartBlock, SampleSet, Tone } from "../generated/types";
 import samplesJson from "../mocks/samples.json";
+import { BlockBoundary } from "../blocks/BlockBoundary";
 import { BlockRenderer } from "../blocks/BlockRenderer";
 import { WidgetPanel } from "../widgets/WidgetPanel";
 
@@ -41,6 +42,14 @@ for (const { envelope } of samples.items) {
     if (!BLOCK_SPECIMENS.some((s) => s.block.kind === block.kind)) BLOCK_SPECIMENS.push({ block, from: envelope.widget_id });
   }
 }
+
+// The samples use only some chart kinds, so show all four from the chart sample.
+const CHART_KINDS: ChartBlock["chart"][] = ["line", "bar", "area", "donut"];
+const chartSample = BLOCK_SPECIMENS.find((s) => s.block.kind === "chart")!;
+const chartBlock = (chart: ChartBlock["chart"]): ChartBlock => {
+  const base = chartSample.block as ChartBlock;
+  return { ...base, chart, series: chart === "donut" ? base.series.slice(0, 1) : base.series };
+};
 
 const TONES: Tone[] = ["good", "attention", "bad", "neutral"];
 
@@ -128,7 +137,16 @@ export function StyleGuide() {
           <div className="sg-grid">
             {BLOCK_SPECIMENS.map(({ block, from }) => (
               <HudFrame key={block.kind} title={block.kind} kicker={from}>
-                <BlockRenderer block={block} />
+                <BlockBoundary>
+                  <BlockRenderer block={block} />
+                </BlockBoundary>
+              </HudFrame>
+            ))}
+            {CHART_KINDS.map((chart) => (
+              <HudFrame key={chart} title={`chart: ${chart}`} kicker={chartSample.from}>
+                <BlockBoundary>
+                  <BlockRenderer block={chartBlock(chart)} />
+                </BlockBoundary>
               </HudFrame>
             ))}
           </div>
