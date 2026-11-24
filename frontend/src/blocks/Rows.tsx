@@ -18,7 +18,11 @@ export function RowsBlock({ block }: { block: RowsBlockData }) {
               {log ? (
                 <>
                   {item.meta && <span className="row-meta">{item.meta}</span>}
-                  <span className="row-label">{item.label}</span>
+                  <span className="row-text">
+                    <span className="row-label">{item.label}</span>
+                    {item.detail && <span className="row-detail block-muted">{item.detail}</span>}
+                    {item.link && <span className="row-detail"><LinkText link={item.link} /></span>}
+                  </span>
                   {item.tone && <ToneIcon tone={item.tone} />}
                 </>
               ) : (

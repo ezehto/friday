@@ -5,6 +5,7 @@ import { ToneIcon } from "../chrome/ToneIcon";
 import type { SpanView, Tone, TraceView } from "../generated/types";
 import { formatNumber, formatTime } from "../lib/format";
 import type { AppState } from "../store";
+import { EmptyState } from "./EmptyState";
 import { PreviewBanner } from "./PreviewBanner";
 import { buildSpanTree, type SpanNode } from "./spanTree";
 import { VisibleText } from "./VisibleText";
@@ -24,12 +25,12 @@ function SpanItems(props: { nodes: SpanNode[]; depth?: number }) {
       {props.nodes.map((n) => (
         <li key={n.span_id}>
           <div className="span-row">
-            <span className="label">{n.kind}</span>
             <span className="span-name"><VisibleText value={n.name} /></span>
-            <span>{duration(n.duration_ms)}</span>
-            {n.tokens_in !== undefined || n.tokens_out !== undefined ? (
-              <span>{T.tokens} {formatNumber(n.tokens_in ?? 0)} / {formatNumber(n.tokens_out ?? 0)}</span>
-            ) : null}
+            <span className="label span-kind">{T.kinds[n.kind]}</span>
+            <span className="span-num">{duration(n.duration_ms)}</span>
+            <span className="span-num">
+              {n.tokens_in !== undefined || n.tokens_out !== undefined ? `${formatNumber(n.tokens_in ?? 0)} / ${formatNumber(n.tokens_out ?? 0)}` : ""}
+            </span>
             <span className="span-status"><ToneIcon tone={TONE[n.status]} />{T.spanStatus[n.status]}</span>
           </div>
           {n.children.length > 0 ? <SpanItems nodes={n.children} depth={depth + 1} /> : null}
@@ -40,7 +41,19 @@ function SpanItems(props: { nodes: SpanNode[]; depth?: number }) {
 }
 
 export function SpanTree(props: { spans: SpanView[] }) {
-  return <SpanItems nodes={buildSpanTree(props.spans)} />;
+  const c = T.columns;
+  return (
+    <div className="span-tree">
+      <div className="span-row span-head label" aria-hidden="true">
+        <span>{c.name}</span>
+        <span>{c.kind}</span>
+        <span className="span-num">{c.duration}</span>
+        <span className="span-num">{c.tokens}</span>
+        <span>{c.status}</span>
+      </div>
+      <SpanItems nodes={buildSpanTree(props.spans)} />
+    </div>
+  );
 }
 
 export function RequestList(props: { traces: TraceView[]; selected: string; onSelect?: (id: string) => void }) {
@@ -50,8 +63,15 @@ export function RequestList(props: { traces: TraceView[]; selected: string; onSe
         <li key={t.trace_id}>
           <button type="button" className="proposal-item" aria-pressed={t.trace_id === props.selected} onClick={() => props.onSelect?.(t.trace_id)}>
             <span><VisibleText value={t.label} /></span>
-            <span className="label">{formatTime(t.started)} / {duration(t.duration_ms)}</span>
-            <span className="label">{T.tokensIn} {formatNumber(t.tokens_in)} / {T.tokensOut} {formatNumber(t.tokens_out)} / {formatCost(t.cost_usd)}</span>
+            <span className="label request-cols">
+              <span>{formatTime(t.started)}</span>
+              <span>{duration(t.duration_ms)}</span>
+              <span>{formatCost(t.cost_usd)}</span>
+            </span>
+            <span className="label request-cols request-cols-pair">
+              <span>{T.tokensIn} {formatNumber(t.tokens_in)}</span>
+              <span>{T.tokensOut} {formatNumber(t.tokens_out)}</span>
+            </span>
           </button>
         </li>
       ))}
@@ -66,6 +86,7 @@ export function Traces(props: { state: AppState }) {
   return (
     <div className="view">
       <PreviewBanner />
+      <h2 className="visually-hidden">{FIXED.chrome.views.traces}</h2>
       {current ? (
         <div className="view-split">
           <RequestList traces={traces} selected={current.trace_id} onSelect={setSelected} />
@@ -74,7 +95,7 @@ export function Traces(props: { state: AppState }) {
           </HudFrame>
         </div>
       ) : (
-        <p className="board-note">{T.empty}</p>
+        <EmptyState title={FIXED.chrome.views.traces} text={T.empty} />
       )}
     </div>
   );

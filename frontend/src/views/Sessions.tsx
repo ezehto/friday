@@ -6,6 +6,7 @@ import type { RunView, SessionView, Tone } from "../generated/types";
 import { formatTime } from "../lib/format";
 import type { AppState } from "../store";
 import type { SessionTransport } from "../transport/types";
+import { EmptyState } from "./EmptyState";
 import { PreviewBanner } from "./PreviewBanner";
 import { VisibleText, visibleString } from "./VisibleText";
 
@@ -28,12 +29,12 @@ export function SessionsTable(props: { sessions: SessionView[] }) {
         <caption className="visually-hidden">{T.sessions}</caption>
         <thead>
           <tr>
-            <th scope="col">{T.project}</th>
-            <th scope="col">{T.dataClass}</th>
-            <th scope="col">{T.kind}</th>
-            <th scope="col">{T.state}</th>
-            <th scope="col">{T.waiting}</th>
-            <th scope="col">{T.lastActivity}</th>
+            <th scope="col" className="label">{T.project}</th>
+            <th scope="col" className="label">{T.dataClass}</th>
+            <th scope="col" className="label">{T.kind}</th>
+            <th scope="col" className="label">{T.state}</th>
+            <th scope="col" className="label">{T.waiting}</th>
+            <th scope="col" className="label">{T.lastActivity}</th>
           </tr>
         </thead>
         <tbody>
@@ -61,18 +62,18 @@ export function RunsList(props: { runs: RunView[]; act: SessionTransport["act"];
   return (
     <>
       {props.runs.length === 0 ? (
-        <p className="board-note">{T.noRuns}</p>
+        <p className="block-empty">{T.noRuns}</p>
       ) : (
         <div className="block-table">
           <table>
             <caption className="visually-hidden">{T.runs}</caption>
             <thead>
               <tr>
-                <th scope="col">{T.repo}</th>
-                <th scope="col">{T.mode}</th>
-                <th scope="col">{T.status}</th>
-                <th scope="col">{T.started}</th>
-                <th scope="col"><span className="visually-hidden">{T.actions}</span></th>
+                <th scope="col" className="label">{T.repo}</th>
+                <th scope="col" className="label">{T.mode}</th>
+                <th scope="col" className="label">{T.status}</th>
+                <th scope="col" className="label">{T.started}</th>
+                <th scope="col" className="label"><span className="visually-hidden">{T.actions}</span></th>
               </tr>
             </thead>
             <tbody>
@@ -103,7 +104,7 @@ export function MessagePanel(props: { sessions: SessionView[]; act: SessionTrans
   const [text, setText] = useState(props.initialText ?? "");
   const [result, setResult] = useState(props.initialResult ?? "");
   const current = props.sessions.find((s) => s.session_id === selected) ?? props.sessions[0];
-  if (!current) return <p className="board-note">{T.empty}</p>;
+  if (!current) return <p className="block-empty">{T.empty}</p>;
   const send = async (): Promise<void> => {
     if (text.trim() === "") return setResult(T.textNeeded);
     setResult((await props.act({ kind: "send_session_message", sessionId: current.session_id, text })).message);
@@ -139,7 +140,7 @@ export function Sessions(props: { state: AppState; act: SessionTransport["act"] 
     <div className="view">
       <PreviewBanner />
       {sorted.length === 0 ? (
-        <p className="board-note">{T.empty}</p>
+        <EmptyState title={T.sessions} text={T.empty} />
       ) : (
         <HudFrame title={T.sessions} headingLevel={2}>
           <SessionsTable sessions={sorted} />

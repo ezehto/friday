@@ -91,3 +91,12 @@ returns to the scenario's state on release; this override is never written to
 the store. With "Reduce motion" or the operating-system preference,
 nothing reads the level and the static core is shown. The Voice level section of
 the style guide page shows both states.
+
+## Empty states and rows
+
+Approvals, Permissions, Traces and Sessions share one empty state: a frame named
+for the view with the fixed empty text inside it. Each view keeps a heading walk
+with no skipped level (h1, then h2). Log rows show the label, then the muted
+detail and any link on the same line, so a task queue reads time, label, status.
+Traces lay each span out in fixed columns (span, kind, duration, tokens, status)
+with the kind written as words. The style guide page shows each.

@@ -4,6 +4,7 @@ import { HudFrame } from "../chrome/HudFrame";
 import type { PermissionView } from "../generated/types";
 import type { AppState } from "../store";
 import type { SessionTransport } from "../transport/types";
+import { EmptyState } from "./EmptyState";
 import { PreviewBanner } from "./PreviewBanner";
 import { RawField } from "./RawField";
 import { VisibleText } from "./VisibleText";
@@ -72,6 +73,7 @@ export function Permissions(props: { state: AppState; act: SessionTransport["act
   return (
     <div className="view">
       <PreviewBanner />
+      <h2 className="visually-hidden">{FIXED.chrome.views.permissions}</h2>
       {request ? (
         <PermissionCard
           request={request}
@@ -81,7 +83,7 @@ export function Permissions(props: { state: AppState; act: SessionTransport["act
           act={props.act}
         />
       ) : (
-        <p className="board-note">{T.empty}</p>
+        <EmptyState title={FIXED.chrome.views.permissions} text={T.empty} />
       )}
     </div>
   );

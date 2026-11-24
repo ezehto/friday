@@ -19,8 +19,8 @@ import { BlockBoundary } from "../blocks/BlockBoundary";
 import { BlockRenderer } from "../blocks/BlockRenderer";
 import { Approvals, ProposalPreview } from "./Approvals";
 import { PermissionCard, Permissions } from "./Permissions";
-import { MessagePanel, RUN_STATUSES, RunsList, SessionsTable } from "./Sessions";
-import { RequestList, SpanTree } from "./Traces";
+import { MessagePanel, RUN_STATUSES, RunsList, Sessions, SessionsTable } from "./Sessions";
+import { RequestList, SpanTree, Traces } from "./Traces";
 import { PreviewBanner } from "./PreviewBanner";
 import { RawField } from "./RawField";
 import { WidgetPanel } from "../widgets/WidgetPanel";
@@ -357,6 +357,12 @@ export function StyleGuide() {
           </HudFrame>
           <HudFrame title="Permissions, empty" kicker="No requests" headingLevel={3}>
             <Permissions state={initialState} act={specimenAct} />
+          </HudFrame>
+          <HudFrame title="Traces, empty" kicker="No requests" headingLevel={3}>
+            <Traces state={initialState} />
+          </HudFrame>
+          <HudFrame title="Sessions, empty" kicker="No sessions" headingLevel={3}>
+            <Sessions state={initialState} act={specimenAct} />
           </HudFrame>
           <HudFrame title="Traces, request list" kicker="Selected request pressed" headingLevel={3}>
             <RequestList traces={SPECIMEN_TRACES} selected="sp-1" />

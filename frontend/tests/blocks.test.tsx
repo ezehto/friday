@@ -70,6 +70,13 @@ test("rows log variant shows meta then label", () => {
   expect(text.indexOf("09:05")).toBeLessThan(text.indexOf("sync done"));
 });
 
+test("rows log variant shows detail and link text", () => {
+  const link = { text: "Open it", url: "https://example.com/x" };
+  const { container } = render(<RowsBlock block={{ kind: "rows", variant: "log", items: [{ label: "Lantern refactor", detail: "awaiting approval", link }] }} />);
+  expect(container.textContent).toContain("awaiting approval");
+  expect(screen.getByRole("link").textContent).toContain("Open it");
+});
+
 test("facts link shows the host", () => {
   render(<FactsBlock block={{ kind: "facts", items: [{ label: "Docs", value: "guide", link: { text: "Read", url: "https://example.com/guide" } }] }} />);
   expect(screen.getByRole("link").textContent).toContain("example.com");

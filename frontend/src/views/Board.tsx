@@ -1,5 +1,6 @@
 import { Component, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Core } from "../chrome/Core";
+import type { CoreState } from "../chrome/coreStates";
 import { FIXED } from "../chrome/fixedText";
 import { StatusPill } from "../chrome/StatusPill";
 import type { WidgetEnvelope } from "../generated/types";
@@ -9,6 +10,8 @@ import type { VoiceLevelSource } from "../transport/types";
 import { WidgetPanel } from "../widgets/WidgetPanel";
 
 const PANEL_MAX = 12;
+// A request is in progress while the core is busy, even before request.started arrives.
+const BUSY: readonly CoreState[] = ["listening", "transcribing", "thinking", "running_tools", "speaking"];
 
 /** Board index 0 is newest; even indexes go left, odd right, order kept. */
 export function splitColumns(board: WidgetEnvelope[]): { left: WidgetEnvelope[]; right: WidgetEnvelope[] } {
@@ -92,7 +95,7 @@ export function Board(props: { state: AppState; now: string; level?: VoiceLevelS
   const host = useRef<HTMLDivElement>(null);
   useFlip(host, items.map((e) => e?.widget_id ?? "").join("|"));
   const { left, right } = splitColumns(items);
-  const note = items.length > 0 ? null : state.requestOpen ? FIXED.loadingBoard : FIXED.emptyBoard;
+  const note = items.length > 0 ? null : state.requestOpen || BUSY.includes(state.core) ? FIXED.loadingBoard : FIXED.emptyBoard;
   return (
     <div className="board" ref={host}>
       <Column name="left" items={left} indexes={left.map((_, i) => i * 2)} now={now} leaving={leaving} />

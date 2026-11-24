@@ -20,7 +20,10 @@ test("traces show cost and tokens", () => {
   expect(item.textContent).toContain("$0.031");
   expect(item.textContent).toContain("5.2K");
   expect(screen.getAllByRole("list").length).toBeGreaterThan(1);
-  expect(screen.getByText(first.spans[0]!.name)).toBeTruthy();
+  expect(document.querySelector(".span-name")?.textContent).toBe(first.spans[0]!.name);
+  // Kinds read as words, not enums.
+  expect(screen.getAllByText("Model turn").length).toBeGreaterThan(0);
+  expect(document.body.textContent).not.toContain("model_turn");
 });
 
 test("a span tree shows error and timeout by word", () => {
