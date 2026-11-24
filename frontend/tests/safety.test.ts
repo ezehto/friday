@@ -79,3 +79,19 @@ test.each(["https://localhost.example.com/", "http://[::ffff:8.8.8.8]/", "https:
     expect(safeLink(url)).not.toBeNull();
   },
 );
+
+test.each([
+  "http://0.0.0.0/",
+  "http://[::]/",
+  "http://[fc00::1]/",
+  "http://[febf::1]/",
+  "http://[::ffff:10.0.0.1]/",
+  "http://[::ffff:192.168.0.1]/",
+  "http://172.16.0.1/",
+])("safeLink rejects range edge %j", (url) => {
+  expect(safeLink(url)).toBeNull();
+});
+
+test("safeLink keeps 172.15.0.1, just below the private range", () => {
+  expect(safeLink("http://172.15.0.1/")?.host).toBe("172.15.0.1");
+});

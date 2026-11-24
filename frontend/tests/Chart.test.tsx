@@ -112,3 +112,10 @@ test("a donut with 5 slices is not grouped", () => {
   const keys = [...container.querySelectorAll(".chart-key")].map((e) => e.textContent);
   expect(keys).toEqual(["x0", "x1", "x2", "x3", "x4"]);
 });
+
+test("a donut with exactly 6 slices draws 5 and sums slices 5 and 6 into Other", () => {
+  const series = mk("donut", [1, 2, 3, 4, 5, 6]).series;
+  const { container } = render(<ChartBlock block={{ kind: "chart", chart: "donut", series }} />);
+  expect(container.querySelectorAll("svg path, svg circle")).toHaveLength(5);
+  expect(donutSlices(series).at(-1)).toMatchObject({ name: "Other", value: 11 });
+});
