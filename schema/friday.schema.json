@@ -11,6 +11,9 @@
     },
     "common": {
       "$ref": "common.schema.json"
+    },
+    "server_frame": {
+      "$ref": "frames/server-frame.schema.json"
     }
   }
 }

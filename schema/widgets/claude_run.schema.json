@@ -27,19 +27,7 @@
       ]
     },
     "status": {
-      "type": "string",
-      "enum": [
-        "proposed",
-        "starting",
-        "working",
-        "waiting",
-        "done",
-        "failed",
-        "stopped",
-        "timed_out",
-        "cancelled",
-        "unlinked"
-      ]
+      "$ref": "#/$defs/RunStatus"
     },
     "started": {
       "type": "string",
@@ -65,5 +53,23 @@
     "mode",
     "status"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$defs": {
+    "RunStatus": {
+      "title": "RunStatus",
+      "type": "string",
+      "enum": [
+        "proposed",
+        "starting",
+        "working",
+        "waiting",
+        "done",
+        "failed",
+        "stopped",
+        "timed_out",
+        "cancelled",
+        "unlinked"
+      ]
+    }
+  }
 }

@@ -7,25 +7,711 @@
       "title": "MockWidget",
       "type": "object",
       "properties": {
-        "widget": { "$ref": "../../../schema/widgets/widget.schema.json" },
+        "widget": {
+          "$ref": "../../../schema/widgets/widget.schema.json"
+        },
         "envelope": {
           "allOf": [
-            { "$ref": "../../../schema/envelope.schema.json" },
-            { "type": "object", "properties": { "source": { "const": "sample" } } }
+            {
+              "$ref": "../../../schema/envelope.schema.json"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "source": {
+                  "const": "sample"
+                }
+              }
+            }
           ]
         }
       },
-      "required": ["widget", "envelope"],
+      "required": [
+        "widget",
+        "envelope"
+      ],
       "additionalProperties": false
     },
     "SampleSet": {
       "title": "SampleSet",
       "type": "object",
       "properties": {
-        "now": { "type": "string", "format": "date-time" },
-        "items": { "type": "array", "items": { "$ref": "#/$defs/MockWidget" } }
+        "now": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MockWidget"
+          }
+        }
       },
-      "required": ["now", "items"],
+      "required": [
+        "now",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "ScriptCoreState": {
+      "title": "ScriptCoreState",
+      "type": "string",
+      "enum": [
+        "idle",
+        "listening",
+        "transcribing",
+        "thinking",
+        "running_tools",
+        "speaking",
+        "awaiting_approval",
+        "error",
+        "plan_limit"
+      ]
+    },
+    "ProposalView": {
+      "title": "ProposalView",
+      "type": "object",
+      "properties": {
+        "proposal_id": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "host_action": {
+          "type": "boolean"
+        },
+        "tool": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "target": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "target_folder": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "data_class": {
+          "$ref": "../../../schema/common.schema.json#/$defs/DataClass"
+        },
+        "content": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "secret_scan": {
+          "type": "string",
+          "enum": [
+            "clean",
+            "found"
+          ]
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expires": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "args_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "proposal_id",
+        "host_action",
+        "tool",
+        "title",
+        "data_class",
+        "content",
+        "secret_scan",
+        "created",
+        "expires",
+        "args_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "RunView": {
+      "title": "RunView",
+      "type": "object",
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "repo": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "ask",
+            "task"
+          ]
+        },
+        "status": {
+          "$ref": "../../../schema/widgets/claude_run.schema.json#/$defs/RunStatus"
+        },
+        "started": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "run_id",
+        "repo",
+        "mode",
+        "status",
+        "started"
+      ],
+      "additionalProperties": false
+    },
+    "SessionView": {
+      "title": "SessionView",
+      "type": "object",
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "project": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "data_class": {
+          "$ref": "../../../schema/common.schema.json#/$defs/DataClass"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "terminal",
+            "background",
+            "friday"
+          ]
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "working",
+            "idle",
+            "waiting",
+            "done"
+          ]
+        },
+        "waiting": {
+          "type": "boolean"
+        },
+        "last_activity": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "session_id",
+        "project",
+        "data_class",
+        "kind",
+        "state",
+        "waiting",
+        "last_activity"
+      ],
+      "additionalProperties": false
+    },
+    "PermissionView": {
+      "title": "PermissionView",
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{32}$"
+        },
+        "session_id": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "project": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "data_class": {
+          "$ref": "../../../schema/common.schema.json#/$defs/DataClass"
+        },
+        "permission_mode": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "friday_started": {
+          "type": "boolean"
+        },
+        "cwd": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "tool": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "input": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "maxLength": 20000
+          }
+        }
+      },
+      "required": [
+        "request_id",
+        "session_id",
+        "project",
+        "data_class",
+        "permission_mode",
+        "friday_started",
+        "cwd",
+        "tool",
+        "input"
+      ],
+      "additionalProperties": false
+    },
+    "SpanView": {
+      "title": "SpanView",
+      "type": "object",
+      "properties": {
+        "span_id": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "parent_span_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 64
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "request",
+            "decision",
+            "model_turn",
+            "tool_call",
+            "retrieval",
+            "subagent",
+            "approval",
+            "external_call",
+            "summary",
+            "handoff",
+            "claude_run",
+            "hook_event",
+            "permission_decision"
+          ]
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tokens_in": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tokens_out": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "error",
+            "timeout"
+          ]
+        }
+      },
+      "required": [
+        "span_id",
+        "parent_span_id",
+        "name",
+        "kind",
+        "duration_ms",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "TraceView": {
+      "title": "TraceView",
+      "type": "object",
+      "properties": {
+        "trace_id": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "started": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tokens_in": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tokens_out": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cost_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "spans": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/$defs/SpanView"
+          }
+        }
+      },
+      "required": [
+        "trace_id",
+        "label",
+        "started",
+        "duration_ms",
+        "tokens_in",
+        "tokens_out",
+        "cost_usd",
+        "spans"
+      ],
+      "additionalProperties": false
+    },
+    "TrayItem": {
+      "title": "TrayItem",
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "../../../schema/frames/server-frame.schema.json#/$defs/AlertKind"
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "approvals",
+            "permissions",
+            "sessions",
+            "traces",
+            "health"
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "ViewSet": {
+      "title": "ViewSet",
+      "type": "object",
+      "properties": {
+        "approvals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProposalView"
+          }
+        },
+        "runs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RunView"
+          }
+        },
+        "sessions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SessionView"
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PermissionView"
+          }
+        },
+        "traces": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TraceView"
+          }
+        },
+        "tray": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TrayItem"
+          }
+        }
+      },
+      "required": [
+        "approvals",
+        "runs",
+        "sessions",
+        "permissions",
+        "traces",
+        "tray"
+      ],
+      "additionalProperties": false
+    },
+    "StateSnapshot": {
+      "title": "StateSnapshot",
+      "type": "object",
+      "properties": {
+        "approvals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProposalView"
+          }
+        },
+        "runs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RunView"
+          }
+        },
+        "sessions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SessionView"
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PermissionView"
+          }
+        },
+        "traces": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TraceView"
+          }
+        },
+        "tray": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TrayItem"
+          }
+        },
+        "board": {
+          "type": "array",
+          "maxItems": 12,
+          "items": {
+            "$ref": "../../../schema/envelope.schema.json"
+          }
+        }
+      },
+      "required": [
+        "approvals",
+        "runs",
+        "sessions",
+        "permissions",
+        "traces",
+        "tray",
+        "board"
+      ],
+      "additionalProperties": false
+    },
+    "ScriptStep": {
+      "title": "ScriptStep",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "at_ms": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "event": {
+              "$ref": "../../../schema/frames/server-frame.schema.json#/$defs/EventName"
+            },
+            "data": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "at_ms",
+            "event",
+            "data"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "at_ms": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "board": {
+              "type": "array",
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,40}$"
+              }
+            }
+          },
+          "required": [
+            "at_ms",
+            "board"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "at_ms": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "reply": {
+              "type": "string",
+              "maxLength": 400
+            }
+          },
+          "required": [
+            "at_ms",
+            "reply"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "at_ms": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "core": {
+              "$ref": "#/$defs/ScriptCoreState"
+            }
+          },
+          "required": [
+            "at_ms",
+            "core"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "Scenario": {
+      "title": "Scenario",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]{1,40}$"
+        },
+        "group": {
+          "type": "string",
+          "enum": [
+            "request",
+            "state",
+            "edge"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "request": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "now": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "widgets": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "$ref": "#/$defs/MockWidget"
+          }
+        },
+        "script": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/$defs/ScriptStep"
+          }
+        },
+        "views": {
+          "type": "object",
+          "properties": {
+            "approvals": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ProposalView"
+              }
+            },
+            "runs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/RunView"
+              }
+            },
+            "sessions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/SessionView"
+              }
+            },
+            "permissions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/PermissionView"
+              }
+            },
+            "traces": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/TraceView"
+              }
+            },
+            "tray": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/TrayItem"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "group",
+        "label",
+        "now",
+        "widgets",
+        "script"
+      ],
       "additionalProperties": false
     }
   }

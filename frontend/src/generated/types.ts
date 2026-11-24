@@ -49,6 +49,113 @@ export type Widget =
   | ScheduleWidget
   | MeetingWidget
   | FocusTimeWidget;
+/**
+ * This interface was referenced by `ClaudeRunWidget`'s JSON-Schema
+ * via the `definition` "RunStatus".
+ */
+export type RunStatus =
+  | "proposed"
+  | "starting"
+  | "working"
+  | "waiting"
+  | "done"
+  | "failed"
+  | "stopped"
+  | "timed_out"
+  | "cancelled"
+  | "unlinked";
+/**
+ * This interface was referenced by `Friday`'s JSON-Schema
+ * via the `definition` "server_frame".
+ */
+export type ServerFrame = {
+  v: 1;
+  type: "event" | "error" | "ack";
+  id: FrameId;
+  ts: string;
+  name?: EventName;
+  data: {};
+};
+/**
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "Id".
+ */
+export type FrameId = string;
+/**
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "EventName".
+ */
+export type EventName =
+  | "message.delta"
+  | "message.done"
+  | "request.started"
+  | "request.finished"
+  | "board.updated"
+  | "approval.created"
+  | "approval.updated"
+  | "run.updated"
+  | "session.updated"
+  | "permission.pending"
+  | "permission.resolved"
+  | "session_message.sent"
+  | "research.finished"
+  | "alert.raised";
+/**
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "AlertKind".
+ */
+export type AlertKind =
+  | "approvals_waiting"
+  | "run_finished"
+  | "run_failed"
+  | "run_timed_out"
+  | "run_over_tokens"
+  | "session_waiting"
+  | "plan_limit"
+  | "login_expiring"
+  | "adapter_degraded"
+  | "companion_degraded"
+  | "over_budget"
+  | "proposal_expiring";
+/**
+ * This interface was referenced by `Mock`'s JSON-Schema
+ * via the `definition` "ScriptCoreState".
+ */
+export type ScriptCoreState =
+  | "idle"
+  | "listening"
+  | "transcribing"
+  | "thinking"
+  | "running_tools"
+  | "speaking"
+  | "awaiting_approval"
+  | "error"
+  | "plan_limit";
+/**
+ * This interface was referenced by `Mock`'s JSON-Schema
+ * via the `definition` "ScriptStep".
+ */
+export type ScriptStep =
+  | {
+      at_ms: number;
+      event: EventName;
+      data: {};
+    }
+  | {
+      at_ms: number;
+      /**
+       * @maxItems 12
+       */
+      board: string[];
+    }
+  | {
+      at_ms: number;
+      reply: string;
+    }
+  | {
+      at_ms: number;
+      core: ScriptCoreState;
+    };
 
 export interface HttpsFridayInvalidFrontendScriptsGenRootJson {
   [k: string]: unknown;
@@ -417,17 +524,7 @@ export interface ClaudeRunWidget {
   run_id: string;
   repo: string;
   mode: "ask" | "task";
-  status:
-    | "proposed"
-    | "starting"
-    | "working"
-    | "waiting"
-    | "done"
-    | "failed"
-    | "stopped"
-    | "timed_out"
-    | "cancelled"
-    | "unlinked";
+  status: RunStatus;
   started?: string;
   duration?: string;
   usage?: string;
@@ -562,4 +659,171 @@ export interface MockWidget {
 export interface SampleSet {
   now: string;
   items: MockWidget[];
+}
+/**
+ * This interface was referenced by `Mock`'s JSON-Schema
+ * via the `definition` "ProposalView".
+ */
+export interface ProposalView {
+  proposal_id: string;
+  host_action: boolean;
+  tool: string;
+  title: string;
+  target?: string;
+  target_folder?: string;
+  data_class: DataClass;
+  content: string;
+  secret_scan: "clean" | "found";
+  created: string;
+  expires: string;
+  args_sha256: string;
+}
+/**
+ * This interface was referenced by `Mock`'s JSON-Schema
+ * via the `definition` "RunView".
+ */
+export interface RunView {
+  run_id: string;
+  repo: string;
+  mode: "ask" | "task";
+  status: RunStatus;
+  started: string;
+}
+/**
+ * This interface was referenced by `Mock`'s JSON-Schema
+ * via the `definition` "SessionView".
+ */
+export interface SessionView {
+  session_id: string;
+  project: string;
+  data_class: DataClass;
+  kind: "terminal" | "background" | "friday";
+  state: "working" | "idle" | "waiting" | "done";
+  waiting: boolean;
+  last_activity: string;
+}
+/**
+ * This interface was referenced by `Mock`'s JSON-Schema
+ * via the `definition` "PermissionView".
+ */
+export interface PermissionView {
+  request_id: string;
+  session_id: string;
+  project: string;
+  data_class: DataClass;
+  permission_mode: string;
+  friday_started: boolean;
+  cwd: string;
+  tool: string;
+  input: {
+    [k: string]: string;
+  };
+}
+/**
+ * This interface was referenced by `Mock`'s JSON-Schema
+ * via the `definition` "SpanView".
+ */
+export interface SpanView {
+  span_id: string;
+  parent_span_id: string | null;
+  name: string;
+  kind:
+    | "request"
+    | "decision"
+    | "model_turn"
+    | "tool_call"
+    | "retrieval"
+    | "subagent"
+    | "approval"
+    | "external_call"
+    | "summary"
+    | "handoff"
+    | "claude_run"
+    | "hook_event"
+    | "permission_decision";
+  duration_ms: number;
+  tokens_in?: number;
+  tokens_out?: number;
+  status: "ok" | "error" | "timeout";
+}
+/**
+ * This interface was referenced by `Mock`'s JSON-Schema
+ * via the `definition` "TraceView".
+ */
+export interface TraceView {
+  trace_id: string;
+  label: string;
+  started: string;
+  duration_ms: number;
+  tokens_in: number;
+  tokens_out: number;
+  cost_usd: number;
+  /**
+   * @maxItems 200
+   */
+  spans: SpanView[];
+}
+/**
+ * This interface was referenced by `Mock`'s JSON-Schema
+ * via the `definition` "TrayItem".
+ */
+export interface TrayItem {
+  kind: AlertKind;
+  count?: number;
+  source: "approvals" | "permissions" | "sessions" | "traces" | "health";
+}
+/**
+ * This interface was referenced by `Mock`'s JSON-Schema
+ * via the `definition` "ViewSet".
+ */
+export interface ViewSet {
+  approvals: ProposalView[];
+  runs: RunView[];
+  sessions: SessionView[];
+  permissions: PermissionView[];
+  traces: TraceView[];
+  tray: TrayItem[];
+}
+/**
+ * This interface was referenced by `Mock`'s JSON-Schema
+ * via the `definition` "StateSnapshot".
+ */
+export interface StateSnapshot {
+  approvals: ProposalView[];
+  runs: RunView[];
+  sessions: SessionView[];
+  permissions: PermissionView[];
+  traces: TraceView[];
+  tray: TrayItem[];
+  /**
+   * @maxItems 12
+   */
+  board: WidgetEnvelope[];
+}
+/**
+ * This interface was referenced by `Mock`'s JSON-Schema
+ * via the `definition` "Scenario".
+ */
+export interface Scenario {
+  id: string;
+  group: "request" | "state" | "edge";
+  label: string;
+  request?: string;
+  now: string;
+  /**
+   * @maxItems 20
+   */
+  widgets: MockWidget[];
+  /**
+   * @maxItems 200
+   */
+  script: ScriptStep[];
+  views?: {
+    approvals?: ProposalView[];
+    runs?: RunView[];
+    sessions?: SessionView[];
+    permissions?: PermissionView[];
+    traces?: TraceView[];
+    tray?: TrayItem[];
+  };
 }
