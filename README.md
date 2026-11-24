@@ -14,7 +14,7 @@ From milestone U L0 onward, `make preview` runs the dashboard preview. Once
 that task has landed, open http://127.0.0.1:8742. Until then the `make` target
 does not exist.
 
-`make preview-local` runs the dev server at http://127.0.0.1:5740 and shows the git-ignored local overlay when it exists (see `frontend/src/mocks/local.README.md`); `make preview` never does.
+`make preview-local` runs the dev server at http://127.0.0.1:5740 and shows the git-ignored local overlay when it exists (see `frontend/src/mocks/local.README.md`); `make preview` never does. `make preview-local-stop` stops the dev server.
 
 ## Reference images
 

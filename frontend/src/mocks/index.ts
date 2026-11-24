@@ -3,12 +3,14 @@ import views from "./views.json";
 
 const GROUP_ORDER: Scenario["group"][] = ["request", "state", "edge"];
 const files = import.meta.glob<Scenario>("./scenarios/*.json", { eager: true, import: "default" });
-// Git-ignored local overlay (see local.README.md); both globs are empty when the folder is absent.
-const localFiles = import.meta.glob<Scenario>("./local/scenarios/*.json", { eager: true, import: "default" });
-const localViews = import.meta.glob<Partial<ViewSet>>("./local/views.json", { eager: true, import: "default" });
+// Git-ignored local overlay (see local.README.md). Empty when the folder is absent, and always empty in
+// production builds: keyed on DEV so the overlay never reaches dist.
+const localFiles: Record<string, Scenario> = import.meta.env.DEV ? import.meta.glob<Scenario>("./local/scenarios/*.json", { eager: true, import: "default" }) : {};
+const localViews: Record<string, Partial<ViewSet>> = import.meta.env.DEV ? import.meta.glob<Partial<ViewSet>>("./local/views.json", { eager: true, import: "default" }) : {};
 
 /** Local scenarios replace committed ones with the same id; new ids are added. Order is group, then label. */
 export function mergeScenarios(base: Scenario[], local: Scenario[]): Scenario[] {
+  for (const list of [base, local]) if (new Set(list.map((s) => s.id)).size !== list.length) throw new Error("Duplicate scenario id within one scenario set");
   const byId = new Map([...base, ...local].map((s) => [s.id, s]));
   return [...byId.values()].sort((a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group) || a.label.localeCompare(b.label));
 }

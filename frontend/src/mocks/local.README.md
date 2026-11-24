@@ -1,6 +1,6 @@
 # Local mock overlay
 
-The committed mocks are synthetic, because this repository is public. To see your own projects in the preview, put files in `frontend/src/mocks/local/`. That folder is git-ignored (`/frontend/src/mocks/local/` in `.gitignore`) and listed in `.dockerignore`, so it never reaches GitHub, CI or the `make preview` image. Do not commit it, and do not remove those two lines.
+The committed mocks are synthetic, because this repository is public. To see your own projects in the preview, put files in `frontend/src/mocks/local/`. That folder is git-ignored (`/frontend/src/mocks/local` in `.gitignore`) and listed in `.dockerignore`, so it never reaches GitHub, CI or the `make preview` image. Do not commit it, and do not remove those two lines.
 
 ## Files
 

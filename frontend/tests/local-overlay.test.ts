@@ -28,9 +28,13 @@ describe("local mock overlay", () => {
   });
 
   it("with no local overlay the committed set loads unchanged", () => {
-    expect(mergeScenarios(base, [])).toHaveLength(base.length);
-    expect(mergeViews(BASE_VIEWS, {})).toEqual(BASE_VIEWS);
-    expect(Object.keys(views).length).toBeGreaterThan(0);
+    expect(mergeScenarios(base, []).map((s) => s.id)).toEqual(["a", "b", "s"]);
+    expect(mergeViews(views as ViewSet, {})).toEqual(views);
+  });
+
+  it("a duplicate id inside the committed or the local set throws", () => {
+    expect(() => mergeScenarios([sc("a", "request", "One"), sc("a", "request", "Two")], [])).toThrow(/Duplicate/);
+    expect(() => mergeScenarios(base, [sc("x", "edge", "One"), sc("x", "edge", "Two")])).toThrow(/Duplicate/);
   });
 
   it("every loaded scenario has a unique id", () => {
@@ -41,11 +45,13 @@ describe("local mock overlay", () => {
   it("no file under mocks/local is tracked by git", (ctx) => {
     let tracked: string;
     try {
-      tracked = execFileSync("git", ["ls-files", "frontend/src/mocks/local", "src/mocks/local"], {
-        cwd: resolve(import.meta.dirname, ".."),
+      tracked = execFileSync("git", ["ls-files", "frontend/src/mocks/local"], {
+        cwd: resolve(import.meta.dirname, "../.."),
         encoding: "utf8",
       });
-    } catch {
+    } catch (error) {
+      // Only a missing git binary skips; any other git failure must fail the check, not pass it.
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
       ctx.skip("git is not available here, so tracked files cannot be listed");
       return;
     }

@@ -9,4 +9,13 @@ repos:
         name: no local mock overlay
         entry: frontend/src/mocks/local is the owner's private overlay and must never be committed
         language: fail
-        files: ^frontend/src/mocks/local/
+        files: ^frontend/src/mocks/local(/|$)
+      - id: no-local-mocks-push
+        name: no local mock overlay in history
+        entry: >-
+          bash -c 'out=$(git ls-files frontend/src/mocks/local) || exit 1;
+          test -z "$out" || { echo "frontend/src/mocks/local is tracked and must never be pushed"; exit 1; }'
+        language: system
+        stages: [pre-push]
+        always_run: true
+        pass_filenames: false
