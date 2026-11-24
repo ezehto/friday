@@ -14,4 +14,10 @@ describe("compose files", () => {
     expect(ports.length).toBeGreaterThan(0);
     for (const p of ports) expect(p).toMatch(/^"?127\.0\.0\.1:\d+:\d+"?$/);
   });
+
+  it(".dockerignore keeps secrets, host modules and local state out of the build", () => {
+    const lines = readFileSync(join(root, ".dockerignore"), "utf8").split("\n").map((l) => l.trim());
+    for (const e of [".git", ".beads", ".superpowers", ".playwright-cli", "CLAUDE.md", "docs/design-references", "secrets", "**/node_modules", "**/dist", "**/.env*", "**/*.env"])
+      expect(lines).toContain(e);
+  });
 });
