@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/sprint_burndown.schema.json",
+  "title": "SprintBurndownWidget",
+  "$comment": "draft: finalized with its pack (L14 or L16)",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "sprint_burndown"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "sprint": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "days": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "remaining": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "date",
+          "remaining"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 31
+    }
+  },
+  "required": [
+    "type",
+    "sprint",
+    "days"
+  ],
+  "additionalProperties": false
+}

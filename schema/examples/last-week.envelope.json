@@ -1,0 +1,20 @@
+{
+  "widget_id": "w3",
+  "source": "claude-mem, git",
+  "as_of": "2026-11-20T08:14:00Z",
+  "data_class": "personal",
+  "title": "Last week",
+  "blocks": [
+    {
+      "kind": "timeline",
+      "items": [
+        {
+          "when": "Mon",
+          "title": "Natsu webhooks",
+          "detail": "retry fix",
+          "tone": "good"
+        }
+      ]
+    }
+  ]
+}

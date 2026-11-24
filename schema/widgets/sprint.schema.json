@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/sprint.schema.json",
+  "title": "SprintWidget",
+  "$comment": "draft: finalized with its pack (L14 or L16)",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "sprint"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "goal": {
+      "type": "string",
+      "maxLength": 400
+    },
+    "start": {
+      "type": "string",
+      "format": "date"
+    },
+    "end": {
+      "type": "string",
+      "format": "date"
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "maxLength": 40
+                },
+                "summary": {
+                  "type": "string",
+                  "maxLength": 80
+                }
+              },
+              "required": [
+                "key",
+                "summary"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 20
+          }
+        },
+        "required": [
+          "status",
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 6
+    }
+  },
+  "required": [
+    "type",
+    "name",
+    "start",
+    "end",
+    "columns"
+  ],
+  "additionalProperties": false
+}

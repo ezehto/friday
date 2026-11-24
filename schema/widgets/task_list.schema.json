@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/task_list.schema.json",
+  "title": "TaskListWidget",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "task_list"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "todo",
+              "doing",
+              "done",
+              "blocked"
+            ]
+          },
+          "due": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": [
+          "title",
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 20
+    }
+  },
+  "required": [
+    "type",
+    "items"
+  ],
+  "additionalProperties": false
+}

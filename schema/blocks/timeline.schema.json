@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/blocks/timeline.schema.json",
+  "title": "TimelineBlock",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "const": "timeline"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "when": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "detail": {
+            "type": "string",
+            "maxLength": 400
+          },
+          "tone": {
+            "$ref": "../common.schema.json#/$defs/Tone"
+          }
+        },
+        "required": [
+          "when",
+          "title"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 30
+    }
+  },
+  "required": [
+    "kind",
+    "items"
+  ],
+  "additionalProperties": false
+}

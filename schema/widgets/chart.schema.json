@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/chart.schema.json",
+  "title": "ChartWidget",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "chart"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "line",
+        "bar",
+        "area",
+        "donut"
+      ]
+    },
+    "series": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "string",
+                  "maxLength": 40
+                },
+                "y": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 500
+          }
+        },
+        "required": [
+          "name",
+          "points"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 5
+    }
+  },
+  "required": [
+    "type",
+    "kind",
+    "series"
+  ],
+  "additionalProperties": false
+}

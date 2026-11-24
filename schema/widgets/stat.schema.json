@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/stat.schema.json",
+  "title": "StatWidget",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "stat"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "label": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "value": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "change": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "hint": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "tone": {
+      "$ref": "../common.schema.json#/$defs/Tone"
+    }
+  },
+  "required": [
+    "type",
+    "label",
+    "value"
+  ],
+  "additionalProperties": false
+}

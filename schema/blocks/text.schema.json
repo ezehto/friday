@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/blocks/text.schema.json",
+  "title": "TextBlock",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "const": "text"
+    },
+    "text": {
+      "type": "string",
+      "maxLength": 400
+    },
+    "tone": {
+      "$ref": "../common.schema.json#/$defs/Tone"
+    }
+  },
+  "required": [
+    "kind",
+    "text"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/common.schema.json",
+  "title": "Common",
+  "$defs": {
+    "Tone": {
+      "title": "Tone",
+      "type": "string",
+      "enum": [
+        "good",
+        "bad",
+        "attention",
+        "neutral"
+      ]
+    },
+    "DataClass": {
+      "title": "DataClass",
+      "type": "string",
+      "enum": [
+        "personal",
+        "work"
+      ]
+    },
+    "Link": {
+      "title": "Link",
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 2048,
+          "pattern": "^https?://"
+        }
+      },
+      "required": [
+        "text",
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

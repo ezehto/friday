@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/learning_roadmap.schema.json",
+  "title": "LearningRoadmapWidget",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "learning_roadmap"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "target": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "week": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 16
+    },
+    "weeks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "week": {
+            "type": "integer"
+          },
+          "theme": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "done",
+              "current",
+              "next",
+              "later"
+            ]
+          }
+        },
+        "required": [
+          "week",
+          "theme",
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 16
+    },
+    "next": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "topic": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "why": {
+            "type": "string",
+            "maxLength": 400
+          },
+          "source_ref": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "topic",
+          "why",
+          "source_ref"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 3
+    }
+  },
+  "required": [
+    "type",
+    "target",
+    "week",
+    "weeks"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/project_status.schema.json",
+  "title": "ProjectStatusWidget",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "project_status"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "blocked",
+        "paused",
+        "done"
+      ]
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 80
+      },
+      "maxItems": 5
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 80
+      },
+      "maxItems": 5
+    },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "due": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "planned",
+              "at_risk",
+              "done"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 6
+    },
+    "next": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "last_commit": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "type",
+    "name",
+    "status"
+  ],
+  "additionalProperties": false
+}

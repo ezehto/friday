@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/task_queue.schema.json",
+  "title": "TaskQueueWidget",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "task_queue"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "proposal",
+              "run",
+              "session",
+              "task"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "since": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "view": {
+            "type": "string",
+            "enum": [
+              "approvals",
+              "sessions",
+              "permissions",
+              "board"
+            ]
+          }
+        },
+        "required": [
+          "kind",
+          "title",
+          "status",
+          "since",
+          "view"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 20
+    }
+  },
+  "required": [
+    "type",
+    "items"
+  ],
+  "additionalProperties": false
+}
