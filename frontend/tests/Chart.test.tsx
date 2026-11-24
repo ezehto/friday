@@ -79,3 +79,20 @@ test("scale returns the midpoint for an empty domain", () => {
   expect(scale(5, 5, 5, 0, 100)).toBe(50);
   expect(scale(5, 0, 10, 0, 100)).toBe(50);
 });
+
+test("line path x coordinates follow category order for out-of-order points", () => {
+  const pt = (x: string, y: number) => ({ x, y });
+  const block: ChartBlockData = {
+    kind: "chart",
+    chart: "line",
+    series: [
+      { name: "A", points: [pt("Mon", 1), pt("Tue", 2), pt("Wed", 3)] },
+      { name: "B", points: [pt("Wed", 3), pt("Mon", 1), pt("Tue", 2)] },
+    ],
+  };
+  const { container } = render(<ChartBlock block={block} />);
+  const d = container.querySelectorAll("svg path")[1]?.getAttribute("d") ?? "";
+  const xs = [...d.matchAll(/[ML]([\d.-]+) /g)].map((m) => Number(m[1]));
+  expect(xs).toHaveLength(3);
+  expect(xs).toEqual([...xs].sort((a, b) => a - b));
+});

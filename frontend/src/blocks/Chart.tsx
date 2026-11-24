@@ -59,11 +59,13 @@ function Cartesian({ block }: { block: ChartBlockData }): ReactElement {
           });
         })
       : series.map((s, si) => {
-          const pts = s.points.map((p) => {
-            const ci = cats.indexOf(p.x);
-            const x = n(cats.length > 1 ? scale(ci, 0, cats.length - 1, PAD.l, W - PAD.r) : (PAD.l + W - PAD.r) / 2);
-            return [x, yOf(p.y)] as const;
-          });
+          const pts = s.points
+            .map((p) => ({ ci: cats.indexOf(p.x), y: p.y }))
+            .sort((a, b) => a.ci - b.ci)
+            .map(({ ci, y }) => {
+              const x = n(cats.length > 1 ? scale(ci, 0, cats.length - 1, PAD.l, W - PAD.r) : (PAD.l + W - PAD.r) / 2);
+              return [x, yOf(y)] as const;
+            });
           const first = pts[0];
           const last = pts[pts.length - 1];
           if (!first || !last) return null;
