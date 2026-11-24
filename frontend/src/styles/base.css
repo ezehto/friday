@@ -421,3 +421,4 @@ p {
 .sg .chat { position: static; padding: 0; align-items: stretch; }
 .sg .topbar { border: 1px solid var(--line-panel-border); }
 .sg-ptt { display: grid; gap: 1rem; }
+.sg-menu-open { min-height: 13rem; }

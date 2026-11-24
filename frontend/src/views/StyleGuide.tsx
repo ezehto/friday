@@ -187,16 +187,38 @@ export function StyleGuide() {
 
         <section className="sg-section" aria-labelledby="sg-chrome">
           <h2 id="sg-chrome" className="sg-section-title">{FIXED.styleGuide.chrome}</h2>
-          <HudFrame title="Top bar" kicker="Chrome" headingLevel={3}>
+          <HudFrame title={FIXED.chrome.specimens.topBar} kicker="Chrome" headingLevel={3}>
             <TopBar state={CHROME_STATE} nowMs={SPECIMEN_NOW_MS} timeZone="UTC" onNavigate={noop} headingLevel={4} />
+          </HudFrame>
+          <HudFrame title={FIXED.chrome.specimens.menuTray} kicker="Chrome" headingLevel={3}>
+            <div className="sg-menu-open">
+              <TopBar state={CHROME_STATE} nowMs={SPECIMEN_NOW_MS} timeZone="UTC" onNavigate={noop} headingLevel={4} open="tray" />
+            </div>
+          </HudFrame>
+          <HudFrame title={FIXED.chrome.specimens.menuSettings} kicker="Chrome" headingLevel={3}>
+            <div className="sg-menu-open">
+              <TopBar state={initialState} nowMs={SPECIMEN_NOW_MS} timeZone="UTC" onNavigate={noop} headingLevel={4} open="settings" />
+            </div>
           </HudFrame>
           <HudFrame title="Tray" kicker="Every alert kind" headingLevel={3}>
             <Tray items={TRAY_SPECIMEN} />
           </HudFrame>
+          <HudFrame title={FIXED.chrome.specimens.trayEmpty} kicker="Tray" headingLevel={3}>
+            <Tray items={[]} />
+          </HudFrame>
+          <HudFrame title={FIXED.chrome.specimens.chatClosed} kicker="Chat" headingLevel={3}>
+            <ChatLine state={initialState} request={null} onAct={specimenAct} />
+          </HudFrame>
           <HudFrame title="Chat line" kicker="Open" headingLevel={3}>
             <ChatLine state={CHROME_STATE} request="What is due today?" onAct={specimenAct} defaultOpen />
           </HudFrame>
-          <HudFrame title="Push to talk" kicker="Unpressed and pressed" headingLevel={3}>
+          <HudFrame title={FIXED.chrome.specimens.chatEmpty} kicker="Chat" headingLevel={3}>
+            <ChatLine state={initialState} request={null} onAct={specimenAct} defaultOpen />
+          </HudFrame>
+          <HudFrame title={FIXED.chrome.specimens.chatResult} kicker="Chat" headingLevel={3}>
+            <ChatLine state={CHROME_STATE} request="What is due today?" onAct={specimenAct} defaultOpen initialResult={FIXED.previewResult} />
+          </HudFrame>
+          <HudFrame title={FIXED.chrome.specimens.ptt} kicker="Chat" headingLevel={3}>
             <div className="sg-ptt">
               <PushToTalk pressed={false} onChange={noop} />
               <PushToTalk pressed onChange={noop} />

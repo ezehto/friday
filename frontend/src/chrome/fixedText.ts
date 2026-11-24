@@ -70,6 +70,7 @@ export const FIXED = {
     over_budget: "Friday: a request went over its token budget",
     proposal_expiring: "Friday: a proposal is about to expire",
   },
+  trayNoCount: "Friday: approvals waiting",
   chrome: {
     userChip: "Owner",
     navLabel: "Views",
@@ -80,6 +81,7 @@ export const FIXED = {
     permissions: "Permissions",
     settings: "Settings",
     clock: "Local time",
+    specimens: { topBar: "Top bar", menuTray: "Top bar, notifications open", menuSettings: "Top bar, settings open", trayEmpty: "Tray, empty", chatClosed: "Chat line, closed", chatEmpty: "Chat line, no request", chatResult: "Chat line, preview result", ptt: "Push to talk, unpressed and pressed" },
   },
   chat: {
     open: "Chat",
@@ -93,6 +95,7 @@ export const FIXED = {
     new: "New",
     pushToTalk: "Push to talk",
     listening: "Listening (preview, no audio)",
+    emptyHint: "Type a message first",
   },
   alertView: {
     sessions: "Open sessions",

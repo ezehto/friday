@@ -1,10 +1,10 @@
 import type { TrayItem } from "../generated/types";
 import { FIXED } from "./fixedText";
 
-/** The count fills {n}; without one the number and its space are dropped. */
+/** The count fills {n}; a count-less approvals row uses its own fixed string. */
 function trayText(item: TrayItem): string {
-  const template: string = FIXED.tray[item.kind];
-  return item.count === undefined ? template.replace("{n} ", "") : template.replace("{n}", String(item.count));
+  if (item.count === undefined) return item.kind === "approvals_waiting" ? FIXED.trayNoCount : FIXED.tray[item.kind];
+  return FIXED.tray[item.kind].replace("{n}", String(item.count));
 }
 
 export function Tray(props: { items: TrayItem[] }) {

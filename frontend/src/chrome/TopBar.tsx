@@ -1,4 +1,4 @@
-import { useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { Fragment, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { formatTime } from "../lib/format";
 import { toHash, useRoute, type View } from "../router";
 import type { AppState } from "../store";
@@ -10,8 +10,9 @@ import { Tray } from "./Tray";
 const VIEWS: readonly View[] = ["board", "approvals", "traces", "sessions", "permissions", "style-guide"];
 
 /** A button with a small panel under it. Escape closes it and returns focus to the button. */
-function Popover(props: { label: string; id: string; button: ReactNode; children: ReactNode }) {
-  const [open, setOpen] = useState(false);
+function Popover(props: { label: string; button: ReactNode; defaultOpen?: boolean; children: ReactNode }) {
+  const [open, setOpen] = useState(props.defaultOpen ?? false);
+  const id = useId();
   const button = useRef<HTMLButtonElement>(null);
   const onKeyDown = (e: KeyboardEvent): void => {
     if (e.key !== "Escape" || !open) return;
@@ -20,10 +21,11 @@ function Popover(props: { label: string; id: string; button: ReactNode; children
   };
   return (
     <div className="pop" onKeyDown={onKeyDown}>
-      <button ref={button} type="button" className="topbar-btn" aria-label={props.label} aria-expanded={open} aria-controls={props.id} onClick={() => setOpen(!open)}>
+      <button ref={button} type="button" className="topbar-btn" aria-expanded={open} aria-controls={open ? id : undefined} onClick={() => setOpen(!open)}>
+        <span className="visually-hidden">{props.label}</span>{" "}
         {props.button}
       </button>
-      {open && <div id={props.id} className="pop-panel">{props.children}</div>}
+      {open && <div id={id} className="pop-panel">{props.children}</div>}
     </div>
   );
 }
@@ -40,7 +42,7 @@ const Gear = () => (
   </svg>
 );
 
-export function TopBar(props: { state: AppState; nowMs: number; timeZone?: string; onNavigate(v: View): void; headingLevel?: 1 | 4 }) {
+export function TopBar(props: { state: AppState; nowMs: number; timeZone?: string; onNavigate(v: View): void; headingLevel?: 1 | 4; open?: "tray" | "settings" }) {
   const { state } = props;
   const route = useRoute();
   const Title = props.headingLevel === 4 ? "h4" : "h1";
@@ -76,20 +78,21 @@ export function TopBar(props: { state: AppState; nowMs: number; timeZone?: strin
           <span className="status-dot" aria-hidden="true" />
           {FIXED.previewStatus}
         </span>
-        <time className="topbar-clock" dateTime={iso} aria-label={FIXED.chrome.clock}>
-          {formatTime(iso, props.timeZone)}
-        </time>
+        <span className="topbar-clock">
+          <span className="visually-hidden">{FIXED.chrome.clock} </span>
+          <time dateTime={iso}>{formatTime(iso, props.timeZone)}</time>
+        </span>
         <Popover
           label={FIXED.chrome.bell}
-          id="tray-panel"
+          defaultOpen={props.open === "tray"}
           button={
             <>
               <Bell />
               {counts.map(([name, n]) =>
                 n > 0 ? (
-                  <span key={name} className="bell-count label">
-                    {name} {n}
-                  </span>
+                  <Fragment key={name}>
+                    <span className="bell-count label">{name} {n}</span>{" "}
+                  </Fragment>
                 ) : null,
               )}
             </>
@@ -97,7 +100,7 @@ export function TopBar(props: { state: AppState; nowMs: number; timeZone?: strin
         >
           <Tray items={state.tray} />
         </Popover>
-        <Popover label={FIXED.chrome.settings} id="settings-panel" button={<Gear />}>
+        <Popover label={FIXED.chrome.settings} defaultOpen={props.open === "settings"} button={<Gear />}>
           <MotionSetting />
         </Popover>
         <span className="topbar-user label">{FIXED.chrome.userChip}</span>

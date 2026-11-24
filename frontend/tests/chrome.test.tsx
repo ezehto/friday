@@ -1,12 +1,14 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, expect, test, vi } from "vitest";
-import { ChatLine } from "../src/chrome/ChatLine";
+import { ChatLine, PushToTalk } from "../src/chrome/ChatLine";
 import { FIXED } from "../src/chrome/fixedText";
 import { TopBar } from "../src/chrome/TopBar";
 import { Tray } from "../src/chrome/Tray";
 import type { AlertKind, TrayItem } from "../src/generated/types";
-import { initialState, type AppState } from "../src/store";
+import { BASE_VIEWS, loadScenarios } from "../src/mocks";
+import { createStore, initialState, type AppState } from "../src/store";
+import { MockTransport } from "../src/transport/mock";
 import type { SessionTransport } from "../src/transport/types";
 
 afterEach(() => {
@@ -39,22 +41,51 @@ test("bell shows the approvals and permissions counts", () => {
     permissions: [1] as unknown as AppState["permissions"],
   };
   topBar(state);
-  const bell = screen.getByRole("button", { name: FIXED.chrome.bell });
+  const bell = screen.getByRole("button", { name: "Notifications Approvals 2 Permissions 1" });
   expect(within(bell).getByText("Approvals 2")).toBeTruthy();
   expect(within(bell).getByText("Permissions 1")).toBeTruthy();
+  expect(bell.getAttribute("aria-controls")).toBeNull();
 });
 
 test("chat submit shows Preview: nothing was executed and the store is unchanged", async () => {
   const user = userEvent.setup();
-  const before = JSON.stringify(initialState);
-  const spy = vi.fn(act);
-  render(<ChatLine state={initialState} request="What is due today?" onAct={spy} />);
+  const transport = new MockTransport(loadScenarios()[0]!, BASE_VIEWS, { instant: true });
+  const store = createStore(transport, transport);
+  await vi.waitFor(() => expect(store.getState().done).toBe(true));
+  const before = store.getState();
+  const spy = vi.fn(store.act);
+  render(<ChatLine state={before} request="What is due today?" onAct={spy} />);
   await user.click(screen.getByRole("button", { name: FIXED.chat.open }));
   await user.type(screen.getByLabelText(FIXED.chat.input), "hello");
   await user.click(screen.getByRole("button", { name: FIXED.chat.send }));
   expect((await screen.findByRole("status")).textContent).toBe("Preview: nothing was executed");
   expect(spy).toHaveBeenCalledWith({ kind: "send_message", text: "hello" });
-  expect(JSON.stringify(initialState)).toBe(before);
+  expect(store.getState()).toBe(before);
+  store.dispose();
+});
+
+test("an empty submit shows a hint and a failing act still shows the preview status", async () => {
+  const user = userEvent.setup();
+  const failing = vi.fn(async () => {
+    throw new Error("boom");
+  });
+  render(<ChatLine state={initialState} request={null} onAct={failing as unknown as SessionTransport["act"]} defaultOpen />);
+  await user.click(screen.getByRole("button", { name: FIXED.chat.send }));
+  expect(screen.getByRole("status").textContent).toBe(FIXED.chat.emptyHint);
+  expect(failing).not.toHaveBeenCalled();
+  await user.type(screen.getByLabelText(FIXED.chat.input), "hi");
+  await user.click(screen.getByRole("button", { name: FIXED.chat.send }));
+  expect((await screen.findByText(FIXED.previewResult)).getAttribute("role")).toBe("status");
+});
+
+test("a tray row without a count uses a fixed string", () => {
+  render(<Tray items={[{ kind: "approvals_waiting", source: "approvals" }]} />);
+  expect(screen.getByText(FIXED.trayNoCount)).toBeTruthy();
+});
+
+test("an empty tray shows the fixed empty text", () => {
+  render(<Tray items={[]} />);
+  expect(screen.getByText(FIXED.chrome.trayEmpty)).toBeTruthy();
 });
 
 test("push-to-talk toggles aria-pressed by Space and makes no media call", async () => {
@@ -70,11 +101,30 @@ test("push-to-talk toggles aria-pressed by Space and makes no media call", async
   expect(screen.getByText(FIXED.chat.listening)).toBeTruthy();
   await user.keyboard("{/ }");
   expect(ptt.getAttribute("aria-pressed")).toBe("false");
-  fireEvent.pointerDown(ptt);
+  await user.pointer({ keys: "[MouseLeft>]", target: ptt });
   expect(ptt.getAttribute("aria-pressed")).toBe("true");
-  fireEvent.pointerUp(ptt);
+  await user.pointer({ keys: "[/MouseLeft]", target: ptt });
   expect(ptt.getAttribute("aria-pressed")).toBe("false");
   expect(spy).not.toHaveBeenCalled();
+});
+
+test("push-to-talk ignores a secondary pointer button", async () => {
+  const user = userEvent.setup();
+  render(<ChatLine state={initialState} request={null} onAct={act} defaultOpen />);
+  const ptt = screen.getByRole("button", { name: FIXED.chat.pushToTalk });
+  await user.pointer({ keys: "[MouseRight>]", target: ptt });
+  expect(ptt.getAttribute("aria-pressed")).toBe("false");
+});
+
+test("a repeat Space keydown does not toggle twice", () => {
+  const onChange = vi.fn();
+  render(<PushToTalk pressed={false} onChange={onChange} />);
+  const ptt = screen.getByRole("button", { name: FIXED.chat.pushToTalk });
+  fireEvent.keyDown(ptt, { key: " " });
+  fireEvent.keyDown(ptt, { key: " ", repeat: true });
+  fireEvent.keyDown(ptt, { key: " ", repeat: true });
+  expect(onChange).toHaveBeenCalledTimes(1);
+  expect(onChange).toHaveBeenCalledWith(true);
 });
 
 test("Escape closes the drawer and returns focus to its button", async () => {
@@ -103,6 +153,7 @@ test("Escape closes the settings menu and returns focus to its button", async ()
 test("clock renders HH:MM from nowMs with timeZone UTC", () => {
   topBar(initialState, { nowMs: Date.UTC(2026, 10, 24, 9, 5), timeZone: "UTC" });
   expect(screen.getByText("09:05")).toBeTruthy();
+  expect(screen.getByText(FIXED.chrome.clock, { exact: false })).toBeTruthy();
 });
 
 test("the h1 text is exactly Friday", () => {

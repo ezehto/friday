@@ -70,8 +70,9 @@ export function App() {
   }, []);
 
   const id = scenario?.id;
+  const isGuide = route.view === "style-guide";
   useEffect(() => {
-    if (route.view === "style-guide" || !scenario) return;
+    if (isGuide || !scenario) return;
     const transport = new MockTransport(scenario, BASE_VIEWS, { instant: route.instant });
     const next = createStore(transport, transport);
     // The store owns a live transport, so it is created here and handed to state.
@@ -83,9 +84,9 @@ export function App() {
       delete document.body.dataset.scenarioDone;
     };
     // scenario is found by id: depend on the id, not the object.
-  }, [id, route.view, route.instant, runs]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [id, isGuide, route.instant, runs]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (route.view === "style-guide") return <StyleGuide />;
+  if (isGuide) return <StyleGuide />;
   const shared = {
     nowMs,
     request: scenario?.request ?? null,

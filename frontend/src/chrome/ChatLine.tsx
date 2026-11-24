@@ -1,4 +1,4 @@
-import { useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import type { AppState } from "../store";
 import type { SessionTransport } from "../transport/types";
 import { FIXED } from "./fixedText";
@@ -14,7 +14,9 @@ export function PushToTalk(props: { pressed: boolean; onChange(pressed: boolean)
         type="button"
         className="ptt-button"
         aria-pressed={pressed}
-        onPointerDown={() => onChange(true)}
+        onPointerDown={(e) => {
+          if (e.button === 0) onChange(true);
+        }}
         onPointerUp={() => onChange(false)}
         onPointerLeave={() => onChange(false)}
         onPointerCancel={() => onChange(false)}
@@ -43,10 +45,12 @@ export function PushToTalk(props: { pressed: boolean; onChange(pressed: boolean)
   );
 }
 
-export function ChatLine(props: { state: AppState; request: string | null; onAct: SessionTransport["act"]; defaultOpen?: boolean }) {
+export function ChatLine(props: { state: AppState; request: string | null; onAct: SessionTransport["act"]; defaultOpen?: boolean; initialResult?: string }) {
   const [open, setOpen] = useState(props.defaultOpen ?? false);
   const [text, setText] = useState("");
-  const [result, setResult] = useState<string | null>(null);
+  const [result, setResult] = useState<string | null>(props.initialResult ?? null);
+  const drawerId = useId();
+  const inputId = useId();
   const [talking, setTalking] = useState(false);
   const toggle = useRef<HTMLButtonElement>(null);
   const { reply } = props.state;
@@ -61,18 +65,22 @@ export function ChatLine(props: { state: AppState; request: string | null; onAct
   const submit = (e: { preventDefault(): void }): void => {
     e.preventDefault();
     const message = text.trim();
-    if (!message) return;
+    if (!message) return setResult(FIXED.chat.emptyHint);
     setText("");
-    void props.onAct({ kind: "send_message", text: message }).then((r) => setResult(r.message));
+    // Preview only: whatever the transport does, the owner sees the preview status.
+    void props
+      .onAct({ kind: "send_message", text: message })
+      .then((r) => setResult(r.message))
+      .catch(() => setResult(FIXED.previewResult));
   };
 
   return (
     <div className="chat" onKeyDown={onKeyDown}>
-      <button ref={toggle} type="button" className="chat-toggle label" aria-expanded={open} aria-controls="chat-drawer" onClick={() => (open ? close() : setOpen(true))}>
+      <button ref={toggle} type="button" className="chat-toggle label" aria-expanded={open} aria-controls={open ? drawerId : undefined} onClick={() => (open ? close() : setOpen(true))}>
         {open ? FIXED.chat.close : FIXED.chat.open}
       </button>
       {open && (
-        <section id="chat-drawer" className="chat-drawer" aria-label={FIXED.chat.region}>
+        <section id={drawerId} className="chat-drawer" aria-label={FIXED.chat.region}>
           <div className="chat-log">
             <p className="chat-line">
               <span className="label chat-who">{FIXED.chat.request}</span>
@@ -86,8 +94,8 @@ export function ChatLine(props: { state: AppState; request: string | null; onAct
             )}
           </div>
           <form className="chat-form" onSubmit={submit}>
-            <label className="visually-hidden" htmlFor="chat-input">{FIXED.chat.input}</label>
-            <input id="chat-input" className="chat-input" value={text} onChange={(e) => setText(e.target.value)} autoComplete="off" />
+            <label className="visually-hidden" htmlFor={inputId}>{FIXED.chat.input}</label>
+            <input id={inputId} className="chat-input" value={text} onChange={(e) => setText(e.target.value)} autoComplete="off" />
             <button type="submit" className="chat-btn label">{FIXED.chat.send}</button>
             <button type="button" className="chat-btn label" onClick={() => setResult(FIXED.previewResult)}>{FIXED.chat.new}</button>
           </form>
