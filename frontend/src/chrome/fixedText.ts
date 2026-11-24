@@ -17,6 +17,18 @@ export const FIXED = {
   emptyBlock: "Nothing to show",
   unsupportedBlock: "This block cannot be shown",
   stamps: { sample: "Sample data", work: "Work", asOf: "as of", stale: "Stale" },
+  styleGuide: {
+    blocks: "Blocks",
+    widgets: "Widgets",
+    packs: {
+      core: "Core",
+      projects: "Projects",
+      career: "Career",
+      server: "Server-made",
+      jira: "Jira (later pack, L14)",
+      calendar: "Calendar (later pack, L16)",
+    },
+  },
   alertView: {
     sessions: "Open sessions",
     permissions: "Open permissions",

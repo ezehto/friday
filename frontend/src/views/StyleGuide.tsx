@@ -7,7 +7,10 @@ import { HudFrame } from "../chrome/HudFrame";
 import { MotionSetting } from "../chrome/MotionSetting";
 import { StatusPill } from "../chrome/StatusPill";
 import { ToneIcon } from "../chrome/ToneIcon";
-import type { Tone } from "../generated/types";
+import type { Block, SampleSet, Tone } from "../generated/types";
+import samplesJson from "../mocks/samples.json";
+import { BlockRenderer } from "../blocks/BlockRenderer";
+import { WidgetPanel } from "../widgets/WidgetPanel";
 
 const TOKEN_GROUPS: [string, string[]][] = [
   ["Background", ["bg-canvas", "bg-panel", "bg-raised"]],
@@ -19,6 +22,26 @@ const TOKEN_GROUPS: [string, string[]][] = [
   ["Focus and glow", ["focus-ring", "glow-color"]],
   ["Chart series", ["series-1", "series-2", "series-3", "series-4", "series-5"]],
 ];
+const samples = samplesJson as SampleSet;
+
+const PACKS = FIXED.styleGuide.packs;
+const PACK_TYPES: [string, string[]][] = [
+  [PACKS.core, ["stat", "chart", "table", "task_list", "progress", "daily_focus"]],
+  [PACKS.projects, ["project_status", "work_timeline", "standup"]],
+  [PACKS.career, ["career_progress", "learning_roadmap"]],
+  [PACKS.server, ["alert", "task_queue", "claude_run"]],
+  [PACKS.jira, ["jira_ticket", "jira_attention", "sprint", "sprint_burndown"]],
+  [PACKS.calendar, ["schedule", "meeting", "focus_time"]],
+];
+
+// First sample that uses each block kind, in sample order.
+const BLOCK_SPECIMENS: { block: Block; from: string }[] = [];
+for (const { envelope } of samples.items) {
+  for (const block of envelope.blocks) {
+    if (!BLOCK_SPECIMENS.some((s) => s.block.kind === block.kind)) BLOCK_SPECIMENS.push({ block, from: envelope.widget_id });
+  }
+}
+
 const TONES: Tone[] = ["good", "attention", "bad", "neutral"];
 
 function Swatch({ name }: { name: string }) {
@@ -99,6 +122,31 @@ export function StyleGuide() {
         <HudFrame title="Motion" kicker="Setting">
           <MotionSetting />
         </HudFrame>
+
+        <section className="sg-section" aria-labelledby="sg-blocks">
+          <h2 id="sg-blocks" className="sg-section-title">{FIXED.styleGuide.blocks}</h2>
+          <div className="sg-grid">
+            {BLOCK_SPECIMENS.map(({ block, from }) => (
+              <HudFrame key={block.kind} title={block.kind} kicker={from}>
+                <BlockRenderer block={block} />
+              </HudFrame>
+            ))}
+          </div>
+        </section>
+
+        <section className="sg-section" aria-labelledby="sg-widgets">
+          <h2 id="sg-widgets" className="sg-section-title">{FIXED.styleGuide.widgets}</h2>
+          {PACK_TYPES.map(([pack, types]) => (
+            <div key={pack} className="sg-pack">
+              <h3 className="sg-pack-title">{pack}</h3>
+              <div className="sg-grid">
+                {samples.items.filter((i) => types.includes(i.widget.type)).map((i) => (
+                  <WidgetPanel key={i.envelope.widget_id} envelope={i.envelope} now={samples.now} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </section>
       </main>
     </>
   );
