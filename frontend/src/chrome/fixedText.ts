@@ -12,6 +12,7 @@ export const FIXED = {
     plan_limit: { disc: "LIMIT", pill: "CLAUDE PLAN LIMIT REACHED" },
   },
   // Placeholder: the owner picks the final line at the checkpoint (F14).
+  previewResult: "Preview: nothing was executed",
   tagline: "Quiet help, close at hand.",
   motionLabel: "Reduce motion",
   chartOther: "Other",
