@@ -59,3 +59,23 @@ test("safeLink keeps public hosts next to the private ranges", () => {
   expect(safeLink("https://172.32.0.1/")?.host).toBe("172.32.0.1");
   expect(safeLink("https://example.com")?.host).toBe("example.com");
 });
+
+test.each([
+  "http://localhost.:8741/",
+  "http://app.localhost./",
+  "http://LOCALHOST./",
+  "http://localhost。/",
+  "http://localhost../",
+  "http://[::127.0.0.1]/",
+  "http://[64:ff9b::127.0.0.1]/",
+  "http://[::ffff:0:127.0.0.1]/",
+])("safeLink rejects trailing-dot or embedded IPv4 local host %j", (url) => {
+  expect(safeLink(url)).toBeNull();
+});
+
+test.each(["https://localhost.example.com/", "http://[::ffff:8.8.8.8]/", "https://[2001:db8::1]/"])(
+  "safeLink keeps %j",
+  (url) => {
+    expect(safeLink(url)).not.toBeNull();
+  },
+);

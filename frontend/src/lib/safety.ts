@@ -1,8 +1,10 @@
 // Links to local services could steer the owner to the host companion or other local ports.
 function isLocalHost(host: string): boolean {
-  if (host === "localhost" || host.endsWith(".localhost")) return true;
-  if (host.startsWith("[")) return isLocalV6(host.slice(1, -1));
-  return isLocalV4(host);
+  // A trailing dot is still the same host to browsers and the OS ("localhost.").
+  const h = host.replace(/\.+$/, "");
+  if (h === "localhost" || h.endsWith(".localhost")) return true;
+  if (h.startsWith("[")) return isLocalV6(h.slice(1, -1));
+  return isLocalV4(h);
 }
 
 function isLocalV4(host: string): boolean {
@@ -21,8 +23,8 @@ function isLocalV4(host: string): boolean {
 function isLocalV6(h: string): boolean {
   if (h === "::1" || h === "::") return true;
   if (/^f[cd][0-9a-f]{2}:/.test(h) || /^fe[89ab][0-9a-f]:/.test(h)) return true;
-  // WHATWG rewrites ::ffff:127.0.0.1 as ::ffff:7f00:1, so read the two hex groups back as an IPv4 address.
-  const m = /^::ffff:([0-9a-f]{1,4}):([0-9a-f]{1,4})$/.exec(h);
+  // WHATWG rewrites an embedded IPv4 (mapped, compatible, SIIT, NAT64) as two hex groups, so read them back as an IPv4 address.
+  const m = /^(?:::(?:ffff:(?:0:)?)?|64:ff9b::)([0-9a-f]{1,4}):([0-9a-f]{1,4})$/.exec(h);
   if (!m) return false;
   const hi = parseInt(m[1]!, 16);
   const lo = parseInt(m[2]!, 16);
