@@ -4,6 +4,8 @@ import { toHash, useRoute, type Route, type View } from "./router";
 import { createStore, initialState, useStore, type AppState } from "./store";
 import { MockTransport } from "./transport/mock";
 import type { SessionTransport, VoiceLevelSource } from "./transport/types";
+import { Approvals } from "./views/Approvals";
+import { Permissions } from "./views/Permissions";
 import { Board } from "./views/Board";
 import { ScenarioSwitcher } from "./views/ScenarioSwitcher";
 import { StyleGuide } from "./views/StyleGuide";
@@ -42,7 +44,13 @@ function Page(props: PageProps) {
       <div className="board-page">
         <TopBar state={props.state} nowMs={props.nowMs} onNavigate={props.onNavigate} level={props.level} />
         <ScenarioSwitcher scenarios={SCENARIOS} current={props.current} onSelect={props.onSelect} onRestart={props.onRestart} />
-        <Board state={props.state} now={props.now} level={props.level} />
+        {props.route.view === "approvals" ? (
+          <Approvals state={props.state} act={props.act} />
+        ) : props.route.view === "permissions" ? (
+          <Permissions state={props.state} act={props.act} />
+        ) : (
+          <Board state={props.state} now={props.now} level={props.level} />
+        )}
         <ChatLine state={props.state} request={props.request} onAct={props.act} level={props.level} />
       </div>
     </>

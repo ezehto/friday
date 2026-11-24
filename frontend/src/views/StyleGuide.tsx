@@ -17,6 +17,10 @@ import type { SessionTransport, VoiceLevelSource } from "../transport/types";
 import samplesJson from "../mocks/samples.json";
 import { BlockBoundary } from "../blocks/BlockBoundary";
 import { BlockRenderer } from "../blocks/BlockRenderer";
+import { ProposalPreview } from "./Approvals";
+import { PermissionCard } from "./Permissions";
+import { PreviewBanner } from "./PreviewBanner";
+import { RawField } from "./RawField";
 import { WidgetPanel } from "../widgets/WidgetPanel";
 
 const TOKEN_GROUPS: [string, string[]][] = [
@@ -70,6 +74,16 @@ const TRAY_SPECIMEN = TRAY_KINDS.map((kind) => ({ kind, source: "health" as cons
 const SPECIMEN_NOW_MS = Date.UTC(2026, 10, 24, 9, 30);
 const specimenAct: SessionTransport["act"] = async () => ({ ok: false, preview: true, message: FIXED.previewResult });
 const noop = (): void => undefined;
+const SPECIMEN_HIDDEN = "echo start\r\n\tprintf '\u001b[31mdone\u001b[0m'\necho \u202edetaN\u200b noitcurtsed\nexport p\u0430ssword=demo";
+const SPECIMEN_PROPOSAL = {
+  proposal_id: "specimen-container", host_action: false, tool: "demo_write", title: "Save the specimen checklist", target: "demo/notes/specimen.md",
+  data_class: "personal", content: "- First item\n- Second item\n", secret_scan: "clean", created: "2026-11-24T08:35:00Z", expires: "2026-11-24T09:35:00Z",
+  args_sha256: "a1d8b9a02f896d31834e7c5b44a403063f1fc724b9d260fd5ae676d47b6bb164",
+} as const;
+const SPECIMEN_PERMISSION = {
+  request_id: "specimen-permission", session_id: "00000000-0000-4000-8000-000000000000", project: "Specimen", data_class: "work", permission_mode: "default",
+  friday_started: false, cwd: "/work/specimen", tool: "Bash", input: { command: SPECIMEN_HIDDEN },
+} as const;
 
 /** A local stand-in for the voice level, so the specimens move without a transport. One timer for all listeners. */
 function demoLevel(kind: "listening" | "speaking"): VoiceLevelSource {
@@ -266,6 +280,22 @@ export function StyleGuide() {
               <PushToTalk pressed onChange={noop} />
             </div>
           </HudFrame>
+        </section>
+
+        <section className="sg-section" aria-labelledby="sg-actions">
+          <h2 id="sg-actions" className="sg-section-title">Approvals and permissions</h2>
+          <HudFrame title="Raw field" kicker="Hidden characters and a look-alike letter" headingLevel={3}>
+            <div className="sg-raw">
+              <RawField name="command" value={SPECIMEN_HIDDEN} />
+              <RawField name="plain" value="pytest -x" />
+            </div>
+          </HudFrame>
+          <HudFrame title="Preview banner" kicker="Sticky at the top of a view" headingLevel={3}>
+            <PreviewBanner />
+          </HudFrame>
+          <ProposalPreview proposal={SPECIMEN_PROPOSAL} act={specimenAct} />
+          <ProposalPreview proposal={{ ...SPECIMEN_PROPOSAL, proposal_id: "specimen-host", host_action: true, title: "Record the specimen decision", target_folder: "Specimen/Decisions" }} act={specimenAct} />
+          <PermissionCard request={SPECIMEN_PERMISSION} position="Request 1 of 1" act={specimenAct} />
         </section>
       </main>
     </>
