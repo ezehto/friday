@@ -291,8 +291,7 @@
                 "$ref": "#/$defs/Id"
               },
               "status": {
-                "type": "string",
-                "maxLength": 40
+                "$ref": "#/$defs/ProposalStatus"
               }
             },
             "required": [
@@ -544,14 +543,73 @@
                 "$ref": "../common.schema.json#/$defs/Tone"
               },
               "view": {
-                "type": "string",
-                "maxLength": 40
+                "$ref": "../common.schema.json#/$defs/AlertView"
               }
             },
             "required": [
               "kind",
               "level"
             ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "error"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "pattern": "^[a-z_]{1,40}$"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "code"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "ack"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {},
             "additionalProperties": false
           }
         },
@@ -566,7 +624,8 @@
       "title": "FrameId",
       "type": "string",
       "minLength": 1,
-      "maxLength": 64
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9_.:-]{1,64}$"
     },
     "EventName": {
       "title": "EventName",
@@ -604,6 +663,19 @@
         "companion_degraded",
         "over_budget",
         "proposal_expiring"
+      ]
+    },
+    "ProposalStatus": {
+      "title": "ProposalStatus",
+      "type": "string",
+      "enum": [
+        "pending",
+        "rejected",
+        "expired",
+        "executing",
+        "executed",
+        "verified",
+        "failed"
       ]
     }
   }

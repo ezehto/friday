@@ -24,6 +24,11 @@ export type Block =
  */
 export type Tone = "good" | "bad" | "attention" | "neutral";
 /**
+ * This interface was referenced by `Common`'s JSON-Schema
+ * via the `definition` "AlertView".
+ */
+export type AlertView = "sessions" | "permissions" | "traces" | "modules";
+/**
  * This interface was referenced by `Friday`'s JSON-Schema
  * via the `definition` "widget".
  */
@@ -117,6 +122,11 @@ export type AlertKind =
   | "companion_degraded"
   | "over_budget"
   | "proposal_expiring";
+/**
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "ProposalStatus".
+ */
+export type ProposalStatus = "pending" | "rejected" | "expired" | "executing" | "executed" | "verified" | "failed";
 /**
  * This interface was referenced by `Mock`'s JSON-Schema
  * via the `definition` "ScriptCoreState".
@@ -310,7 +320,7 @@ export interface AlertBlock {
   kind: "alert";
   level: Tone;
   text: string;
-  view?: "sessions" | "permissions" | "traces" | "modules";
+  view?: AlertView;
 }
 export interface KanbanBlock {
   kind: "kanban";

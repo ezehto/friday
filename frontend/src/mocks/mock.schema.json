@@ -74,7 +74,7 @@
       "properties": {
         "proposal_id": {
           "type": "string",
-          "maxLength": 64
+          "pattern": "^[A-Za-z0-9_.:-]{1,64}$"
         },
         "host_action": {
           "type": "boolean"
@@ -142,7 +142,7 @@
       "properties": {
         "run_id": {
           "type": "string",
-          "maxLength": 64
+          "pattern": "^[A-Za-z0-9_.:-]{1,64}$"
         },
         "repo": {
           "type": "string",
@@ -233,7 +233,7 @@
         },
         "session_id": {
           "type": "string",
-          "maxLength": 64
+          "pattern": "^[A-Za-z0-9_.:-]{1,64}$"
         },
         "project": {
           "type": "string",
@@ -284,14 +284,14 @@
       "properties": {
         "span_id": {
           "type": "string",
-          "maxLength": 64
+          "pattern": "^[A-Za-z0-9_.:-]{1,64}$"
         },
         "parent_span_id": {
           "type": [
             "string",
             "null"
           ],
-          "maxLength": 64
+          "pattern": "^[A-Za-z0-9_.:-]{1,64}$"
         },
         "name": {
           "type": "string",
@@ -352,7 +352,7 @@
       "properties": {
         "trace_id": {
           "type": "string",
-          "maxLength": 64
+          "pattern": "^[A-Za-z0-9_.:-]{1,64}$"
         },
         "label": {
           "type": "string",

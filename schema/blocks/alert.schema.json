@@ -15,13 +15,7 @@
       "maxLength": 200
     },
     "view": {
-      "type": "string",
-      "enum": [
-        "sessions",
-        "permissions",
-        "traces",
-        "modules"
-      ]
+      "$ref": "../common.schema.json#/$defs/AlertView"
     }
   },
   "required": [

@@ -43,6 +43,44 @@ describe("server frame", () => {
   });
 });
 
+const minimal: Record<string, unknown> = {
+  "message.delta": { request_id: "r", text: "t" },
+  "message.done": { request_id: "r" },
+  "request.started": { request_id: "r" },
+  "request.finished": { request_id: "r" },
+  "board.updated": { board: [] },
+  "approval.created": { proposal_id: "p" },
+  "approval.updated": { proposal_id: "p", status: "executed" },
+  "run.updated": { run_id: "r", status: "done" },
+  "session.updated": { session_id: "s", state: "idle" },
+  "permission.pending": { request_id: "r" },
+  "permission.resolved": { request_id: "r" },
+  "session_message.sent": { session_id: "s" },
+  "research.finished": { job_id: "j" },
+  "alert.raised": { kind: "run_failed", level: "bad", view: "sessions" },
+};
+
+describe("closed frame data", () => {
+  it.each(Object.entries(minimal))("%s: minimal passes, extra key fails", (name, data) => {
+    expect(validateAgainst(FRAME, frame(name, data))).toEqual([]);
+    expect(validateAgainst(FRAME, frame(name, { ...(data as object), extra: "x" })).join("\n")).toContain("/data");
+  });
+
+  it("free text in constrained fields fails", () => {
+    expect(validateAgainst(FRAME, frame("alert.raised", { kind: "run_failed", level: "bad", view: "elsewhere" })).join("\n")).toContain("/data/view");
+    expect(validateAgainst(FRAME, frame("approval.updated", { proposal_id: "p", status: "approved" })).join("\n")).toContain("/data/status");
+  });
+
+  it("error and ack data are closed", () => {
+    const base = { v: 1, id: "f", ts };
+    expect(validateAgainst(FRAME, { ...base, type: "error", data: { code: "bad_hello" } })).toEqual([]);
+    expect(validateAgainst(FRAME, { ...base, type: "ack", data: {} })).toEqual([]);
+    expect(validateAgainst(FRAME, { ...base, type: "error", data: { code: "bad_hello", message: "x" } })).not.toEqual([]);
+    expect(validateAgainst(FRAME, { ...base, type: "error", data: {} })).not.toEqual([]);
+    expect(validateAgainst(FRAME, { ...base, type: "ack", data: { a: 1 } })).not.toEqual([]);
+  });
+});
+
 describe("scenario model", () => {
   const step = (s: unknown) => validateAgainst(`${MOCK}#/$defs/ScriptStep`, s);
 

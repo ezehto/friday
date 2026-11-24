@@ -40,6 +40,16 @@
         "url"
       ],
       "additionalProperties": false
+    },
+    "AlertView": {
+      "title": "AlertView",
+      "type": "string",
+      "enum": [
+        "sessions",
+        "permissions",
+        "traces",
+        "modules"
+      ]
     }
   }
 }
