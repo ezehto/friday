@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { ToneIcon } from "../chrome/ToneIcon";
 import type { MeterBlock as MeterBlockData } from "../generated/types";
 import { Empty } from "./Empty";
@@ -15,7 +16,7 @@ export function MeterBlock({ block }: { block: MeterBlockData }) {
       ) : (
         <ul>
           {block.items.map((item, i) => (
-            <li key={i} data-tone={item.tone}>
+            <li key={i} data-tone={item.tone} style={{ "--bi": i } as CSSProperties}>
               <div className="meter-head">
                 <span>{item.label}</span>
                 {item.tone && <ToneIcon tone={item.tone} />}

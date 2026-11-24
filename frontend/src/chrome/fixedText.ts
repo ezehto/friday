@@ -118,6 +118,8 @@ export const FIXED = {
     blocks: "Blocks",
     widgets: "Widgets",
     chrome: "Chrome",
+    motion: "Motion specimens",
+    replay: "Replay",
     packs: {
       core: "Core",
       projects: "Projects",

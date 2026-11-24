@@ -66,6 +66,10 @@
   --motion-panel-entry-duration: 0.45s;
   --motion-voice-duration: 1.4s;
   --motion-voice-ease: 50ms;
+  --motion-state-duration: 0.6s;
+  --motion-exit-duration: 0.25s;
+  --motion-chart-draw-duration: 0.9s;
+  --motion-stagger: 60ms;
   --motion-easing: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
@@ -76,6 +80,10 @@
     --motion-panel-entry-duration: 0s;
     --motion-voice-duration: 0s;
     --motion-voice-ease: 0s;
+    --motion-state-duration: 0s;
+    --motion-exit-duration: 0s;
+    --motion-chart-draw-duration: 0s;
+    --motion-stagger: 0s;
   }
 }
 
@@ -85,4 +93,8 @@
   --motion-panel-entry-duration: 0s;
   --motion-voice-duration: 0s;
   --motion-voice-ease: 0s;
+  --motion-state-duration: 0s;
+  --motion-exit-duration: 0s;
+  --motion-chart-draw-duration: 0s;
+  --motion-stagger: 0s;
 }

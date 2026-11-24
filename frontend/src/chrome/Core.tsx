@@ -1,5 +1,6 @@
 import { useEffect, useRef, type RefObject } from "react";
 import type { VoiceLevelSource } from "../transport/types";
+import { easePlaybackRate, motionReduced, tokenMs, useGhost } from "../lib/motion";
 import { coreLabels, type CoreState } from "./coreStates";
 
 const C = 200;
@@ -48,10 +49,30 @@ export function useVoiceLevel(ref: RefObject<Element | null>, level: VoiceLevelS
 
 const VOICE_STATES: readonly CoreState[] = ["listening", "speaking"];
 
+/**
+ * The rings spin on one CSS animation at the base rate. The state's --core-speed becomes the
+ * animation's playbackRate, eased, so a state change never restarts it or jumps the angle.
+ */
+function useRingSpeed(ref: RefObject<SVGSVGElement | null>, state: CoreState): void {
+  const settled = useRef(false);
+  useEffect(() => {
+    const svg = ref.current;
+    if (!svg || typeof svg.getAnimations !== "function" || motionReduced()) return;
+    const speed = parseFloat(getComputedStyle(svg).getPropertyValue("--core-speed"));
+    const rings = svg.getAnimations({ subtree: true }).filter((a) => (a as CSSAnimation).animationName === "core-spin");
+    const to = 1 / (Number.isFinite(speed) && speed > 0 ? speed : 1);
+    const ms = settled.current ? tokenMs("--motion-state-duration") : 0;
+    settled.current = true;
+    return easePlaybackRate(rings, to, ms);
+  }, [ref, state]);
+}
+
 export function Core(props: { state: CoreState; size: "full" | "compact"; level?: VoiceLevelSource }) {
   const root = useRef<SVGSVGElement>(null);
   useVoiceLevel(root, props.level, VOICE_STATES.includes(props.state));
+  useRingSpeed(root, props.state);
   const { disc, pill } = coreLabels(props.state);
+  const ghost = useGhost(disc);
   const compact = props.size === "compact";
   return (
     <svg
@@ -89,9 +110,16 @@ export function Core(props: { state: CoreState; size: "full" | "compact"; level?
       <circle className="core-line core-inner" cx={C} cy={C} r="86" />
       <circle className="core-disc" cx={C} cy={C} r="68" />
       {compact ? null : (
-        <text className="core-disc-label" x={C} y={C} textAnchor="middle" dominantBaseline="central">
-          {disc}
-        </text>
+        <>
+          <text key={disc} className="core-disc-label" x={C} y={C} textAnchor="middle" dominantBaseline="central">
+            {disc}
+          </text>
+          {ghost !== null && (
+            <text className="core-disc-ghost" x={C} y={C} textAnchor="middle" dominantBaseline="central" aria-hidden="true">
+              {ghost}
+            </text>
+          )}
+        </>
       )}
     </svg>
   );

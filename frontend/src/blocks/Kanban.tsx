@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { KanbanBlock as KanbanBlockData } from "../generated/types";
 import { Empty } from "./Empty";
 
@@ -16,7 +17,7 @@ export function KanbanBlock({ block }: { block: KanbanBlockData }) {
               ) : (
                 <ul>
                   {col.items.map((item, j) => (
-                    <li key={j}>
+                    <li key={j} style={{ "--bi": i + j } as CSSProperties}>
                       <span>{item.label}</span>
                       {item.meta && <span className="row-meta">{item.meta}</span>}
                     </li>

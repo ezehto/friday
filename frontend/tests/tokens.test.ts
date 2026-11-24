@@ -55,7 +55,7 @@ test("tone-attention differs from accent-primary by at least 20 degrees of hue",
 
 test("every --motion duration is redefined to 0s in both reduced-motion blocks", () => {
   const durations = Object.keys(t).filter((k) => k.startsWith("--motion-") && k.endsWith("-duration"));
-  expect(durations.length).toBe(4);
+  expect(durations.length).toBe(7);
   const media = css.match(/@media \(prefers-reduced-motion: reduce\)\s*\{\s*:root\s*\{([^}]*)\}/);
   const attr = css.match(/:root\[data-motion="reduced"\]\s*\{([^}]*)\}/);
   for (const block of [media, attr]) {

@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { ToneIcon } from "../chrome/ToneIcon";
 import type { RowsBlock as RowsBlockData } from "../generated/types";
 import { Empty } from "./Empty";
@@ -13,7 +14,7 @@ export function RowsBlock({ block }: { block: RowsBlockData }) {
       ) : (
         <ol>
           {block.items.map((item, i) => (
-            <li key={i} data-tone={item.tone}>
+            <li key={i} data-tone={item.tone} style={{ "--bi": i } as CSSProperties}>
               {log ? (
                 <>
                   {item.meta && <span className="row-meta">{item.meta}</span>}

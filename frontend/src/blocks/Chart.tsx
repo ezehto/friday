@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import type { CSSProperties, ReactElement } from "react";
 import type { ChartBlock as ChartBlockData } from "../generated/types";
 import { formatNumber } from "../lib/format";
 import { Empty } from "./Empty";
@@ -54,6 +54,9 @@ function Cartesian({ block }: { block: ChartBlockData }): ReactElement {
                 width={n(bw)}
                 height={n(Math.abs(base - y))}
                 fill={color(si)}
+                className="chart-bar"
+                // Grows from the zero line, so a negative bar grows downward.
+                style={{ transformOrigin: `0px ${n(base)}px`, "--bi": ci } as CSSProperties}
               />
             );
           });
@@ -73,11 +76,11 @@ function Cartesian({ block }: { block: ChartBlockData }): ReactElement {
           const [fx, fy] = first;
           const [lx] = last;
           return (
-            <g key={si}>
+            <g key={si} style={{ "--ci": si } as CSSProperties}>
               {chart === "area" && (
-                <path d={`${line}L${lx} ${base}L${fx} ${base}Z`} fill={color(si)} fillOpacity="0.18" stroke="none" />
+                <path d={`${line}L${lx} ${base}L${fx} ${base}Z`} fill={color(si)} fillOpacity="0.18" stroke="none" className="chart-area-fill" />
               )}
-              <path d={line} fill="none" stroke={color(si)} strokeWidth="1.5" strokeLinejoin="round" />
+              <path d={line} fill="none" stroke={color(si)} strokeWidth="1.5" strokeLinejoin="round" pathLength="1" className="chart-line" />
               {pts.length === 1 && <circle cx={fx} cy={fy} r="2.5" fill={color(si)} />}
             </g>
           );
@@ -98,11 +101,13 @@ function Donut({ series }: { series: Series }): ReactElement | null {
   const cx = W / 2;
   const cy = H / 2;
   const pt = (t: number) => `${n(cx + r * Math.sin(t * 2 * Math.PI))} ${n(cy - r * Math.cos(t * 2 * Math.PI))}`;
+  // Each slice draws over its own share of the sweep, starting where the one before ended.
+  const sweep = (s: { start: number; end: number }) => ({ "--ss": s.start, "--sw": s.end - s.start }) as CSSProperties;
   return (
     <>
       {slices.map((s, i) =>
         s.end - s.start > 0.9999 ? (
-          <circle key={i} cx={cx} cy={cy} r={r} fill="none" stroke={color(i)} strokeWidth="18" />
+          <circle key={i} cx={cx} cy={cy} r={r} fill="none" stroke={color(i)} strokeWidth="18" pathLength="1" className="chart-slice" style={sweep(s)} />
         ) : (
           <path
             key={i}
@@ -110,6 +115,9 @@ function Donut({ series }: { series: Series }): ReactElement | null {
             fill="none"
             stroke={color(i)}
             strokeWidth="18"
+            pathLength="1"
+            className="chart-slice"
+            style={sweep(s)}
           />
         ),
       )}

@@ -679,4 +679,4 @@ From the independent cross-check (`.superpowers/sdd/2026-11-20-friday-milestone-
 | Defect 8 Deny position untested | accepted | Task 22 |
 | Owner instruction: documents in subfolders of `docs/` | applied | Global Constraints, File structure, Spec line, Task 8 (`docs/guides/style-guide.md`), Out of scope |
 | Owner request 2026-11-24: voice-level animation | added | Task 21a |
-
+| Owner request 2026-11-24: smooth transitions | added | Task 24a |

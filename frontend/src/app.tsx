@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { BASE_VIEWS, loadScenarios } from "./mocks";
 import { toHash, useRoute, type Route, type View } from "./router";
 import { createStore, initialState, useStore, type AppState } from "./store";
@@ -63,13 +63,17 @@ function Page(props: PageProps) {
   );
 }
 
-function LivePage(props: Omit<PageProps, "state" | "act"> & { store: Store }) {
+// One page component for live and idle alike, so the board keeps its state across a scenario
+// switch or restart and the old panels can fade out before the new ones enter.
+const IDLE = { subscribe: () => () => undefined, getState: () => initialState };
+
+function LivePage(props: Omit<PageProps, "state" | "act"> & { store: Store | null }) {
   const { store, ...rest } = props;
-  const state = useStore(store, (s) => s);
+  const state = useStore(store ?? IDLE, (s) => s);
   useEffect(() => {
     if (state.done) document.body.dataset.scenarioDone = "true";
   }, [state.done]);
-  return <Page {...rest} state={state} act={store.act} />;
+  return <Page {...rest} state={state} act={store ? store.act : idleAct} />;
 }
 
 export function App() {
@@ -83,6 +87,12 @@ export function App() {
     const timer = setInterval(() => setNowMs(Date.now()), CLOCK_MS);
     return () => clearInterval(timer);
   }, []);
+
+  // Instant mode: CSS entry animations and the exit and glide scripts all key off this attribute.
+  useLayoutEffect(() => {
+    if (route.instant) document.documentElement.dataset.instant = "1";
+    return () => void delete document.documentElement.dataset.instant;
+  }, [route.instant]);
 
   const id = scenario?.id;
   const isGuide = route.view === "style-guide";
@@ -113,9 +123,12 @@ export function App() {
   };
   // A disposed store from the previous scenario is never rendered: it must match the current route.
   const current = live && live.id === id && live.runs === runs && live.instant === route.instant ? live : null;
-  return current && scenario ? (
-    <LivePage {...shared} now={scenario.now} store={current.store} level={current.level} />
-  ) : (
-    <Page {...shared} now={new Date(nowMs).toISOString()} state={initialState} act={idleAct} />
+  return (
+    <LivePage
+      {...shared}
+      now={current && scenario ? scenario.now : new Date(nowMs).toISOString()}
+      store={current && scenario ? current.store : null}
+      level={current && scenario ? current.level : undefined}
+    />
   );
 }

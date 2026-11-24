@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Background } from "../chrome/Background";
 import { Core } from "../chrome/Core";
 import { ChatLine, PushToTalk } from "../chrome/ChatLine";
@@ -149,6 +149,59 @@ function Swatch({ name }: { name: string }) {
   );
 }
 
+const STEP_MS = 2600;
+
+/** Remounts on Replay: one panel, the four chart kinds and a core that steps through every state. */
+function MotionSpecimen() {
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => setIndex((i) => (i + 1) % CORE_STATES.length), STEP_MS);
+    return () => clearInterval(timer);
+  }, []);
+  const state = CORE_STATES[index]!;
+  const specimens = BLOCK_SPECIMENS.filter((b) => ["rows", "meter", "chips"].includes(b.block.kind));
+  return (
+    <div className="sg-motion">
+      <div className="board-item">
+        <HudFrame title="Panel" kicker="Rows, meter and chips" headingLevel={3}>
+          {specimens.map(({ block }) => (
+            <BlockBoundary key={block.kind}>
+              <BlockRenderer block={block} />
+            </BlockBoundary>
+          ))}
+        </HudFrame>
+      </div>
+      <div className="sg-grid">
+        {CHART_KINDS.map((chart) => (
+          <HudFrame key={chart} title={`chart: ${chart}`} headingLevel={3}>
+            <BlockBoundary>
+              <BlockRenderer block={chartBlock(chart)} />
+            </BlockBoundary>
+          </HudFrame>
+        ))}
+      </div>
+      <div className="sg-core-stage">
+        <Core state={state} size="full" />
+        <StatusPill state={state} />
+      </div>
+    </div>
+  );
+}
+
+function MotionSection() {
+  const [run, setRun] = useState(0);
+  return (
+    <section className="sg-section" aria-labelledby="sg-motion">
+      <h2 id="sg-motion" className="sg-section-title">{FIXED.styleGuide.motion}</h2>
+      <p>Panels rise in, blocks and charts draw in, and the core eases between agent states. Replay mounts them again.</p>
+      <div>
+        <button type="button" className="chat-btn" onClick={() => setRun((n) => n + 1)}>{FIXED.styleGuide.replay}</button>
+      </div>
+      <MotionSpecimen key={run} />
+    </section>
+  );
+}
+
 export function StyleGuide() {
   const [state, setState] = useState<CoreState>("idle");
   return (
@@ -226,6 +279,8 @@ export function StyleGuide() {
         <HudFrame title="Motion" kicker="Setting">
           <MotionSetting />
         </HudFrame>
+
+        <MotionSection />
 
         <section className="sg-section" aria-labelledby="sg-blocks">
           <h2 id="sg-blocks" className="sg-section-title">{FIXED.styleGuide.blocks}</h2>

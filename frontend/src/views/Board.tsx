@@ -1,8 +1,9 @@
-import { Component, type ReactNode } from "react";
+import { Component, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Core } from "../chrome/Core";
 import { FIXED } from "../chrome/fixedText";
 import { StatusPill } from "../chrome/StatusPill";
 import type { WidgetEnvelope } from "../generated/types";
+import { motionOff, tokenMs, useFlip } from "../lib/motion";
 import type { AppState } from "../store";
 import type { VoiceLevelSource } from "../transport/types";
 import { WidgetPanel } from "../widgets/WidgetPanel";
@@ -25,29 +26,69 @@ class PanelBoundary extends Component<{ children: ReactNode }, { failed: boolean
   }
 }
 
-function Column(props: { name: string; items: WidgetEnvelope[]; indexes: number[]; now: string }) {
+type Leaving = { envelope: WidgetEnvelope; index: number };
+
+/**
+ * Keeps an envelope that left the board mounted for the exit duration so it can fade out.
+ * Returns the board with the leaving envelopes spliced back at their old index, and their ids.
+ */
+function useLeaving(board: WidgetEnvelope[]): { items: WidgetEnvelope[]; leaving: Set<string> } {
+  const [track, setTrack] = useState<{ board: WidgetEnvelope[]; leaving: Leaving[] }>({ board, leaving: [] });
+  if (track.board !== board) {
+    const ids = new Set(board.slice(0, PANEL_MAX).map((e) => e?.widget_id));
+    const kept = track.leaving.filter((l) => !ids.has(l.envelope.widget_id));
+    const gone = motionOff() || tokenMs("--motion-exit-duration") <= 0
+      ? []
+      : track.board.slice(0, PANEL_MAX).flatMap((envelope, index) => (envelope && !ids.has(envelope.widget_id) && !kept.some((l) => l.envelope.widget_id === envelope.widget_id) ? [{ envelope, index }] : []));
+    setTrack({ board, leaving: [...kept, ...gone] });
+  }
+  const { leaving } = track;
+  useEffect(() => {
+    if (leaving.length === 0) return;
+    const timer = setTimeout(() => setTrack((s) => ({ ...s, leaving: [] })), tokenMs("--motion-exit-duration"));
+    return () => clearTimeout(timer);
+  }, [leaving]);
+  const items = board.slice(0, PANEL_MAX);
+  for (const l of [...leaving].sort((a, b) => a.index - b.index)) items.splice(Math.min(l.index, items.length), 0, l.envelope);
+  return { items, leaving: new Set(leaving.map((l) => l.envelope.widget_id)) };
+}
+
+function Column(props: { name: string; items: WidgetEnvelope[]; indexes: number[]; now: string; leaving: Set<string> }) {
   return (
     <div className={`board-col board-col-${props.name}`}>
-      {props.items.map((envelope, i) => (
-        // order keeps board order when the columns collapse into one.
-        <div key={envelope?.widget_id ?? `bad-${props.indexes[i]}`} className="board-item" style={{ order: props.indexes[i] }}>
-          <PanelBoundary>
-            <WidgetPanel envelope={envelope} now={props.now} headingLevel={2} />
-          </PanelBoundary>
-        </div>
-      ))}
+      {props.items.map((envelope, i) => {
+        const gone = envelope ? props.leaving.has(envelope.widget_id) : false;
+        return (
+          // order keeps board order when the columns collapse into one; --i staggers the entry.
+          <div
+            key={envelope?.widget_id ?? `bad-${props.indexes[i]}`}
+            className="board-item"
+            data-flip={envelope?.widget_id}
+            data-leaving={gone ? "" : undefined}
+            aria-hidden={gone ? true : undefined}
+            inert={gone}
+            style={{ order: props.indexes[i], "--i": props.indexes[i] } as CSSProperties}
+          >
+            <PanelBoundary>
+              <WidgetPanel envelope={envelope} now={props.now} headingLevel={2} />
+            </PanelBoundary>
+          </div>
+        );
+      })}
     </div>
   );
 }
 
 export function Board(props: { state: AppState; now: string; level?: VoiceLevelSource }) {
   const { state, now } = props;
-  const board = state.board.slice(0, PANEL_MAX);
-  const { left, right } = splitColumns(board);
-  const note = board.length > 0 ? null : state.requestOpen ? FIXED.loadingBoard : FIXED.emptyBoard;
+  const { items, leaving } = useLeaving(state.board);
+  const host = useRef<HTMLDivElement>(null);
+  useFlip(host);
+  const { left, right } = splitColumns(items);
+  const note = items.length > 0 ? null : state.requestOpen ? FIXED.loadingBoard : FIXED.emptyBoard;
   return (
-    <div className="board">
-      <Column name="left" items={left} indexes={left.map((_, i) => i * 2)} now={now} />
+    <div className="board" ref={host}>
+      <Column name="left" items={left} indexes={left.map((_, i) => i * 2)} now={now} leaving={leaving} />
       <div className="board-core">
         <div className="core-full-wrap">
           <Core state={state.core} size="full" level={props.level} />
@@ -55,7 +96,7 @@ export function Board(props: { state: AppState; now: string; level?: VoiceLevelS
         <StatusPill state={state.core} />
         {note && <p className="board-note">{note}</p>}
       </div>
-      <Column name="right" items={right} indexes={right.map((_, i) => i * 2 + 1)} now={now} />
+      <Column name="right" items={right} indexes={right.map((_, i) => i * 2 + 1)} now={now} leaving={leaving} />
     </div>
   );
 }

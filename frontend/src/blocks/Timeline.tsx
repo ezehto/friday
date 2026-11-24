@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { ToneIcon } from "../chrome/ToneIcon";
 import type { TimelineBlock as TimelineBlockData } from "../generated/types";
 import { Empty } from "./Empty";
@@ -10,7 +11,7 @@ export function TimelineBlock({ block }: { block: TimelineBlockData }) {
       ) : (
         <ol>
           {block.items.map((item, i) => (
-            <li key={i} data-tone={item.tone}>
+            <li key={i} data-tone={item.tone} style={{ "--bi": i } as CSSProperties}>
               <span className="row-meta">{item.when}</span>
               <div>
                 <p className="timeline-title">

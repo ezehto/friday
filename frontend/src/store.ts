@@ -108,6 +108,6 @@ export function createStore(transport: SessionTransport, preview?: PreviewFeed) 
   };
 }
 
-export function useStore<T>(store: ReturnType<typeof createStore>, select: (s: AppState) => T): T {
+export function useStore<T>(store: Pick<ReturnType<typeof createStore>, "subscribe" | "getState">, select: (s: AppState) => T): T {
   return useSyncExternalStore(store.subscribe, () => select(store.getState()));
 }

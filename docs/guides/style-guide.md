@@ -19,7 +19,7 @@ MVP; every colour sits in one `:root` block so a light set can follow.
 | Focus | `--focus-ring` | Light teal, 3:1 or better on canvas and panel. |
 | Chart | `--series-1` to `--series-5` | Plain SVG chart series. |
 | Typography | `--font-body`, `--font-label`, `--size-label`, `--size-body`, `--size-value`, `--tracking-label` | System stacks, nothing fetched. |
-| Motion | `--motion-ring-duration`, `--motion-pulse-duration`, `--motion-panel-entry-duration`, `--motion-easing` | Each duration is `0s` under `prefers-reduced-motion` and `data-motion="reduced"`. |
+| Motion | `--motion-ring-duration`, `--motion-pulse-duration`, `--motion-panel-entry-duration`, `--motion-state-duration`, `--motion-exit-duration`, `--motion-chart-draw-duration`, `--motion-stagger`, `--motion-easing` | Each duration is `0s` under `prefers-reduced-motion` and `data-motion="reduced"`. |
 
 Contrast is enforced by `frontend/tests/tokens.test.ts`: readable colours reach 4.5:1
 on all three backgrounds, `--text-on-accent` 4.5:1 on `--accent-primary`,
@@ -65,6 +65,16 @@ values never use it.
 
 Ring rotation and the disc pulse run only through the `--motion-*` tokens. The
 "Reduce motion" setting and the operating-system preference both set them to `0s`.
+
+Transitions between states (Task 24a) use the same tokens: `--motion-state-duration`
+(colour, labels, ring speed, glides), `--motion-exit-duration`, `--motion-chart-draw-duration`
+and `--motion-stagger`. Panels rise in staggered by board index, a removed panel fades
+before it unmounts, panels that change place glide (FLIP), blocks fade in item by item,
+lines draw, bars grow from the zero line, donut slices sweep, meters fill. The core
+cross-fades colour, disc label and pill text, and eases ring speed through `playbackRate`
+so the angle never jumps. Only opacity, transform, stroke-dashoffset and colour move. Reduced
+motion shows the final state at once; instant mode (`?instant=1`) skips entry, exit and
+draw-in. The "Motion specimens" section of the style guide page has a Replay button.
 
 ## Voice level
 
