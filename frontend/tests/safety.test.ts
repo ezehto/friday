@@ -34,5 +34,28 @@ test("safeLink shows an IDN host as punycode", () => {
 
 test("safeLink reports the host the browser will use", () => {
   expect(safeLink("https://github.com\\@evil.example")?.host).toBe("github.com");
-  expect(safeLink("https://2130706433/")?.host).toBe("127.0.0.1");
+});
+
+test.each([
+  "http://127.0.0.1:8741/x",
+  "https://2130706433/",
+  "https://0x7f.1/",
+  "http://localhost:8740/",
+  "http://app.localhost/",
+  "http://10.1.2.3/",
+  "http://172.16.0.1/",
+  "http://172.31.255.255/",
+  "http://192.168.1.1/",
+  "http://169.254.169.254/",
+  "http://[::1]/",
+  "http://[fd00::1]/",
+  "http://[fe80::1]/",
+  "http://[::ffff:127.0.0.1]/",
+])("safeLink rejects local or private host %j", (url) => {
+  expect(safeLink(url)).toBeNull();
+});
+
+test("safeLink keeps public hosts next to the private ranges", () => {
+  expect(safeLink("https://172.32.0.1/")?.host).toBe("172.32.0.1");
+  expect(safeLink("https://example.com")?.host).toBe("example.com");
 });
