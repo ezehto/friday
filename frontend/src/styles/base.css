@@ -304,3 +304,9 @@ p {
 .kanban-column h3 { color: var(--text-muted); }
 .kanban-column li { display: grid; gap: 0.15rem; padding: 0.4rem 0.5rem; background: var(--bg-panel); border: 1px solid var(--line-blueprint); }
 .kanban-column li + li { margin-top: 0.4rem; }
+
+.block-chart { margin: 0; }
+.block-chart svg { display: block; width: 100%; height: auto; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; margin-top: 0.4rem; font-size: 0.8rem; color: var(--text-secondary); }
+.chart-key { display: inline-flex; align-items: center; gap: 0.35rem; }
+.chart-swatch { width: 0.6rem; height: 0.6rem; display: inline-block; }
