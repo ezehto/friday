@@ -77,6 +77,15 @@ for id in edge-caps edge-board-full; do
 done
 pw resize 1440 900 >/dev/null
 
+echo "== 3b. core stays fixed while the board fills"
+core_rect() { val '() => { const r = document.querySelector(".core-full").getBoundingClientRect(); return [r.x, r.y, r.width, r.height].join(","); }'; }
+for id in focus-today state-empty-board; do
+  load "#/board?scenario=$id"
+  before="$(core_rect)"
+  wait_done >/dev/null
+  expect_eq "3b $id core rect before and after the board step" "$(core_rect)" "$before"
+done
+
 echo "== 4. approvals, permissions, sessions: banner and actions"
 banner() { expect_eq "4 $1 banner" "$(val '() => document.querySelector("[role=note]")?.textContent.trim()')" "$BANNER"; }
 # click_expect <name> <button text or aria-label prefix> [pre-step eval]

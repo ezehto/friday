@@ -242,6 +242,7 @@ html[data-instant] .hud-frame { animation: none; }
   font-family: var(--font-label);
   font-size: var(--size-label);
   letter-spacing: var(--tracking-label);
+  white-space: nowrap;
 }
 
 /* Tone icons */
@@ -411,9 +412,12 @@ html[data-instant] .hud-frame { animation: none; }
 .panel-failed { padding: 1rem; border: 1px solid var(--line-panel-border); color: var(--text-muted); }
 @media (min-width: 1100px) {
   .board-page { height: 100dvh; }
-  .board { display: grid; grid-template-columns: minmax(0, 1fr) minmax(18rem, 26rem) minmax(0, 1fr); gap: 1.5rem; }
+  /* One fixed row: the core never moves with panel content or the note. */
+  .board { display: grid; grid-template-columns: minmax(0, 1fr) minmax(18rem, 26rem) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); gap: 1.5rem; }
   .board-col { display: flex; flex-direction: column; gap: 1.25rem; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 6px; }
-  .board-core { align-self: center; order: 0; }
+  .board-core { align-self: center; order: 0; position: relative; }
+  /* The note overlays below the pill, outside the flow, so it cannot move the core. */
+  .board-note { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 1rem; width: max-content; }
   .core-full-wrap { display: block; }
 }
 
