@@ -1,0 +1,250 @@
+{
+  "id": "plan-week",
+  "group": "request",
+  "label": "Plan week",
+  "request": "Plan my week",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "schedule",
+        "title": "Today's schedule",
+        "day": "2026-11-24",
+        "items": [
+          {
+            "start": "09:30",
+            "end": "10:00",
+            "title": "Standup",
+            "kind": "meeting"
+          },
+          {
+            "start": "10:30",
+            "end": "12:00",
+            "title": "Retry tests",
+            "kind": "focus"
+          },
+          {
+            "start": "13:00",
+            "end": "13:45",
+            "title": "Compass design sync",
+            "kind": "meeting"
+          },
+          {
+            "start": "15:00",
+            "end": "16:00",
+            "title": "Lantern review",
+            "kind": "review"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "pw-schedule",
+        "source": "sample",
+        "as_of": "2026-11-24T08:40:00Z",
+        "data_class": "work",
+        "title": "Today's schedule",
+        "blocks": [
+          {
+            "kind": "timeline",
+            "items": [
+              {
+                "when": "09:30-10:00",
+                "title": "Standup",
+                "detail": "meeting"
+              },
+              {
+                "when": "10:30-12:00",
+                "title": "Retry tests",
+                "detail": "focus"
+              },
+              {
+                "when": "13:00-13:45",
+                "title": "Compass design sync",
+                "detail": "meeting"
+              },
+              {
+                "when": "15:00-16:00",
+                "title": "Lantern review",
+                "detail": "review"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "focus_time",
+        "title": "Focus time",
+        "day": "2026-11-24",
+        "blocks": [
+          {
+            "start": "10:30",
+            "end": "12:00",
+            "label": "Retry tests"
+          },
+          {
+            "start": "14:00",
+            "end": "15:30",
+            "label": "Lantern fixes"
+          },
+          {
+            "start": "16:15",
+            "end": "17:30",
+            "label": "Compass spike"
+          }
+        ],
+        "total_minutes": 255
+      },
+      "envelope": {
+        "widget_id": "pw-focus",
+        "source": "sample",
+        "as_of": "2026-11-24T08:38:00Z",
+        "data_class": "work",
+        "title": "Focus time",
+        "blocks": [
+          {
+            "kind": "timeline",
+            "items": [
+              {
+                "when": "10:30-12:00",
+                "title": "Retry tests"
+              },
+              {
+                "when": "14:00-15:30",
+                "title": "Lantern fixes"
+              },
+              {
+                "when": "16:15-17:30",
+                "title": "Compass spike"
+              }
+            ]
+          },
+          {
+            "kind": "meter",
+            "items": [
+              {
+                "label": "Focus time",
+                "done": 255,
+                "total": 480
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "task_list",
+        "title": "This week",
+        "items": [
+          {
+            "title": "Draft the Orchard release notes",
+            "status": "doing",
+            "due": "2026-11-26"
+          },
+          {
+            "title": "Review the Lantern theme PR",
+            "status": "todo",
+            "due": "2026-11-25"
+          },
+          {
+            "title": "Update the Compass tile cache docs",
+            "status": "todo"
+          },
+          {
+            "title": "Rotate the staging API keys",
+            "status": "blocked",
+            "due": "2026-11-27"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "pw-tasks",
+        "source": "sample",
+        "as_of": "2026-11-24T08:35:00Z",
+        "data_class": "personal",
+        "title": "This week",
+        "blocks": [
+          {
+            "kind": "rows",
+            "items": [
+              {
+                "label": "Draft the Orchard release notes",
+                "meta": "2026-11-26",
+                "tone": "attention"
+              },
+              {
+                "label": "Review the Lantern theme PR",
+                "meta": "2026-11-25",
+                "tone": "neutral"
+              },
+              {
+                "label": "Update the Compass tile cache docs",
+                "tone": "neutral"
+              },
+              {
+                "label": "Rotate the staging API keys",
+                "meta": "2026-11-27",
+                "tone": "bad"
+              }
+            ]
+          },
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "2 todo",
+                "tone": "neutral"
+              },
+              {
+                "label": "1 doing",
+                "tone": "attention"
+              },
+              {
+                "label": "1 blocked",
+                "tone": "bad"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 100,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-plan-week"
+      }
+    },
+    {
+      "at_ms": 1200,
+      "board": [
+        "pw-schedule",
+        "pw-focus",
+        "pw-tasks"
+      ]
+    },
+    {
+      "at_ms": 1300,
+      "reply": "Your week has about four hours of focus time, and one task is blocked."
+    },
+    {
+      "at_ms": 1820,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-plan-week"
+      }
+    },
+    {
+      "at_ms": 1870,
+      "core": "idle"
+    }
+  ]
+}

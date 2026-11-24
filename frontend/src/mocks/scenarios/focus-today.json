@@ -1,0 +1,239 @@
+{
+  "id": "focus-today",
+  "group": "request",
+  "label": "Focus today",
+  "request": "What should I focus on today?",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "daily_focus",
+        "title": "Today's focus",
+        "items": [
+          {
+            "title": "Finish the Orchard webhook retry tests",
+            "why": "The retry path is the last open item before the release candidate is cut.",
+            "source_ref": "Orchard/Plans/retry-tests"
+          },
+          {
+            "title": "Reply to the Lantern accessibility review",
+            "why": "The reviewer asked for contrast fixes by Wednesday.",
+            "source_ref": "Lantern/Reviews/a11y"
+          },
+          {
+            "title": "Plan the Compass offline cache spike",
+            "why": "Needed to size the December milestone.",
+            "source_ref": "Compass/Plans/offline-cache"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "fx-focus",
+        "source": "sample",
+        "as_of": "2026-11-24T08:40:00Z",
+        "data_class": "personal",
+        "title": "Today's focus",
+        "blocks": [
+          {
+            "kind": "rows",
+            "items": [
+              {
+                "label": "Finish the Orchard webhook retry tests",
+                "detail": "The retry path is the last open item before the release candidate is cut.",
+                "source_ref": "Orchard/Plans/retry-tests"
+              },
+              {
+                "label": "Reply to the Lantern accessibility review",
+                "detail": "The reviewer asked for contrast fixes by Wednesday.",
+                "source_ref": "Lantern/Reviews/a11y"
+              },
+              {
+                "label": "Plan the Compass offline cache spike",
+                "detail": "Needed to size the December milestone.",
+                "source_ref": "Compass/Plans/offline-cache"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "project_status",
+        "title": "Orchard status",
+        "name": "Orchard",
+        "status": "active",
+        "risks": [
+          "Staging cluster is shared with the Lantern team"
+        ],
+        "milestones": [
+          {
+            "name": "Release candidate",
+            "due": "2026-11-27",
+            "status": "at_risk"
+          }
+        ],
+        "next": "Finish the retry tests",
+        "last_commit": "2026-11-23"
+      },
+      "envelope": {
+        "widget_id": "fx-orchard",
+        "source": "sample",
+        "as_of": "2026-11-24T08:45:00Z",
+        "data_class": "work",
+        "title": "Orchard status",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "active",
+                "tone": "neutral"
+              },
+              {
+                "label": "Release candidate 2026-11-27",
+                "tone": "attention"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Next",
+                "value": "Finish the retry tests"
+              },
+              {
+                "label": "Last commit",
+                "value": "2026-11-23"
+              }
+            ]
+          },
+          {
+            "kind": "rows",
+            "heading": "Blockers and risks",
+            "items": [
+              {
+                "label": "Staging cluster is shared with the Lantern team",
+                "tone": "attention"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "project_status",
+        "title": "Compass status",
+        "name": "Compass",
+        "status": "active",
+        "blockers": [
+          "Waiting on the staging key rotation"
+        ],
+        "milestones": [
+          {
+            "name": "Beta invite list",
+            "due": "2026-12-19",
+            "status": "planned"
+          }
+        ],
+        "next": "Spike the offline cache on two devices",
+        "last_commit": "2026-11-23"
+      },
+      "envelope": {
+        "widget_id": "fx-compass",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "work",
+        "title": "Compass status",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "active",
+                "tone": "neutral"
+              },
+              {
+                "label": "Beta invite list 2026-12-19",
+                "tone": "neutral"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Next",
+                "value": "Spike the offline cache on two devices"
+              },
+              {
+                "label": "Last commit",
+                "value": "2026-11-23"
+              }
+            ]
+          },
+          {
+            "kind": "rows",
+            "heading": "Blockers and risks",
+            "items": [
+              {
+                "label": "Waiting on the staging key rotation",
+                "tone": "bad"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "listening"
+    },
+    {
+      "at_ms": 1200,
+      "core": "transcribing"
+    },
+    {
+      "at_ms": 1900,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 2000,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-focus-today"
+      }
+    },
+    {
+      "at_ms": 3000,
+      "board": [
+        "fx-focus",
+        "fx-orchard",
+        "fx-compass"
+      ]
+    },
+    {
+      "at_ms": 3100,
+      "reply": "Three things matter today, starting with the Orchard retry tests."
+    },
+    {
+      "at_ms": 3100,
+      "core": "speaking"
+    },
+    {
+      "at_ms": 3800,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-focus-today"
+      }
+    },
+    {
+      "at_ms": 3850,
+      "core": "idle"
+    }
+  ]
+}

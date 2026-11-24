@@ -1,0 +1,320 @@
+{
+  "approvals": [
+    {
+      "proposal_id": "prop-demo-write",
+      "host_action": false,
+      "tool": "demo_write",
+      "title": "Save the Orchard retry checklist",
+      "target": "demo/notes/orchard-retry-checklist.md",
+      "data_class": "personal",
+      "content": "- Cap retries at five attempts\n- Log every attempt\n- Alert on the fifth failure\n",
+      "secret_scan": "clean",
+      "created": "2026-11-24T08:35:00Z",
+      "expires": "2026-11-24T09:35:00Z",
+      "args_sha256": "a1d8b9a02f896d31834e7c5b44a403063f1fc724b9d260fd5ae676d47b6bb164"
+    },
+    {
+      "proposal_id": "prop-vault-note",
+      "host_action": true,
+      "tool": "vault_write_note",
+      "title": "Record the Orchard retry cap decision",
+      "target": "Orchard/Decisions/retry-cap.md",
+      "target_folder": "Orchard/Decisions",
+      "data_class": "work",
+      "content": "# Retry cap decision\n\nOrchard webhook retries stop after five attempts with exponential backoff.\n",
+      "secret_scan": "clean",
+      "created": "2026-11-24T08:48:00Z",
+      "expires": "2026-11-24T09:48:00Z",
+      "args_sha256": "0a3bdaf3f8922a1cfbcf37e9f7beb0a004a2acb554c8a7dbb6f2245093e0a658"
+    }
+  ],
+  "runs": [
+    {
+      "run_id": "run-0141",
+      "repo": "orchard-api",
+      "mode": "ask",
+      "status": "done",
+      "started": "2026-11-24T06:00:00Z"
+    },
+    {
+      "run_id": "run-0142",
+      "repo": "lantern-web",
+      "mode": "task",
+      "status": "working",
+      "started": "2026-11-24T08:20:00Z"
+    }
+  ],
+  "sessions": [
+    {
+      "session_id": "3f2a9c1e-5b7d-4e08-9a41-6c0d2e8b7f13",
+      "project": "Orchard",
+      "data_class": "work",
+      "kind": "terminal",
+      "state": "waiting",
+      "waiting": true,
+      "last_activity": "2026-11-24T08:57:00Z"
+    },
+    {
+      "session_id": "8d41b6a2-0c9e-4f57-b3a8-1e5d7c9a2b64",
+      "project": "Lantern",
+      "data_class": "personal",
+      "kind": "background",
+      "state": "working",
+      "waiting": false,
+      "last_activity": "2026-11-24T08:59:00Z"
+    },
+    {
+      "session_id": "c07e5d93-a1b4-4826-8f3c-9b2a6d4e1f50",
+      "project": "Compass",
+      "data_class": "personal",
+      "kind": "friday",
+      "state": "idle",
+      "waiting": false,
+      "last_activity": "2026-11-24T07:25:00Z"
+    }
+  ],
+  "permissions": [
+    {
+      "request_id": "a3f1c9d2e8b04567a1b2c3d4e5f60718",
+      "session_id": "3f2a9c1e-5b7d-4e08-9a41-6c0d2e8b7f13",
+      "project": "Orchard",
+      "data_class": "work",
+      "permission_mode": "default",
+      "friday_started": false,
+      "cwd": "/work/orchard-api",
+      "tool": "Bash",
+      "input": {
+        "command": "pytest -x",
+        "description": "Run the retry tests and stop at the first failure"
+      }
+    },
+    {
+      "request_id": "0b9e7d5c3a1f2468b0d2f4a6c8e0b1d3",
+      "session_id": "3f2a9c1e-5b7d-4e08-9a41-6c0d2e8b7f13",
+      "project": "Orchard",
+      "data_class": "work",
+      "permission_mode": "default",
+      "friday_started": false,
+      "cwd": "/work/orchard-api",
+      "tool": "Bash",
+      "input": {
+        "command": "echo start\r\n\tprintf '\u001b[31mall clear\u001b[0m'\necho \u202edetaN\u200b noitcurtsed\nexport p\u0430ssword=demo",
+        "description": "Print a status line before the deploy check"
+      }
+    }
+  ],
+  "traces": [
+    {
+      "trace_id": "trace-0001",
+      "label": "What should I focus on today?",
+      "started": "2026-11-24T08:30:00Z",
+      "duration_ms": 4200,
+      "tokens_in": 5200,
+      "tokens_out": 640,
+      "cost_usd": 0.031,
+      "spans": [
+        {
+          "span_id": "t1-request",
+          "parent_span_id": null,
+          "name": "Request",
+          "kind": "request",
+          "duration_ms": 4200,
+          "tokens_in": 5200,
+          "tokens_out": 640,
+          "status": "ok"
+        },
+        {
+          "span_id": "t1-decide",
+          "parent_span_id": "t1-request",
+          "name": "Choose sources",
+          "kind": "decision",
+          "duration_ms": 180,
+          "status": "ok"
+        },
+        {
+          "span_id": "t1-retrieve",
+          "parent_span_id": "t1-request",
+          "name": "Search the notes",
+          "kind": "retrieval",
+          "duration_ms": 820,
+          "status": "ok"
+        },
+        {
+          "span_id": "t1-model",
+          "parent_span_id": "t1-request",
+          "name": "Draft the focus list",
+          "kind": "model_turn",
+          "duration_ms": 2600,
+          "tokens_in": 4300,
+          "tokens_out": 520,
+          "status": "ok"
+        },
+        {
+          "span_id": "t1-tool",
+          "parent_span_id": "t1-model",
+          "name": "Read the project plan",
+          "kind": "tool_call",
+          "duration_ms": 340,
+          "status": "ok"
+        },
+        {
+          "span_id": "t1-summary",
+          "parent_span_id": "t1-request",
+          "name": "Summarize",
+          "kind": "summary",
+          "duration_ms": 410,
+          "tokens_in": 900,
+          "tokens_out": 120,
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "trace_id": "trace-0002",
+      "label": "Review this implementation",
+      "started": "2026-11-24T07:00:00Z",
+      "duration_ms": 18300,
+      "tokens_in": 21400,
+      "tokens_out": 2900,
+      "cost_usd": 0.142,
+      "spans": [
+        {
+          "span_id": "t2-request",
+          "parent_span_id": null,
+          "name": "Request",
+          "kind": "request",
+          "duration_ms": 18300,
+          "tokens_in": 21400,
+          "tokens_out": 2900,
+          "status": "ok"
+        },
+        {
+          "span_id": "t2-model",
+          "parent_span_id": "t2-request",
+          "name": "Plan the review",
+          "kind": "model_turn",
+          "duration_ms": 3100,
+          "tokens_in": 3800,
+          "tokens_out": 700,
+          "status": "ok"
+        },
+        {
+          "span_id": "t2-approval",
+          "parent_span_id": "t2-request",
+          "name": "Wait for the owner",
+          "kind": "approval",
+          "duration_ms": 9000,
+          "status": "ok"
+        },
+        {
+          "span_id": "t2-handoff",
+          "parent_span_id": "t2-request",
+          "name": "Hand off the brief",
+          "kind": "handoff",
+          "duration_ms": 600,
+          "status": "ok"
+        },
+        {
+          "span_id": "t2-run",
+          "parent_span_id": "t2-handoff",
+          "name": "Claude Code run",
+          "kind": "claude_run",
+          "duration_ms": 5200,
+          "tokens_in": 17600,
+          "tokens_out": 2200,
+          "status": "ok"
+        },
+        {
+          "span_id": "t2-sub",
+          "parent_span_id": "t2-run",
+          "name": "Read the test suite",
+          "kind": "subagent",
+          "duration_ms": 1900,
+          "tokens_in": 4200,
+          "tokens_out": 380,
+          "status": "ok"
+        },
+        {
+          "span_id": "t2-hook",
+          "parent_span_id": "t2-run",
+          "name": "Pre tool hook",
+          "kind": "hook_event",
+          "duration_ms": 40,
+          "status": "ok"
+        },
+        {
+          "span_id": "t2-perm",
+          "parent_span_id": "t2-run",
+          "name": "Permission for pytest",
+          "kind": "permission_decision",
+          "duration_ms": 1100,
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "trace_id": "trace-0003",
+      "label": "Summarize my important emails",
+      "started": "2026-11-24T04:00:00Z",
+      "duration_ms": 30500,
+      "tokens_in": 900,
+      "tokens_out": 50,
+      "cost_usd": 0.004,
+      "spans": [
+        {
+          "span_id": "t3-request",
+          "parent_span_id": null,
+          "name": "Request",
+          "kind": "request",
+          "duration_ms": 30500,
+          "tokens_in": 900,
+          "tokens_out": 50,
+          "status": "timeout"
+        },
+        {
+          "span_id": "t3-model",
+          "parent_span_id": "t3-request",
+          "name": "Pick the mailbox query",
+          "kind": "model_turn",
+          "duration_ms": 1200,
+          "tokens_in": 900,
+          "tokens_out": 50,
+          "status": "ok"
+        },
+        {
+          "span_id": "t3-ext",
+          "parent_span_id": "t3-request",
+          "name": "Mail lookup",
+          "kind": "external_call",
+          "duration_ms": 30000,
+          "status": "timeout"
+        },
+        {
+          "span_id": "t3-err",
+          "parent_span_id": "t3-ext",
+          "name": "Retry the lookup",
+          "kind": "tool_call",
+          "duration_ms": 250,
+          "status": "error"
+        }
+      ]
+    }
+  ],
+  "tray": [
+    {
+      "kind": "approvals_waiting",
+      "count": 2,
+      "source": "approvals"
+    },
+    {
+      "kind": "session_waiting",
+      "count": 1,
+      "source": "sessions"
+    },
+    {
+      "kind": "run_finished",
+      "count": 1,
+      "source": "traces"
+    }
+  ]
+}

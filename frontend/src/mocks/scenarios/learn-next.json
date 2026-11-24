@@ -1,0 +1,155 @@
+{
+  "id": "learn-next",
+  "group": "request",
+  "label": "Learn next",
+  "request": "What should I learn next?",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "learning_roadmap",
+        "title": "Learning roadmap",
+        "target": "Senior Software Engineer",
+        "week": 6,
+        "weeks": [
+          {
+            "week": 4,
+            "theme": "Distributed systems basics",
+            "status": "done"
+          },
+          {
+            "week": 5,
+            "theme": "Consistency models",
+            "status": "done"
+          },
+          {
+            "week": 6,
+            "theme": "Event sourcing",
+            "status": "current"
+          },
+          {
+            "week": 7,
+            "theme": "Capacity planning",
+            "status": "next"
+          },
+          {
+            "week": 8,
+            "theme": "Writing design docs",
+            "status": "later"
+          }
+        ],
+        "next": [
+          {
+            "topic": "Event sourcing patterns",
+            "why": "Orchard's webhook log would benefit from an append-only design.",
+            "source_ref": "Career/Week6/event-sourcing"
+          },
+          {
+            "topic": "Capacity planning worksheet",
+            "why": "Compass needs a tile quota estimate.",
+            "source_ref": "Career/Week7/capacity"
+          },
+          {
+            "topic": "Design doc template",
+            "why": "The next design review needs a shared structure.",
+            "source_ref": "Career/Week8/design-docs"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "ln-roadmap",
+        "source": "sample",
+        "as_of": "2026-11-24T08:25:00Z",
+        "data_class": "personal",
+        "title": "Learning roadmap",
+        "blocks": [
+          {
+            "kind": "timeline",
+            "items": [
+              {
+                "when": "Week 4",
+                "title": "Distributed systems basics",
+                "tone": "good"
+              },
+              {
+                "when": "Week 5",
+                "title": "Consistency models",
+                "tone": "good"
+              },
+              {
+                "when": "Week 6",
+                "title": "Event sourcing",
+                "tone": "attention"
+              },
+              {
+                "when": "Week 7",
+                "title": "Capacity planning",
+                "tone": "neutral"
+              },
+              {
+                "when": "Week 8",
+                "title": "Writing design docs",
+                "tone": "neutral"
+              }
+            ]
+          },
+          {
+            "kind": "rows",
+            "heading": "Next",
+            "items": [
+              {
+                "label": "Event sourcing patterns",
+                "detail": "Orchard's webhook log would benefit from an append-only design.",
+                "source_ref": "Career/Week6/event-sourcing"
+              },
+              {
+                "label": "Capacity planning worksheet",
+                "detail": "Compass needs a tile quota estimate.",
+                "source_ref": "Career/Week7/capacity"
+              },
+              {
+                "label": "Design doc template",
+                "detail": "The next design review needs a shared structure.",
+                "source_ref": "Career/Week8/design-docs"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 100,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-learn-next"
+      }
+    },
+    {
+      "at_ms": 1200,
+      "board": [
+        "ln-roadmap"
+      ]
+    },
+    {
+      "at_ms": 1300,
+      "reply": "Event sourcing is this week, and capacity planning comes next."
+    },
+    {
+      "at_ms": 1700,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-learn-next"
+      }
+    },
+    {
+      "at_ms": 1750,
+      "core": "idle"
+    }
+  ]
+}

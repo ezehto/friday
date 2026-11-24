@@ -755,7 +755,7 @@
         "type": "alert",
         "title": "Alert",
         "level": "attention",
-        "text": "Sample alert text"
+        "text": "Approvals are waiting"
       },
       "envelope": {
         "widget_id": "w-alert",
@@ -767,7 +767,7 @@
           {
             "kind": "alert",
             "level": "attention",
-            "text": "Sample alert text"
+            "text": "Approvals are waiting"
           }
         ]
       }

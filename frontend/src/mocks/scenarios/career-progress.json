@@ -1,0 +1,133 @@
+{
+  "id": "career-progress",
+  "group": "request",
+  "label": "Career progress",
+  "request": "How am I progressing toward Senior Software Engineer?",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "career_progress",
+        "title": "Career progress",
+        "target": "Senior Software Engineer",
+        "week": 6,
+        "skills": [
+          {
+            "name": "System design",
+            "done": 5,
+            "total": 8
+          },
+          {
+            "name": "Technical writing",
+            "done": 3,
+            "total": 6
+          },
+          {
+            "name": "Mentoring",
+            "done": 2,
+            "total": 5
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "cp-career",
+        "source": "sample",
+        "as_of": "2026-11-24T08:20:00Z",
+        "data_class": "personal",
+        "title": "Career progress",
+        "blocks": [
+          {
+            "kind": "value",
+            "label": "Senior Software Engineer",
+            "value": "Week 6 of 16"
+          },
+          {
+            "kind": "meter",
+            "items": [
+              {
+                "label": "System design",
+                "done": 5,
+                "total": 8
+              },
+              {
+                "label": "Technical writing",
+                "done": 3,
+                "total": 6
+              },
+              {
+                "label": "Mentoring",
+                "done": 2,
+                "total": 5
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "progress",
+        "title": "Study plan",
+        "label": "Planned study sessions",
+        "done": 14,
+        "total": 24,
+        "tone": "attention"
+      },
+      "envelope": {
+        "widget_id": "cp-progress",
+        "source": "sample",
+        "as_of": "2026-11-24T08:15:00Z",
+        "data_class": "personal",
+        "title": "Study plan",
+        "blocks": [
+          {
+            "kind": "meter",
+            "items": [
+              {
+                "label": "Planned study sessions",
+                "done": 14,
+                "total": 24,
+                "tone": "attention"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 100,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-career-progress"
+      }
+    },
+    {
+      "at_ms": 1200,
+      "board": [
+        "cp-career",
+        "cp-progress"
+      ]
+    },
+    {
+      "at_ms": 1300,
+      "reply": "You are in week 6 of 16, with system design furthest along."
+    },
+    {
+      "at_ms": 1760,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-career-progress"
+      }
+    },
+    {
+      "at_ms": 1810,
+      "core": "idle"
+    }
+  ]
+}
