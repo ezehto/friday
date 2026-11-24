@@ -136,14 +136,14 @@ export function StyleGuide() {
           <h2 id="sg-blocks" className="sg-section-title">{FIXED.styleGuide.blocks}</h2>
           <div className="sg-grid">
             {BLOCK_SPECIMENS.map(({ block, from }) => (
-              <HudFrame key={block.kind} title={block.kind} kicker={from}>
+              <HudFrame key={block.kind} title={block.kind} kicker={from} headingLevel={3}>
                 <BlockBoundary>
                   <BlockRenderer block={block} />
                 </BlockBoundary>
               </HudFrame>
             ))}
             {CHART_KINDS.map((chart) => (
-              <HudFrame key={chart} title={`chart: ${chart}`} kicker={chartSample.from}>
+              <HudFrame key={chart} title={`chart: ${chart}`} kicker={chartSample.from} headingLevel={3}>
                 <BlockBoundary>
                   <BlockRenderer block={chartBlock(chart)} />
                 </BlockBoundary>
@@ -159,7 +159,7 @@ export function StyleGuide() {
               <h3 className="sg-pack-title">{pack}</h3>
               <div className="sg-grid">
                 {samples.items.filter((i) => types.includes(i.widget.type)).map((i) => (
-                  <WidgetPanel key={i.envelope.widget_id} envelope={i.envelope} now={samples.now} />
+                  <WidgetPanel key={i.envelope.widget_id} envelope={i.envelope} now={samples.now} headingLevel={4} />
                 ))}
               </div>
             </div>

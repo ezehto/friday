@@ -50,3 +50,17 @@ test("the blocks section shows every chart kind", () => {
   const labels = [...section.querySelectorAll("figure[data-block-kind='chart'] svg")].map((e) => e.getAttribute("aria-label") ?? "");
   for (const kind of ["line", "bar", "area", "donut"]) expect(labels.some((l) => l.startsWith(`${kind} chart`))).toBe(true);
 });
+
+test("no heading level is skipped and panel headings sit below their section", () => {
+  const { container } = render(<StyleGuide />);
+  const levels = [...container.querySelectorAll("h1, h2, h3, h4, h5, h6")].map((e) => Number(e.tagName[1]));
+  expect(levels[0]).toBe(1);
+  levels.forEach((l, i) => {
+    if (i > 0) expect(l).toBeLessThanOrEqual(levels[i - 1]! + 1);
+  });
+  for (const id of ["sg-blocks", "sg-widgets"]) {
+    const section = container.querySelector(`#${id}`)!.closest("section")!;
+    const sectionLevel = Number(section.querySelector(`#${id}`)!.tagName[1]);
+    for (const h of section.querySelectorAll(".hud-title")) expect(Number(h.tagName[1])).toBeGreaterThan(sectionLevel);
+  }
+});

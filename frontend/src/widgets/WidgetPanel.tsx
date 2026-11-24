@@ -6,7 +6,7 @@ import { HudFrame } from "../chrome/HudFrame";
 import type { WidgetEnvelope } from "../generated/types";
 import { formatTime, isStale } from "../lib/format";
 
-export function WidgetPanel(props: { envelope: WidgetEnvelope; now: string; timeZone?: string }): ReactElement {
+export function WidgetPanel(props: { envelope: WidgetEnvelope; now: string; timeZone?: string; headingLevel?: 2 | 3 | 4 }): ReactElement {
   const { envelope, now, timeZone } = props;
   const stamps = (
     <>
@@ -18,7 +18,7 @@ export function WidgetPanel(props: { envelope: WidgetEnvelope; now: string; time
   );
   return (
     <div className="widget-panel" data-widget-id={envelope.widget_id}>
-      <HudFrame title={envelope.title} stamps={stamps}>
+      <HudFrame title={envelope.title} stamps={stamps} headingLevel={props.headingLevel}>
         {Array.isArray(envelope.blocks) ? (
           envelope.blocks.map((block, i) => (
             <BlockBoundary key={i}>
