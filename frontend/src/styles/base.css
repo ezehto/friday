@@ -310,3 +310,11 @@ p {
 .chart-legend { display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; margin-top: 0.4rem; font-size: 0.8rem; color: var(--text-secondary); }
 .chart-key { display: inline-flex; align-items: center; gap: 0.35rem; }
 .chart-swatch { width: 0.6rem; height: 0.6rem; display: inline-block; }
+
+.widget-panel, .widget-panel * { min-width: 0; overflow-wrap: anywhere; }
+.hud-stamps { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.6rem; justify-content: flex-end; }
+.stamp { white-space: nowrap; }
+.stamp-sample, .stamp-work, .stamp-stale { padding: 0 0.45rem; border: 1px solid currentColor; }
+.stamp-work { color: var(--accent-primary); }
+.stamp-stale { color: var(--tone-attention); }
+.block-unsupported { color: var(--text-muted); }

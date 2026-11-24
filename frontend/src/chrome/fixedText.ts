@@ -15,6 +15,8 @@ export const FIXED = {
   tagline: "Quiet help, close at hand.",
   motionLabel: "Reduce motion",
   emptyBlock: "Nothing to show",
+  unsupportedBlock: "This block cannot be shown",
+  stamps: { sample: "Sample data", work: "Work", asOf: "as of", stale: "Stale" },
   alertView: {
     sessions: "Open sessions",
     permissions: "Open permissions",
