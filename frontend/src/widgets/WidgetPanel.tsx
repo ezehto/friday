@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import { BlockBoundary } from "../blocks/BlockBoundary";
 import { BlockRenderer } from "../blocks/BlockRenderer";
 import { FIXED } from "../chrome/fixedText";
 import { HudFrame } from "../chrome/HudFrame";
@@ -19,7 +20,9 @@ export function WidgetPanel(props: { envelope: WidgetEnvelope; now: string; time
     <div className="widget-panel" data-widget-id={envelope.widget_id}>
       <HudFrame title={envelope.title} stamps={stamps}>
         {envelope.blocks.map((block, i) => (
-          <BlockRenderer key={i} block={block} />
+          <BlockBoundary key={i}>
+            <BlockRenderer block={block} />
+          </BlockBoundary>
         ))}
       </HudFrame>
     </div>
