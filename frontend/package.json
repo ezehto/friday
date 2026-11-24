@@ -11,7 +11,9 @@
     "test": "vitest run",
     "gen:types": "node scripts/gen-types.mjs",
     "gen:check": "node scripts/gen-types.mjs --check",
-    "check": "npm run lint && npm run typecheck && npm run gen:check && npm run test"
+    "check:hex": "node scripts/check-hex.mjs",
+    "check:dashes": "node scripts/check-dashes.mjs",
+    "check": "npm run lint && npm run typecheck && npm run gen:check && npm run check:hex && npm run check:dashes && npm run test"
   },
   "dependencies": {
     "react": "19.3.1",
