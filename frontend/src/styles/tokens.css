@@ -1,0 +1,82 @@
+/* Friday design tokens. Dark theme only (D18, D23). Every colour lives in this
+   one :root block so a light set can follow as a second block. Colours that
+   tests pair are opaque 6-digit hex. */
+:root {
+  /* background layers: warm near-black with a brown cast */
+  --bg-canvas: #120c09;
+  --bg-panel: #1a110c;
+  --bg-raised: #251912;
+
+  /* primary accent: saturated orange */
+  --accent-primary: #ff7a1a;
+  --accent-primary-strong: #ff9a4d;
+  --accent-primary-dim: #8c4515;
+
+  /* secondary accent: muted teal-green */
+  --accent-secondary: #3fb8a0;
+  --accent-secondary-dim: #1f5a4e;
+
+  /* text */
+  --text-primary: #f7f0ea;
+  --text-secondary: #cdbdb0;
+  --text-muted: #a99a8d;
+  --text-on-accent: #1a0e05;
+
+  /* lines and frames: faint grey-brown linework */
+  --line-grid: #24180f;
+  --line-blueprint: #3a281c;
+  --line-panel-border: #5c3d29;
+  --line-corner-bracket: #b8601f;
+
+  /* glow */
+  --glow-color: #ff7a1a;
+  --glow-radius: 14px;
+  --glow-strength: 30%;
+
+  /* tone: each also carries an icon or a word, never colour alone */
+  --tone-good: #4fd1a5;
+  --tone-bad: #ff6a5e;
+  --tone-attention: #f5d547;
+  --tone-neutral: #b8a79a;
+  --tone-good-bg: #12281f;
+  --tone-bad-bg: #331611;
+  --tone-attention-bg: #2f2810;
+  --tone-neutral-bg: #2a211b;
+
+  --focus-ring: #8ee8d8;
+
+  /* chart series */
+  --series-1: #ff7a1a;
+  --series-2: #3fb8a0;
+  --series-3: #f5d547;
+  --series-4: #d98ba0;
+  --series-5: #8fa8d6;
+
+  /* typography: system stacks, nothing fetched */
+  --font-body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-label: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
+  --size-label: 0.6875rem;
+  --size-body: 0.9375rem;
+  --size-value: 2.25rem;
+  --tracking-label: 0.16em;
+
+  /* motion */
+  --motion-ring-duration: 48s;
+  --motion-pulse-duration: 2.6s;
+  --motion-panel-entry-duration: 0.45s;
+  --motion-easing: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-ring-duration: 0s;
+    --motion-pulse-duration: 0s;
+    --motion-panel-entry-duration: 0s;
+  }
+}
+
+:root[data-motion="reduced"] {
+  --motion-ring-duration: 0s;
+  --motion-pulse-duration: 0s;
+  --motion-panel-entry-duration: 0s;
+}
