@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import { expect, test } from "vitest";
 import { ChartBlock } from "../src/blocks/Chart";
-import { scale } from "../src/blocks/chartMath";
+import { donutSlices, scale } from "../src/blocks/chartMath";
 import type { ChartBlock as ChartBlockData } from "../src/generated/types";
 
 type Kind = ChartBlockData["chart"];
@@ -95,4 +95,20 @@ test("line path x coordinates follow category order for out-of-order points", ()
   const xs = [...d.matchAll(/[ML]([\d.-]+) /g)].map((m) => Number(m[1]));
   expect(xs).toHaveLength(3);
   expect(xs).toEqual([...xs].sort((a, b) => a - b));
+});
+
+test("a donut with 7 slices draws 5 and groups the rest as Other", () => {
+  const { container } = render(<ChartBlock block={mk("donut", [1, 2, 3, 4, 5, 6, 7])} />);
+  expect(container.querySelectorAll("svg path, svg circle")).toHaveLength(5);
+  const keys = [...container.querySelectorAll(".chart-key")].map((e) => e.textContent);
+  expect(keys).toEqual(["x0", "x1", "x2", "x3", "Other"]);
+  expect(container.querySelectorAll(".visually-hidden tbody tr")).toHaveLength(7);
+  const last = donutSlices(mk("donut", [1, 2, 3, 4, 5, 6, 7]).series).at(-1);
+  expect(last).toMatchObject({ name: "Other", value: 18 });
+});
+
+test("a donut with 5 slices is not grouped", () => {
+  const { container } = render(<ChartBlock block={mk("donut", [1, 2, 3, 4, 5])} />);
+  const keys = [...container.querySelectorAll(".chart-key")].map((e) => e.textContent);
+  expect(keys).toEqual(["x0", "x1", "x2", "x3", "x4"]);
 });

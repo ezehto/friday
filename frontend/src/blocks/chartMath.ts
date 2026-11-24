@@ -1,3 +1,4 @@
+import { FIXED } from "../chrome/fixedText";
 import type { ChartBlock } from "../generated/types";
 
 type Series = ChartBlock["series"];
@@ -30,15 +31,23 @@ export function xCategories(series: Series): string[] {
   return [...seen];
 }
 
-/** start and end are fractions of a full turn, 0 to 1. */
+const MAX_SLICES = 5;
+
+/** start and end are fractions of a full turn, 0 to 1. Past 5 slices the tail is summed into "Other" so colours never repeat. */
 export function donutSlices(series: Series): { name: string; value: number; start: number; end: number }[] {
   const pts = (series[0]?.points ?? []).map((p) => ({ name: p.x, value: Math.max(0, safe(p.y)) }));
   const total = pts.reduce((a, p) => a + p.value, 0);
   if (!(total > 0) || !Number.isFinite(total)) return [];
   let acc = 0;
-  return pts
-    .filter((p) => p.value > 0)
-    .map((p) => {
+  const positive = pts.filter((p) => p.value > 0);
+  const drawn =
+    positive.length > MAX_SLICES
+      ? [
+          ...positive.slice(0, MAX_SLICES - 1),
+          { name: FIXED.chartOther, value: positive.slice(MAX_SLICES - 1).reduce((a, p) => a + p.value, 0) },
+        ]
+      : positive;
+  return drawn.map((p) => {
       const start = acc / total;
       acc += p.value;
       return { ...p, start, end: acc / total };

@@ -14,6 +14,7 @@ export const FIXED = {
   // Placeholder: the owner picks the final line at the checkpoint (F14).
   tagline: "Quiet help, close at hand.",
   motionLabel: "Reduce motion",
+  chartOther: "Other",
   emptyBlock: "Nothing to show",
   unsupportedBlock: "This block cannot be shown",
   stamps: { sample: "Sample data", work: "Work", asOf: "as of", stale: "Stale" },
