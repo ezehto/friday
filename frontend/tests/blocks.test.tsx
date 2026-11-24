@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { expect, test } from "vitest";
 import { AlertBlock } from "../src/blocks/Alert";
 import { ChipsBlock } from "../src/blocks/Chips";
@@ -78,4 +78,14 @@ test("facts link shows the host", () => {
 test("alert view links to its hash route", () => {
   render(<AlertBlock block={{ kind: "alert", level: "attention", text: "x", view: "modules" }} />);
   expect(screen.getByRole("link").getAttribute("href")).toBe("#/modules");
+});
+
+test("alert view link keeps scenario and instant from the route", () => {
+  window.location.hash = "#/board?scenario=edge-caps&instant=1";
+  render(<AlertBlock block={{ kind: "alert", level: "attention", text: "x", view: "sessions" }} />);
+  expect(screen.getByRole("link").getAttribute("href")).toBe("#/sessions?scenario=edge-caps&instant=1");
+  cleanup();
+  render(<AlertBlock block={{ kind: "alert", level: "attention", text: "x", view: "modules" }} />);
+  expect(screen.getByRole("link").getAttribute("href")).toBe("#/modules?scenario=edge-caps&instant=1");
+  window.location.hash = "";
 });
