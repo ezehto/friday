@@ -194,28 +194,28 @@ html[data-instant] .hud-frame { animation: none; }
   html:not([data-motion="reduced"]) .core,
   html:not([data-motion="reduced"]) .ptt-wave { transition: --voice-level var(--motion-voice-ease) linear; }
   html:not([data-motion="reduced"]) .core[data-live] .core-contract { transform-box: view-box; transform-origin: 50% 50%; }
-  html:not([data-motion="reduced"]) .core[data-core-state="listening"][data-live] .core-contract { transform: scale(calc(1 - var(--voice-level) * 0.08)); }
-  html:not([data-motion="reduced"]) .core[data-core-state="listening"][data-live] .core-ripple {
+  html:not([data-motion="reduced"]) .core[data-live] .core-contract { transform: scale(calc(1 - var(--voice-level) * var(--gate-l) * 0.08)); }
+  html:not([data-motion="reduced"]) .core[data-live] .core-ripple {
     display: inline;
     stroke: var(--accent-secondary);
     stroke-width: 3;
     opacity: calc(var(--voice-level) * var(--gate-l));
     animation: core-ripple-in var(--motion-voice-duration) ease-in infinite;
   }
-  html:not([data-motion="reduced"]) .core[data-core-state="speaking"][data-live] .core-halo {
+  html:not([data-motion="reduced"]) .core[data-live] .core-halo {
     display: inline;
     stroke: var(--accent-primary);
     stroke-opacity: 0.45;
     stroke-width: calc(var(--voice-level) * var(--gate-s) * 22px);
   }
-  html:not([data-motion="reduced"]) .core[data-core-state="speaking"][data-live] .core-pulse {
+  html:not([data-motion="reduced"]) .core[data-live] .core-pulse {
     display: inline;
     stroke: var(--accent-primary);
     stroke-width: 3;
     opacity: calc(var(--voice-level) * var(--gate-s));
     animation: core-pulse-out var(--motion-voice-duration) ease-out infinite;
   }
-  html:not([data-motion="reduced"]) .core[data-core-state="speaking"][data-live] .core-pulse-late { animation-delay: calc(var(--motion-voice-duration) / -2); }
+  html:not([data-motion="reduced"]) .core[data-live] .core-pulse-late { animation-delay: calc(var(--motion-voice-duration) / -2); }
   html:not([data-motion="reduced"]) .ptt-wave[data-live] .ptt-bar {
     height: calc(4px + var(--voice-level) * var(--gain) * 26px);
     animation: none;
@@ -624,8 +624,7 @@ html[data-instant] .hud-frame { animation: none; }
   html:not([data-motion="reduced"]) .core-disc-label,
   html:not([data-motion="reduced"]) .pill-text { animation: fade-in var(--motion-state-duration) var(--motion-easing) backwards; }
   html:not([data-motion="reduced"]) .core-disc-ghost { animation: fade-out var(--motion-state-duration) var(--motion-easing) forwards; }
-  html:not([data-motion="reduced"]) .status-pill[data-ghost]::before {
-    content: attr(data-ghost);
+  html:not([data-motion="reduced"]) .pill-ghost {
     position: absolute;
     left: 1rem;
     animation: fade-out var(--motion-state-duration) var(--motion-easing) forwards;

@@ -48,7 +48,7 @@ function Cartesian({ block }: { block: ChartBlockData }): ReactElement {
             const y = yOf(p.y);
             return (
               <rect
-                key={`${si}-${ci}`}
+                key={`${si}-${ci}-${p.y}`}
                 x={n(PAD.l + ci * band + band * 0.1 + si * bw)}
                 y={Math.min(y, base)}
                 width={n(bw)}

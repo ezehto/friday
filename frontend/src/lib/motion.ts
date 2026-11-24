@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, type RefObject } from "react";
+import { useLayoutEffect, useRef, useState, useSyncExternalStore, type RefObject } from "react";
 
 const root = (): HTMLElement => document.documentElement;
 
@@ -58,30 +58,59 @@ export function useGhost<T>(value: T): T | null {
   return ghost;
 }
 
+/** motionReduced() as a subscription, so effects rerun when the setting or the OS preference changes. */
+export function useMotionReduced(): boolean {
+  return useSyncExternalStore(
+    (onChange) => {
+      const mq = typeof window.matchMedia === "function" ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+      mq?.addEventListener?.("change", onChange);
+      const mo = new MutationObserver(onChange);
+      mo.observe(root(), { attributes: true, attributeFilter: ["data-motion"] });
+      return () => {
+        mq?.removeEventListener?.("change", onChange);
+        mo.disconnect();
+      };
+    },
+    motionReduced,
+  );
+}
+
+/** The translation a running glide adds to the element, read from its computed transform. */
+function translation(el: HTMLElement): [number, number] {
+  const m = /matrix\(([^)]+)\)/.exec(getComputedStyle(el).transform);
+  const p = m?.[1]?.split(",").map(parseFloat);
+  return p && p.length === 6 ? [p[4]!, p[5]!] : [0, 0];
+}
+
 /**
- * FLIP: after every render, panels marked data-flip that moved glide from their old place to the
- * new one with the Web Animations API. New panels have no old place and enter by CSS instead.
+ * FLIP: when `key` (the order and identity of the panels) changes, panels marked data-flip that
+ * moved glide from where they were drawn to the new place with the Web Animations API. A glide
+ * still running starts the next one from its in-flight position. New panels have no old place
+ * and enter by CSS instead.
  */
-export function useFlip(ref: RefObject<HTMLElement | null>): void {
-  const before = useRef(new Map<string, DOMRect>());
+export function useFlip(ref: RefObject<HTMLElement | null>, key: string): void {
+  const before = useRef(new Map<string, { left: number; top: number }>());
+  const lastKey = useRef(key);
   useLayoutEffect(() => {
     const host = ref.current;
     if (!host) return;
-    const els = [...host.querySelectorAll<HTMLElement>("[data-flip]")];
-    // Measure the settled layout, not a glide that is still running.
-    for (const el of els) for (const a of el.getAnimations?.() ?? []) if (a.id === "flip") a.cancel();
-    const after = new Map<string, DOMRect>();
+    const changed = lastKey.current !== key;
+    lastKey.current = key;
     const ms = tokenMs("--motion-state-duration");
     const easing = getComputedStyle(root()).getPropertyValue("--motion-easing").trim() || "ease";
-    for (const el of els) {
+    const after = new Map<string, { left: number; top: number }>();
+    for (const el of host.querySelectorAll<HTMLElement>("[data-flip]")) {
       const id = el.dataset.flip!;
-      const rect = el.getBoundingClientRect();
-      after.set(id, rect);
+      const r = el.getBoundingClientRect();
+      const [tx, ty] = translation(el);
+      const settled = { left: r.left - tx, top: r.top - ty };
+      after.set(id, settled);
       const old = before.current.get(id);
-      if (!old || typeof el.animate !== "function" || motionOff() || ms <= 0 || el.hasAttribute("data-leaving")) continue;
-      const dx = old.left - rect.left;
-      const dy = old.top - rect.top;
+      if (!changed || !old || typeof el.animate !== "function" || motionOff() || ms <= 0 || el.hasAttribute("data-leaving")) continue;
+      const dx = old.left + tx - settled.left;
+      const dy = old.top + ty - settled.top;
       if (Math.abs(dx) < 1 && Math.abs(dy) < 1) continue;
+      for (const a of el.getAnimations?.() ?? []) if (a.id === "flip") a.cancel();
       el.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }], { duration: ms, easing, id: "flip" });
     }
     before.current = after;

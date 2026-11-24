@@ -1,6 +1,6 @@
 import { useEffect, useRef, type RefObject } from "react";
 import type { VoiceLevelSource } from "../transport/types";
-import { easePlaybackRate, motionReduced, tokenMs, useGhost } from "../lib/motion";
+import { easePlaybackRate, motionReduced, tokenMs, useGhost, useMotionReduced } from "../lib/motion";
 import { coreLabels, type CoreState } from "./coreStates";
 
 const C = 200;
@@ -32,19 +32,38 @@ const NOTCH_DOTS = [346, 352, 358] as const;
  * subscribed and `active`, data-live marks the element; a level of 0 does not clear it.
  */
 export function useVoiceLevel(ref: RefObject<Element | null>, level: VoiceLevelSource | undefined, active: boolean): void {
+  const hold = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const recent = useRef(0); // last level above 0: the source often drops to 0 in the same tick the state leaves
   useEffect(() => {
     const el = ref.current as SVGElement | HTMLElement | null;
     if (!level || !el) return;
-    if (active) el.setAttribute("data-live", "true");
+    if (active) {
+      clearTimeout(hold.current);
+      el.setAttribute("data-live", "true");
+    }
     const off = level.onLevel((v) => {
-      if (Number.isFinite(v)) el.style.setProperty("--voice-level", String(Math.min(1, Math.max(0, v))));
+      // While the parts fade out after the state left, the last level is held (the source usually drops to 0).
+      if (!active && el.hasAttribute("data-live")) return;
+      if (!Number.isFinite(v)) return;
+      const clamped = Math.min(1, Math.max(0, v));
+      if (clamped > 0) recent.current = clamped;
+      el.style.setProperty("--voice-level", String(clamped));
     });
     return () => {
       off();
-      el.style.removeProperty("--voice-level");
-      el.removeAttribute("data-live");
+      const clear = (): void => {
+        el.style.removeProperty("--voice-level");
+        el.removeAttribute("data-live");
+      };
+      // Leaving a live state keeps the level and data-live for the state duration, so the voice parts fade out.
+      const ms = active && !motionReduced() ? tokenMs("--motion-state-duration") : 0;
+      if (ms > 0) {
+        el.style.setProperty("--voice-level", String(recent.current));
+        hold.current = setTimeout(clear, ms);
+      } else clear();
     };
   }, [ref, level, active]);
+  useEffect(() => () => clearTimeout(hold.current), []);
 }
 
 const VOICE_STATES: readonly CoreState[] = ["listening", "speaking"];
@@ -55,16 +74,17 @@ const VOICE_STATES: readonly CoreState[] = ["listening", "speaking"];
  */
 function useRingSpeed(ref: RefObject<SVGSVGElement | null>, state: CoreState): void {
   const settled = useRef(false);
+  const reduced = useMotionReduced();
   useEffect(() => {
     const svg = ref.current;
-    if (!svg || typeof svg.getAnimations !== "function" || motionReduced()) return;
+    if (!svg || typeof svg.getAnimations !== "function") return;
     const speed = parseFloat(getComputedStyle(svg).getPropertyValue("--core-speed"));
     const rings = svg.getAnimations({ subtree: true }).filter((a) => (a as CSSAnimation).animationName === "core-spin");
     const to = 1 / (Number.isFinite(speed) && speed > 0 ? speed : 1);
-    const ms = settled.current ? tokenMs("--motion-state-duration") : 0;
+    const ms = settled.current && !reduced ? tokenMs("--motion-state-duration") : 0;
     settled.current = true;
     return easePlaybackRate(rings, to, ms);
-  }, [ref, state]);
+  }, [ref, state, reduced]);
 }
 
 export function Core(props: { state: CoreState; size: "full" | "compact"; level?: VoiceLevelSource }) {

@@ -26,7 +26,10 @@ class PanelBoundary extends Component<{ children: ReactNode }, { failed: boolean
   }
 }
 
-type Leaving = { envelope: WidgetEnvelope; index: number };
+// Expiry is stamped when the board update arrives, so it is read from one place.
+const clock = (): number => Date.now();
+
+type Leaving = { envelope: WidgetEnvelope; index: number; until: number };
 
 /**
  * Keeps an envelope that left the board mounted for the exit duration so it can fade out.
@@ -39,18 +42,22 @@ function useLeaving(board: WidgetEnvelope[]): { items: WidgetEnvelope[]; leaving
     const kept = track.leaving.filter((l) => !ids.has(l.envelope.widget_id));
     const gone = motionOff() || tokenMs("--motion-exit-duration") <= 0
       ? []
-      : track.board.slice(0, PANEL_MAX).flatMap((envelope, index) => (envelope && !ids.has(envelope.widget_id) && !kept.some((l) => l.envelope.widget_id === envelope.widget_id) ? [{ envelope, index }] : []));
-    setTrack({ board, leaving: [...kept, ...gone] });
+      : track.board.slice(0, PANEL_MAX).flatMap((envelope, index) => (envelope && !ids.has(envelope.widget_id) && !kept.some((l) => l.envelope.widget_id === envelope.widget_id) ? [{ envelope, index, until: clock() + tokenMs("--motion-exit-duration") }] : []));
+    // Entries keep their own expiry, so a later board change never extends a panel's exit.
+    setTrack({ board, leaving: gone.length === 0 && kept.length === track.leaving.length ? track.leaving : [...kept, ...gone] });
   }
   const { leaving } = track;
   useEffect(() => {
     if (leaving.length === 0) return;
-    const timer = setTimeout(() => setTrack((s) => ({ ...s, leaving: [] })), tokenMs("--motion-exit-duration"));
+    const next = Math.min(...leaving.map((l) => l.until));
+    const timer = setTimeout(() => setTrack((s) => ({ ...s, leaving: s.leaving.filter((l) => l.until > clock()) })), Math.max(0, next - clock()));
     return () => clearTimeout(timer);
   }, [leaving]);
   const items = board.slice(0, PANEL_MAX);
-  for (const l of [...leaving].sort((a, b) => a.index - b.index)) items.splice(Math.min(l.index, items.length), 0, l.envelope);
-  return { items, leaving: new Set(leaving.map((l) => l.envelope.widget_id)) };
+  // The 12 panel cap holds while panels exit: only as many leaving panels as there is room for.
+  const shown = [...leaving].sort((a, b) => a.index - b.index).slice(0, PANEL_MAX - items.length);
+  for (const l of shown) items.splice(Math.min(l.index, items.length), 0, l.envelope);
+  return { items, leaving: new Set(shown.map((l) => l.envelope.widget_id)) };
 }
 
 function Column(props: { name: string; items: WidgetEnvelope[]; indexes: number[]; now: string; leaving: Set<string> }) {
@@ -83,7 +90,7 @@ export function Board(props: { state: AppState; now: string; level?: VoiceLevelS
   const { state, now } = props;
   const { items, leaving } = useLeaving(state.board);
   const host = useRef<HTMLDivElement>(null);
-  useFlip(host);
+  useFlip(host, items.map((e) => e?.widget_id ?? "").join("|"));
   const { left, right } = splitColumns(items);
   const note = items.length > 0 ? null : state.requestOpen ? FIXED.loadingBoard : FIXED.emptyBoard;
   return (

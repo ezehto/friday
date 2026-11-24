@@ -1,4 +1,7 @@
 import { act, render } from "@testing-library/react";
+import { StatusPill } from "../src/chrome/StatusPill";
+import { coreLabels } from "../src/chrome/coreStates";
+import type { VoiceLevelSource } from "../src/transport/types";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
@@ -160,4 +163,165 @@ test("the app marks the page instant only for ?instant=1", async () => {
   window.location.hash = "#/board?scenario=focus-today";
   render(<App />);
   expect(document.documentElement.dataset.instant).toBeUndefined();
+});
+
+const flush = () => act(async () => void (await Promise.resolve()));
+function ringAnims() {
+  const mk = (animationName: string) => ({ animationName, playbackRate: 1, cancel: vi.fn() });
+  const anims = [mk("core-spin"), mk("core-spin"), mk("core-pulse")];
+  Object.defineProperty(SVGElement.prototype, "getAnimations", { configurable: true, value: () => anims });
+  return anims;
+}
+const noAnims = () => delete (SVGElement.prototype as { getAnimations?: unknown }).getAnimations;
+
+test("the pill's accessible text is only the current label during the cross-fade", () => {
+  stubMatchMedia(false);
+  stubComputed();
+  tokens["--motion-state-duration"] = "600ms";
+  const { container, rerender } = render(<StatusPill state="idle" />);
+  rerender(<StatusPill state="error" />);
+  const pill = container.querySelector(".status-pill")!;
+  expect(pill.querySelector(".pill-ghost")?.getAttribute("aria-hidden")).toBe("true");
+  expect(pill.querySelector(".pill-ghost")?.textContent).toBe(coreLabels("idle").pill);
+  const readable = [...pill.children].filter((c) => c.getAttribute("aria-hidden") !== "true").map((c) => c.textContent).join("");
+  expect(readable).toBe(coreLabels("error").pill);
+  expect(css("styles/base.css")).not.toContain("attr(data-ghost)");
+});
+
+test("voice parts keep data-live and the level for the state duration after the state leaves", () => {
+  vi.useFakeTimers();
+  stubMatchMedia(false);
+  stubComputed();
+  tokens["--motion-state-duration"] = "600ms";
+  const listeners = new Set<(v: number) => void>();
+  const source: VoiceLevelSource = { onLevel: (l) => (listeners.add(l), () => void listeners.delete(l)) };
+  const { container, rerender, unmount } = render(<Core state="speaking" size="full" level={source} />);
+  const el = container.querySelector(".core") as SVGElement;
+  act(() => listeners.forEach((l) => l(0.5)));
+  act(() => listeners.forEach((l) => l(0))); // the source drops to 0 as the state leaves
+  rerender(<Core state="thinking" size="full" level={source} />);
+  act(() => listeners.forEach((l) => l(0)));
+  expect(el.getAttribute("data-live")).toBe("true");
+  expect(el.style.getPropertyValue("--voice-level")).toBe("0.5"); // held while the parts fade out
+  act(() => void vi.advanceTimersByTime(599));
+  expect(el.hasAttribute("data-live")).toBe(true);
+  act(() => void vi.advanceTimersByTime(2));
+  expect(el.hasAttribute("data-live")).toBe(false);
+  expect(el.style.getPropertyValue("--voice-level")).toBe("");
+  unmount();
+  expect(vi.getTimerCount()).toBe(0);
+});
+
+test("under reduced motion the voice parts clear at once", () => {
+  vi.useFakeTimers();
+  stubMatchMedia(true);
+  stubComputed();
+  tokens["--motion-state-duration"] = "600ms";
+  const source: VoiceLevelSource = { onLevel: () => () => undefined };
+  const { container, rerender } = render(<Core state="speaking" size="full" level={source} />);
+  rerender(<Core state="thinking" size="full" level={source} />);
+  expect((container.querySelector(".core") as SVGElement).hasAttribute("data-live")).toBe(false);
+});
+
+test("the voice rules key on data-live and fade through the gates", () => {
+  const b = css("styles/base.css");
+  expect(b).not.toMatch(/data-core-state="(listening|speaking)"\]\[data-live\] \.core-(ripple|halo|pulse|contract)/);
+  expect(b).toMatch(/\.core\[data-live\] \.core-ripple[^}]*var\(--gate-l\)/);
+  expect(b).toMatch(/\.core\[data-live\] \.core-halo[^}]*var\(--gate-s\)/);
+});
+
+test("a changed bar value remounts its bar so bar-grow replays", () => {
+  const { container, rerender } = render(<ChartBlock block={bar([4, 2])} />);
+  const first = container.querySelectorAll("rect.chart-bar")[0];
+  rerender(<ChartBlock block={bar([4, 2])} />);
+  expect(container.querySelectorAll("rect.chart-bar")[0]).toBe(first);
+  rerender(<ChartBlock block={bar([5, 2])} />);
+  expect(container.querySelectorAll("rect.chart-bar")[0]).not.toBe(first);
+  expect(container.querySelectorAll("rect.chart-bar")[1]).toBe(container.querySelectorAll("rect.chart-bar")[1]);
+});
+
+test("a later board change does not extend a leaving panel's exit", () => {
+  vi.useFakeTimers();
+  stubMatchMedia(false);
+  stubComputed();
+  tokens["--motion-exit-duration"] = "250ms";
+  const { container, rerender } = render(<Board state={board(["a", "b", "c"])} now={NOW} />);
+  rerender(<Board state={board(["a", "c"])} now={NOW} />);
+  act(() => void vi.advanceTimersByTime(100));
+  rerender(<Board state={{ ...board(["a", "c"]), core: "thinking" }} now={NOW} />);
+  rerender(<Board state={board(["a", "c", "d"])} now={NOW} />);
+  act(() => void vi.advanceTimersByTime(149));
+  expect(container.querySelector('[data-widget-id="b"]')).toBeTruthy();
+  act(() => void vi.advanceTimersByTime(2));
+  expect(container.querySelector('[data-widget-id="b"]')).toBeNull();
+  expect(container.querySelector('[data-widget-id="d"]')).toBeTruthy();
+});
+
+test("the 12 panel cap holds while panels exit", () => {
+  vi.useFakeTimers();
+  stubMatchMedia(false);
+  stubComputed();
+  tokens["--motion-exit-duration"] = "250ms";
+  const ids = (p: string) => Array.from({ length: 12 }, (_, i) => `${p}${i}`);
+  const { container, rerender } = render(<Board state={board(ids("o"))} now={NOW} />);
+  rerender(<Board state={board(ids("n"))} now={NOW} />);
+  expect(container.querySelectorAll("[data-widget-id]").length).toBeLessThanOrEqual(12);
+  rerender(<Board state={board(ids("n").slice(0, 6))} now={NOW} />);
+  expect(container.querySelectorAll("[data-widget-id]").length).toBeLessThanOrEqual(12);
+});
+
+test("the ring rate eases through an intermediate value, then settles", () => {
+  vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "requestAnimationFrame", "cancelAnimationFrame", "performance", "Date"] });
+  stubMatchMedia(false);
+  stubComputed();
+  tokens["--motion-state-duration"] = "600ms";
+  const anims = ringAnims();
+  tokens["--core-speed"] = "1";
+  const { rerender } = render(<Core state="idle" size="full" />);
+  tokens["--core-speed"] = "0.2";
+  rerender(<Core state="thinking" size="full" />);
+  act(() => void vi.advanceTimersByTime(300));
+  expect(anims[0]!.playbackRate).toBeGreaterThan(1.2);
+  expect(anims[0]!.playbackRate).toBeLessThan(4.8);
+  act(() => void vi.advanceTimersByTime(400));
+  expect(anims[0]!.playbackRate).toBeCloseTo(5);
+  noAnims();
+});
+
+test("reduce on, a state change, then reduce off leaves the rate of the current state", async () => {
+  stubMatchMedia(false);
+  stubComputed();
+  const anims = ringAnims();
+  tokens["--core-speed"] = "1";
+  const { rerender } = render(<Core state="idle" size="full" />);
+  document.documentElement.dataset.motion = "reduced";
+  await flush();
+  tokens["--core-speed"] = "0.5";
+  rerender(<Core state="transcribing" size="full" />);
+  expect(anims[0]!.playbackRate).toBeCloseTo(2);
+  delete document.documentElement.dataset.motion;
+  await flush();
+  expect(anims[0]!.playbackRate).toBeCloseTo(2);
+  noAnims();
+});
+
+test("panels glide only when the order or identity changes", () => {
+  stubMatchMedia(false);
+  stubComputed();
+  tokens["--motion-state-duration"] = "600ms";
+  const animate = vi.fn(() => ({}));
+  Object.defineProperty(HTMLElement.prototype, "animate", { configurable: true, value: animate });
+  vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
+    const all = [...document.querySelectorAll("[data-flip]")];
+    const top = all.indexOf(this) * 100;
+    return { left: 0, top, right: 10, bottom: top + 50, width: 10, height: 50, x: 0, y: top, toJSON: () => ({}) };
+  });
+  const { rerender } = render(<Board state={board(["a", "b", "c"])} now={NOW} />);
+  expect(animate).not.toHaveBeenCalled();
+  rerender(<Board state={board(["b", "a", "c"])} now={NOW} />);
+  expect(animate).toHaveBeenCalled();
+  animate.mockClear();
+  rerender(<Board state={{ ...board(["b", "a", "c"]), core: "thinking" }} now={NOW} />);
+  expect(animate).not.toHaveBeenCalled();
+  delete (HTMLElement.prototype as { animate?: unknown }).animate;
 });
