@@ -65,6 +65,16 @@ test("Deny stays the same DOM element across Next and Previous", async () => {
   expect(screen.getByRole("button", { name: "Deny" })).toBe(deny);
 });
 
+test("the evidence comes before the reason and the Deny button", () => {
+  render(<Permissions state={state} act={makeAct()} />);
+  const evidence = screen.getByRole("region", { name: FIXED.permissions.details });
+  const follows = (el: Element): boolean => Boolean(evidence.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING);
+  expect(evidence.textContent).toContain(snap.permissions[0]!.tool);
+  expect(follows(screen.getByRole("textbox"))).toBe(true);
+  expect(follows(screen.getByRole("button", { name: "Deny" }))).toBe(true);
+  expect(evidence.contains(screen.getByRole("button", { name: "Deny" }))).toBe(false);
+});
+
 test("Next and Previous at the ends keep focus and do nothing", async () => {
   const user = userEvent.setup();
   render(<Permissions state={state} act={makeAct()} />);

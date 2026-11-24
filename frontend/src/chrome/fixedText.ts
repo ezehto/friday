@@ -42,6 +42,7 @@ export const FIXED = {
   permissions: {
     empty: "No permission requests are waiting.",
     request: "Permission request",
+    details: "Request details",
     position: (n: number, total: number): string => `Request ${n} of ${total}`,
     previous: "Previous",
     next: "Next",

@@ -13,7 +13,10 @@ const T = FIXED.permissions;
 // Disabled ends use aria-disabled and a no-op, so focus is never lost.
 const noop = (): void => undefined;
 
-/** The controls come before the details, so the Deny button never moves when the details change height. */
+/**
+ * The evidence comes first, then the decision. The details sit in a fixed-height scroll region,
+ * so the reason box and the Deny button never move when the details change height.
+ */
 export function PermissionCard(props: { request: PermissionView; position: string; onPrev?: () => void; onNext?: () => void; act: SessionTransport["act"]; initialResult?: string }) {
   const { request: r, act } = props;
   const [reason, setReason] = useState("");
@@ -30,37 +33,37 @@ export function PermissionCard(props: { request: PermissionView; position: strin
   };
   return (
     <HudFrame title={props.position} kicker={T.request} headingLevel={3}>
-      <div className="action-row">
-        <button type="button" className="chat-btn" aria-disabled={!props.onPrev} onClick={props.onPrev ?? noop}>{T.previous}</button>
-        <button type="button" className="chat-btn" aria-disabled={!props.onNext} onClick={props.onNext ?? noop}>{T.next}</button>
+      <div className="permission-evidence" role="region" aria-label={T.details} tabIndex={0}>
+        <dl className="facts">
+          <dt>{T.session}</dt>
+          <dd><VisibleText value={r.session_id} /></dd>
+          <dt>{T.project}</dt>
+          <dd><VisibleText value={r.project} /></dd>
+          <dt>{T.dataClass}</dt>
+          <dd>{r.data_class}</dd>
+          <dt>{T.mode}</dt>
+          <dd><VisibleText value={r.permission_mode} /></dd>
+          <dt>{T.cwd}</dt>
+          <dd><VisibleText value={r.cwd} /></dd>
+          <dt>{T.started}</dt>
+          <dd>{r.friday_started ? T.yes : T.no}</dd>
+          <dt>{T.tool}</dt>
+          <dd><VisibleText value={r.tool} /></dd>
+        </dl>
+        {Object.entries(r.input).map(([name, value]) => (
+          <RawField key={name} name={name} value={value} />
+        ))}
       </div>
       <label className="reason">
         <span className="label">{T.reason}</span>
-        <textarea className="chat-input reason-input" rows={3} required value={reason} onChange={(e) => setReason(e.target.value)} />
+        <textarea className="chat-input reason-input" rows={2} required value={reason} onChange={(e) => setReason(e.target.value)} />
       </label>
       <div className="action-row">
         <button type="button" className="chat-btn" onClick={() => void deny()}>{T.deny}</button>
+        <button type="button" className="chat-btn" aria-disabled={!props.onPrev} onClick={props.onPrev ?? noop}>{T.previous}</button>
+        <button type="button" className="chat-btn" aria-disabled={!props.onNext} onClick={props.onNext ?? noop}>{T.next}</button>
       </div>
       <p className="action-result" role="status">{result}</p>
-      <dl className="facts">
-        <dt>{T.session}</dt>
-        <dd><VisibleText value={r.session_id} /></dd>
-        <dt>{T.project}</dt>
-        <dd><VisibleText value={r.project} /></dd>
-        <dt>{T.dataClass}</dt>
-        <dd>{r.data_class}</dd>
-        <dt>{T.mode}</dt>
-        <dd><VisibleText value={r.permission_mode} /></dd>
-        <dt>{T.cwd}</dt>
-        <dd><VisibleText value={r.cwd} /></dd>
-        <dt>{T.started}</dt>
-        <dd>{r.friday_started ? T.yes : T.no}</dd>
-        <dt>{T.tool}</dt>
-        <dd><VisibleText value={r.tool} /></dd>
-      </dl>
-      {Object.entries(r.input).map(([name, value]) => (
-        <RawField key={name} name={name} value={value} />
-      ))}
     </HudFrame>
   );
 }

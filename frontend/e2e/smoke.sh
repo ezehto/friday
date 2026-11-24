@@ -115,6 +115,18 @@ load "#/sessions?scenario=focus-today&instant=1"
 pw fill "textarea" "Smoke test message" >/dev/null
 click_expect "sessions Send" "Send"
 
+echo "== 4b. permissions: Deny keeps its place across requests"
+deny_box() { val '() => { const r = [...document.querySelectorAll("button")].find((b) => b.textContent.trim() === "Deny").getBoundingClientRect(); return [r.x, r.y, r.width, r.height].join(","); }'; }
+for w in 1440 900; do
+  pw resize "$w" 900 >/dev/null
+  load "#/permissions?scenario=focus-today&instant=1"
+  first="$(deny_box)"
+  val '() => { [...document.querySelectorAll("button")].find((b) => b.textContent.trim() === "Next").click(); return "next"; }' >/dev/null
+  expect_eq "4b permissions@$w second request is shown" "$(val '() => document.querySelector(".hud-title").textContent')" "Request 2 of 2"
+  expect_eq "4b permissions@$w Deny box is identical across requests" "$(deny_box)" "$first"
+done
+pw resize 1440 900 >/dev/null
+
 echo "== 5. style guide: core states and reduced motion"
 load "#/style-guide"
 for state in $(node -e 'console.log(require("fs").readFileSync(process.argv[1], "utf8").match(/CORE_STATES = \[([^\]]*)\]/)[1].match(/"[a-z_]+"/g).map((s) => s.slice(1, -1)).join(" "))' "$HERE/../src/chrome/coreStates.ts"); do
