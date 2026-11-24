@@ -10,9 +10,10 @@ NOTHING="Preview: nothing was executed"
 FAILED=0
 
 # The CLI writes its output files into the working directory; keep them out of the repo.
-cd "$(mktemp -d)"
+WORK="$(mktemp -d)"
+cd "$WORK"
 pw() { playwright-cli -s=smoke "$@"; }
-trap 'pw close >/dev/null 2>&1 || true' EXIT
+trap 'pw close >/dev/null 2>&1 || true; rm -rf "$WORK"' EXIT
 
 # Runs a JS function in the page and prints its raw value without JSON string quotes.
 val() { pw --raw eval "$1" 2>&1 | tr -d '"'; }
@@ -38,21 +39,28 @@ pw open --browser chromium "$BASE/" >/dev/null
 pw resize 1440 900 >/dev/null
 
 echo "== 1. scenarios: panel count and Sample data stamp"
-while read -r id count; do
-  load "#/board?scenario=$id&instant=1"
-  expect_eq "1 $id finished" "$(wait_done)" "done"
-  expect_eq "1 $id panels" "$(val '() => document.querySelectorAll("[data-widget-id]").length')" "$count"
-  expect_eq "1 $id sample stamp" "$(val '() => [...document.querySelectorAll("[data-widget-id]")].every((p) => p.textContent.includes("Sample data"))')" "true"
-done < <(node -e '
+EXPECTED="$(node -e '
 const fs = require("fs"), dir = process.argv[1];
 for (const f of fs.readdirSync(dir).sort()) {
   const s = JSON.parse(fs.readFileSync(dir + "/" + f, "utf8"));
   const boards = s.script.filter((x) => x.board);
   console.log(s.id, boards.length ? boards[boards.length - 1].board.length : 0);
-}' "$SCENARIOS")
+}' "$SCENARIOS")"
+FILES="$(find "$SCENARIOS" -maxdepth 1 -name '*.json' | wc -l | tr -d ' ')"
+expect_eq "1 scenario list matches the files" "$(printf '%s\n' "$EXPECTED" | grep -c .)" "$FILES"
+[ "$FILES" -gt 0 ] || { echo "FAIL 1 no scenario files"; exit 1; }
+while read -r id count; do
+  load "#/board?scenario=$id&instant=1"
+  expect_eq "1 $id finished" "$(wait_done)" "done"
+  expect_eq "1 $id panels" "$(val '() => document.querySelectorAll("[data-widget-id]").length')" "$count"
+  expect_eq "1 $id sample stamp" "$(val '() => [...document.querySelectorAll("[data-widget-id]")].every((p) => p.textContent.includes("Sample data"))')" "true"
+done <<< "$EXPECTED"
 
 echo "== 2. network: only the preview origin"
-OFFENDERS="$(pw requests --static --all | grep -oE 'https?://[^ )]+' | grep -vF "$BASE/" || true)"
+REQUESTS="$(pw requests --static --all)"
+URLS="$(printf '%s\n' "$REQUESTS" | grep -oE 'https?://[^ )]+' || true)"
+expect_eq "2 at least one request to $BASE listed" "$([ "$(printf '%s\n' "$URLS" | grep -cF "$BASE/" || true)" -gt 0 ] && echo yes || echo no)" "yes"
+OFFENDERS="$(printf '%s\n' "$URLS" | grep -vF "$BASE/" || true)"
 expect_eq "2 requests stay on $BASE" "${OFFENDERS:-none}" "none"
 
 echo "== 3. layout at 1440 and 900"
@@ -73,8 +81,10 @@ echo "== 4. approvals, permissions, sessions: banner and actions"
 banner() { expect_eq "4 $1 banner" "$(val '() => document.querySelector("[role=note]")?.textContent.trim()')" "$BANNER"; }
 # click_expect <name> <button text or aria-label prefix> [pre-step eval]
 click_expect() {
-  local name="$1" label="$2"
-  val "() => { const b = [...document.querySelectorAll('button')].find((x) => (x.getAttribute('aria-label') ?? x.textContent).trim().startsWith('$label')); if (!b) return 'no button'; b.click(); return 'clicked'; }" >/dev/null
+  local name="$1" label="$2" clicked
+  expect_eq "4 $name starts without a result" "$(val "() => [...document.querySelectorAll('[role=status]')].some((s) => s.textContent.trim() === '$NOTHING')")" "false"
+  clicked="$(val "() => { const b = [...document.querySelectorAll('button')].find((x) => (x.getAttribute('aria-label') ?? x.textContent).trim().startsWith('$label')); if (!b) return 'no button'; b.click(); return 'clicked'; }")"
+  expect_eq "4 $name button found" "$clicked" "clicked"
   # React renders the result on the next tick.
   expect_eq "4 $name shows result" "$(val "() => new Promise((r) => setTimeout(() => r([...document.querySelectorAll('[role=status]')].some((s) => s.textContent.trim() === '$NOTHING')), 200))")" "true"
 }
@@ -105,7 +115,8 @@ pw set-reduced-motion reduce >/dev/null
 expect_eq "5 reduced motion ring duration" "$(val '() => getComputedStyle(document.querySelector(".core-ring")).animationDuration')" "0s"
 
 echo "== 6. console: no errors"
-CONSOLE="$(pw console error --all)"
+CONSOLE="$(pw console error --all)" || { echo "FAIL 6 console command failed"; FAILED=1; }
+expect_eq "6 console output is readable" "$(printf '%s\n' "$CONSOLE" | grep -c '^Total messages: ')" "1"
 expect_eq "6 console errors" "$(printf '%s\n' "$CONSOLE" | grep -c '^\[ERROR\]' || true)" "0"
 [ "$FAILED" = 0 ] || printf '%s\n' "$CONSOLE" | grep '^\[ERROR\]' || true
 

@@ -49,6 +49,6 @@ jobs:
       - run: npm install -g @playwright/cli@0.1.24
       # Linux system packages for the browser are unverified on the runner; confirm on the first CI run.
       - run: playwright-cli install-browser chromium
-      - run: frontend/e2e/smoke.sh
+      - run: bash frontend/e2e/smoke.sh
       - if: always()
         run: docker compose down

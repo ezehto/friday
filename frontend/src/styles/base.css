@@ -90,10 +90,10 @@ p {
   height: 14px;
   border: 0 solid var(--line-corner-bracket);
 }
-.hud-bracket-tl { top: -1px; left: -1px; border-top-width: 2px; border-left-width: 2px; }
-.hud-bracket-tr { top: -1px; right: -1px; border-top-width: 2px; border-right-width: 2px; }
-.hud-bracket-bl { bottom: -1px; left: -1px; border-bottom-width: 2px; border-left-width: 2px; }
-.hud-bracket-br { bottom: -1px; right: -1px; border-bottom-width: 2px; border-right-width: 2px; }
+.hud-bracket-tl { top: -4px; left: -4px; border-top-width: 2px; border-left-width: 2px; }
+.hud-bracket-tr { top: -4px; right: -4px; border-top-width: 2px; border-right-width: 2px; }
+.hud-bracket-bl { bottom: -4px; left: -4px; border-bottom-width: 2px; border-left-width: 2px; }
+.hud-bracket-br { bottom: -4px; right: -4px; border-bottom-width: 2px; border-right-width: 2px; }
 .hud-header {
   display: flex;
   align-items: baseline;
@@ -372,6 +372,8 @@ p {
 .chart-swatch { width: 0.6rem; height: 0.6rem; display: inline-block; }
 
 .widget-panel, .widget-panel * { min-width: 0; overflow-wrap: anywhere; }
+/* Brackets protrude 4px from the frame; the padding holds them inside the measured box and the margin cancels it. */
+.widget-panel { padding: 4px; margin: -4px; }
 .hud-stamps { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.6rem; justify-content: flex-end; }
 .stamp { white-space: nowrap; }
 .stamp-sample, .stamp-work, .stamp-stale { padding: 0 0.45rem; border: 1px solid currentColor; }
