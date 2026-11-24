@@ -1,3 +1,5 @@
+name: friday-dev
+
 services:
   frontend-dev:
     build:
@@ -12,3 +14,5 @@ services:
 
 volumes:
   friday-node-modules:
+    # Keep the volume created before the project was renamed, so dependencies stay installed.
+    name: friday_friday-node-modules
