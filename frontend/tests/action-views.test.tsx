@@ -89,6 +89,12 @@ test("every untrusted field beside an action shows its markers", () => {
   expect(screen.getByRole("group", { name: "co[ZW U+200B]mmand" })).toBeTruthy();
 });
 
+test("a look-alike slash in cwd shows the notice", () => {
+  const r = { ...snap.permissions[0]!, cwd: "/work\u2215orchard-api" };
+  render(<Permissions state={{ ...state, permissions: [r] }} act={makeAct()} />);
+  expect(screen.getAllByText(FIXED.homoglyph).length).toBeGreaterThan(0);
+});
+
 test("Permissions has no button whose name matches /allow/i", () => {
   render(<Permissions state={state} act={makeAct()} />);
   expect(screen.queryAllByRole("button", { name: /allow/i })).toHaveLength(0);

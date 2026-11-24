@@ -1,11 +1,10 @@
 export type Segment = { text: string; marker: boolean };
-/** `hidden`: a marker was drawn. `nonAscii`: an unmarked letter above U+007F, a possible look-alike. */
+/** `hidden`: a marker was drawn. `nonAscii`: an unmarked code point above U+007F, a possible look-alike. `bytes` is the UTF-8 length of the JS string, so a lone surrogate counts as 3 bytes (U+FFFD) and the companion hashes the raw bytes. */
 export type Visible = { segments: Segment[]; lines: number; bytes: number; nonAscii: boolean; hidden: boolean };
 
 const hex = (code: number): string => code.toString(16).toUpperCase().padStart(4, "0");
-const HIDDEN = /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}\p{Co}\p{Cs}\p{Noncharacter_Code_Point}\p{Default_Ignorable_Code_Point}]/u;
+const HIDDEN = /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}\p{Co}\p{Cs}\p{Noncharacter_Code_Point}\p{Default_Ignorable_Code_Point}\p{Zs}\u2800]/u;
 const MARK = /\p{M}/u;
-const LETTER = /\p{L}/u;
 
 /** The marker for one code point, or null when it is ordinary text. LF is a line break, never a marker. */
 function markerFor(cp: number, ch: string): string | null {
@@ -56,11 +55,12 @@ export function renderVisible(raw: string): Visible {
       pushMarker(marker);
       plainFrom = i + ch.length;
     } else if (cp > 0x7f && MARK.test(ch)) {
+      nonAscii = true;
       if (markCount === 0) markFrom = i;
       markCount++;
     } else {
       closeMarks(i);
-      if (cp > 0x7f && LETTER.test(ch)) nonAscii = true;
+      if (cp > 0x7f) nonAscii = true;
     }
     i += ch.length;
   }

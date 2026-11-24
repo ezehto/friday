@@ -27,7 +27,7 @@ test("a code point above U+FFFF stays whole", () => {
   const v = renderVisible("a\u{1F600}b");
   expect(v.segments).toEqual([{ text: "a\u{1F600}b", marker: false }]);
   expect(v.bytes).toBe(6);
-  expect(v.nonAscii).toBe(false);
+  expect(v.nonAscii).toBe(true);
 });
 
 test("empty string has 0 lines and 0 bytes", () => {
@@ -79,4 +79,13 @@ test("raw text is forced to storage order", () => {
     expect(rule).toContain("direction: ltr");
   }
   expect(css).toMatch(/\.raw-marker \{ unicode-bidi: isolate/);
+});
+
+test.each(["\u00a0", "\u2000", "\u200a", "\u202f", "\u205f", "\u3000", "\u2800"])("space %j is marked", (sp) => {
+  expect(marked(`a${sp}b`)).toHaveLength(1);
+  expect(marked("a b")).toEqual([]);
+});
+
+test.each(["/etc\u2215passwd", "notes\uff0fx.md", "\uff11\uff12", "\u00e9", "e\u0301", "\u2024"])("look-alike %j sets nonAscii", (raw) => {
+  expect(renderVisible(raw).nonAscii).toBe(true);
 });
