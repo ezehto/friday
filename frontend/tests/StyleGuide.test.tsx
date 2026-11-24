@@ -43,3 +43,10 @@ test("every interactive control is reachable by Tab", async () => {
   expect(radioStop).toBeGreaterThanOrEqual(0);
   expect(stops.indexOf(motion)).toBeGreaterThan(radioStop);
 });
+
+test("the blocks section shows every chart kind", () => {
+  const { container } = render(<StyleGuide />);
+  const section = container.querySelector("#sg-blocks")!.closest("section")!;
+  const labels = [...section.querySelectorAll("figure[data-block-kind='chart'] svg")].map((e) => e.getAttribute("aria-label") ?? "");
+  for (const kind of ["line", "bar", "area", "donut"]) expect(labels.some((l) => l.startsWith(`${kind} chart`))).toBe(true);
+});
