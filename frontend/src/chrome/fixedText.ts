@@ -14,4 +14,11 @@ export const FIXED = {
   // Placeholder: the owner picks the final line at the checkpoint (F14).
   tagline: "Quiet help, close at hand.",
   motionLabel: "Reduce motion",
+  emptyBlock: "Nothing to show",
+  alertView: {
+    sessions: "Open sessions",
+    permissions: "Open permissions",
+    traces: "Open traces",
+    modules: "Open modules",
+  },
 } as const;
