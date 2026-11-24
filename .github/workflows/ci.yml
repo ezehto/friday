@@ -15,11 +15,11 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v6
-      - name: Local mock overlay must not be tracked
+        with:
+          fetch-depth: 0
+      - name: Local mock overlay must not be in the index or in history
         working-directory: .
-        run: |
-          out=$(git ls-files frontend/src/mocks/local)
-          test -z "$out"
+        run: scripts/check-no-local-mocks.sh HEAD
       - uses: actions/setup-node@v6
         with:
           node-version: 22.22.0

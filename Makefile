@@ -18,7 +18,7 @@ check-dist-overlay:
 	@! grep -rlE "Lucy|Natsu|Demo v2" frontend/dist || { echo "overlay content found in frontend/dist"; exit 1; }
 
 check-frontend:
-	@out=$$(git ls-files frontend/src/mocks/local) || exit 1; test -z "$$out" || { echo "frontend/src/mocks/local must never be tracked"; exit 1; }
+	@scripts/check-no-local-mocks.sh
 	docker compose config --quiet
 	docker compose -f compose.dev.yaml config --quiet
 	docker compose -f compose.dev.yaml run --rm frontend-dev npm run check
