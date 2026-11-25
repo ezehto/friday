@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/standup.schema.json",
+  "title": "StandupWidget",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "standup"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "yesterday": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "source_ref": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "text",
+          "source_ref"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 8
+    },
+    "today": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "source_ref": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "text",
+          "source_ref"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 8
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "source_ref": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "text",
+          "source_ref"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 8
+    }
+  },
+  "required": [
+    "type",
+    "yesterday",
+    "today"
+  ],
+  "additionalProperties": false
+}

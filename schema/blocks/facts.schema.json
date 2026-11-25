@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/blocks/facts.schema.json",
+  "title": "FactsBlock",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "const": "facts"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "link": {
+            "$ref": "../common.schema.json#/$defs/Link"
+          }
+        },
+        "required": [
+          "label",
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 12
+    }
+  },
+  "required": [
+    "kind",
+    "items"
+  ],
+  "additionalProperties": false
+}

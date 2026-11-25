@@ -1,0 +1,190 @@
+{
+  "id": "jira-attention",
+  "group": "request",
+  "label": "Jira attention",
+  "request": "What Jira tickets need my attention?",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "jira_attention",
+        "title": "Needs attention",
+        "items": [
+          {
+            "key": "DEMO-311",
+            "summary": "Rotate the staging API keys before the Compass beta invite list goes out",
+            "status": "Blocked",
+            "priority": "High",
+            "reason": "blocked"
+          },
+          {
+            "key": "DEMO-142",
+            "summary": "Retry failed webhook deliveries",
+            "status": "In Progress",
+            "priority": "High",
+            "reason": "assigned"
+          },
+          {
+            "key": "DEMO-207",
+            "summary": "Lantern contrast fixes",
+            "status": "In Review",
+            "priority": "Medium",
+            "reason": "mentioned"
+          },
+          {
+            "key": "DEMO-98",
+            "summary": "Orchard dashboard copy",
+            "status": "To Do",
+            "priority": "Low",
+            "reason": "due"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "ja-attention",
+        "source": "sample",
+        "as_of": "2026-11-24T08:35:00Z",
+        "data_class": "work",
+        "title": "Needs attention",
+        "blocks": [
+          {
+            "kind": "rows",
+            "items": [
+              {
+                "label": "DEMO-311 Rotate the staging API keys before the Compass beta invite list goes o…",
+                "detail": "DEMO-311 Rotate the staging API keys before the Compass beta invite list goes out",
+                "meta": "blocked"
+              },
+              {
+                "label": "DEMO-142 Retry failed webhook deliveries",
+                "meta": "assigned"
+              },
+              {
+                "label": "DEMO-207 Lantern contrast fixes",
+                "meta": "mentioned"
+              },
+              {
+                "label": "DEMO-98 Orchard dashboard copy",
+                "meta": "due"
+              }
+            ]
+          },
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "1 blocked"
+              },
+              {
+                "label": "1 assigned"
+              },
+              {
+                "label": "1 mentioned"
+              },
+              {
+                "label": "1 due"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "jira_ticket",
+        "title": "DEMO-142 (Jira pack, later)",
+        "key": "DEMO-142",
+        "summary": "Retry failed webhook deliveries with backoff",
+        "status": "In Progress",
+        "priority": "High",
+        "assignee": "Mira Okafor",
+        "updated": "2026-11-24T07:30:00Z",
+        "url": "https://example.com/browse/DEMO-142"
+      },
+      "envelope": {
+        "widget_id": "ja-ticket",
+        "source": "sample",
+        "as_of": "2026-11-24T08:30:00Z",
+        "data_class": "work",
+        "title": "DEMO-142 (Jira pack, later)",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "In Progress"
+              },
+              {
+                "label": "High"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Key",
+                "value": "DEMO-142"
+              },
+              {
+                "label": "Updated",
+                "value": "2026-11-24T07:30:00Z"
+              },
+              {
+                "label": "Ticket",
+                "value": "Retry failed webhook deliveries with backoff",
+                "link": {
+                  "text": "DEMO-142",
+                  "url": "https://example.com/browse/DEMO-142"
+                }
+              }
+            ]
+          },
+          {
+            "kind": "person",
+            "people": [
+              {
+                "name": "Mira Okafor"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 100,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-jira-attention"
+      }
+    },
+    {
+      "at_ms": 1200,
+      "board": [
+        "ja-attention",
+        "ja-ticket"
+      ]
+    },
+    {
+      "at_ms": 1300,
+      "reply": "Four tickets need you, and DEMO-311 is blocked. The ticket card comes from a later Jira pack."
+    },
+    {
+      "at_ms": 1910,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-jira-attention"
+      }
+    },
+    {
+      "at_ms": 1960,
+      "core": "idle"
+    }
+  ]
+}

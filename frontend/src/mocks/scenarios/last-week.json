@@ -1,0 +1,194 @@
+{
+  "id": "last-week",
+  "group": "request",
+  "label": "Last week",
+  "request": "What did I work on last week?",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "work_timeline",
+        "title": "Last week",
+        "items": [
+          {
+            "when": "Mon 09:30",
+            "title": "Orchard retry design review",
+            "detail": "Agreed on exponential backoff with a cap of five attempts."
+          },
+          {
+            "when": "Tue 14:00",
+            "title": "Lantern theme handoff",
+            "detail": "Design tokens handed to the web team."
+          },
+          {
+            "when": "Wed 11:15",
+            "title": "Compass tile quota check"
+          },
+          {
+            "when": "Thu 16:45",
+            "title": "Release candidate tagged",
+            "detail": "Orchard 2.4.0-rc1 went to the staging cluster."
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "lw-timeline",
+        "source": "sample",
+        "as_of": "2026-11-24T08:10:00Z",
+        "data_class": "work",
+        "title": "Last week",
+        "blocks": [
+          {
+            "kind": "timeline",
+            "items": [
+              {
+                "when": "Mon 09:30",
+                "title": "Orchard retry design review",
+                "detail": "Agreed on exponential backoff with a cap of five attempts."
+              },
+              {
+                "when": "Tue 14:00",
+                "title": "Lantern theme handoff",
+                "detail": "Design tokens handed to the web team."
+              },
+              {
+                "when": "Wed 11:15",
+                "title": "Compass tile quota check"
+              },
+              {
+                "when": "Thu 16:45",
+                "title": "Release candidate tagged",
+                "detail": "Orchard 2.4.0-rc1 went to the staging cluster."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "chart",
+        "title": "Commits per day",
+        "kind": "bar",
+        "series": [
+          {
+            "name": "Orchard",
+            "points": [
+              {
+                "x": "Mon",
+                "y": 6
+              },
+              {
+                "x": "Tue",
+                "y": 9
+              },
+              {
+                "x": "Wed",
+                "y": 4
+              },
+              {
+                "x": "Thu",
+                "y": 11
+              },
+              {
+                "x": "Fri",
+                "y": 7
+              },
+              {
+                "x": "Sat",
+                "y": 2
+              },
+              {
+                "x": "Sun",
+                "y": 3
+              }
+            ]
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "lw-chart",
+        "source": "sample",
+        "as_of": "2026-11-24T08:05:00Z",
+        "data_class": "personal",
+        "title": "Commits per day",
+        "blocks": [
+          {
+            "kind": "chart",
+            "chart": "bar",
+            "series": [
+              {
+                "name": "Orchard",
+                "points": [
+                  {
+                    "x": "Mon",
+                    "y": 6
+                  },
+                  {
+                    "x": "Tue",
+                    "y": 9
+                  },
+                  {
+                    "x": "Wed",
+                    "y": 4
+                  },
+                  {
+                    "x": "Thu",
+                    "y": 11
+                  },
+                  {
+                    "x": "Fri",
+                    "y": 7
+                  },
+                  {
+                    "x": "Sat",
+                    "y": 2
+                  },
+                  {
+                    "x": "Sun",
+                    "y": 3
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 100,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-last-week"
+      }
+    },
+    {
+      "at_ms": 1200,
+      "board": [
+        "lw-timeline",
+        "lw-chart"
+      ]
+    },
+    {
+      "at_ms": 1300,
+      "reply": "Last week centred on the Orchard retry work, with Thursday the busiest day."
+    },
+    {
+      "at_ms": 1790,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-last-week"
+      }
+    },
+    {
+      "at_ms": 1840,
+      "core": "idle"
+    }
+  ]
+}

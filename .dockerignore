@@ -1,0 +1,12 @@
+.git
+.beads
+.superpowers
+.playwright-cli
+CLAUDE.md
+docs/design-references
+secrets
+**/node_modules
+**/dist
+**/.env*
+**/*.env
+frontend/src/mocks/local

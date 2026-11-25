@@ -1,0 +1,682 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/frames/server-frame.schema.json",
+  "title": "ServerFrame",
+  "type": "object",
+  "properties": {
+    "v": {
+      "const": 1
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "event",
+        "error",
+        "ack"
+      ]
+    },
+    "id": {
+      "$ref": "#/$defs/Id"
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "name": {
+      "$ref": "#/$defs/EventName"
+    },
+    "data": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "v",
+    "type",
+    "id",
+    "ts",
+    "data"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "event"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/$defs/EventName"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "const": "message.delta"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "request_id": {
+                "$ref": "#/$defs/Id"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 400
+              }
+            },
+            "required": [
+              "request_id",
+              "text"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "const": "message.done"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "request_id": {
+                "$ref": "#/$defs/Id"
+              }
+            },
+            "required": [
+              "request_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "const": "request.started"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "request_id": {
+                "$ref": "#/$defs/Id"
+              }
+            },
+            "required": [
+              "request_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "const": "request.finished"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "request_id": {
+                "$ref": "#/$defs/Id"
+              }
+            },
+            "required": [
+              "request_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "const": "board.updated"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "board": {
+                "type": "array",
+                "maxItems": 12,
+                "items": {
+                  "$ref": "../envelope.schema.json"
+                }
+              }
+            },
+            "required": [
+              "board"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "const": "approval.created"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "proposal_id": {
+                "$ref": "#/$defs/Id"
+              }
+            },
+            "required": [
+              "proposal_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "const": "approval.updated"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "proposal_id": {
+                "$ref": "#/$defs/Id"
+              },
+              "status": {
+                "$ref": "#/$defs/ProposalStatus"
+              }
+            },
+            "required": [
+              "proposal_id",
+              "status"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "const": "run.updated"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "run_id": {
+                "$ref": "#/$defs/Id"
+              },
+              "status": {
+                "$ref": "../widgets/claude_run.schema.json#/$defs/RunStatus"
+              }
+            },
+            "required": [
+              "run_id",
+              "status"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "const": "session.updated"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "session_id": {
+                "$ref": "#/$defs/Id"
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "working",
+                  "idle",
+                  "waiting",
+                  "done"
+                ]
+              }
+            },
+            "required": [
+              "session_id",
+              "state"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "const": "permission.pending"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "request_id": {
+                "$ref": "#/$defs/Id"
+              }
+            },
+            "required": [
+              "request_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "const": "permission.resolved"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "request_id": {
+                "$ref": "#/$defs/Id"
+              }
+            },
+            "required": [
+              "request_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "const": "session_message.sent"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "session_id": {
+                "$ref": "#/$defs/Id"
+              }
+            },
+            "required": [
+              "session_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "const": "research.finished"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "job_id": {
+                "$ref": "#/$defs/Id"
+              }
+            },
+            "required": [
+              "job_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "const": "alert.raised"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "$ref": "#/$defs/AlertKind"
+              },
+              "level": {
+                "$ref": "../common.schema.json#/$defs/Tone"
+              },
+              "view": {
+                "$ref": "../common.schema.json#/$defs/AlertView"
+              }
+            },
+            "required": [
+              "kind",
+              "level"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "error"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "pattern": "^[a-z_]{1,40}$"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "code"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "ack"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "Id": {
+      "title": "FrameId",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9_.:-]{1,64}$"
+    },
+    "EventName": {
+      "title": "EventName",
+      "type": "string",
+      "enum": [
+        "message.delta",
+        "message.done",
+        "request.started",
+        "request.finished",
+        "board.updated",
+        "approval.created",
+        "approval.updated",
+        "run.updated",
+        "session.updated",
+        "permission.pending",
+        "permission.resolved",
+        "session_message.sent",
+        "research.finished",
+        "alert.raised"
+      ]
+    },
+    "AlertKind": {
+      "title": "AlertKind",
+      "type": "string",
+      "enum": [
+        "approvals_waiting",
+        "run_finished",
+        "run_failed",
+        "run_timed_out",
+        "run_over_tokens",
+        "session_waiting",
+        "plan_limit",
+        "login_expiring",
+        "adapter_degraded",
+        "companion_degraded",
+        "over_budget",
+        "proposal_expiring"
+      ]
+    },
+    "ProposalStatus": {
+      "title": "ProposalStatus",
+      "type": "string",
+      "enum": [
+        "pending",
+        "rejected",
+        "expired",
+        "executing",
+        "executed",
+        "verified",
+        "failed"
+      ]
+    }
+  }
+}

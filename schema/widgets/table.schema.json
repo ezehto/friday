@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/table.schema.json",
+  "title": "TableWidget",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "table"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 60
+      },
+      "maxItems": 8
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "maxItems": 8
+      },
+      "maxItems": 50
+    }
+  },
+  "required": [
+    "type",
+    "columns",
+    "rows"
+  ],
+  "additionalProperties": false
+}

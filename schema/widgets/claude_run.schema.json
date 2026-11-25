@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/claude_run.schema.json",
+  "title": "ClaudeRunWidget",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "claude_run"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "run_id": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "repo": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "ask",
+        "task"
+      ]
+    },
+    "status": {
+      "$ref": "#/$defs/RunStatus"
+    },
+    "started": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "usage": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "excerpt": {
+      "type": "string",
+      "maxLength": 400
+    }
+  },
+  "required": [
+    "type",
+    "run_id",
+    "repo",
+    "mode",
+    "status"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "RunStatus": {
+      "title": "RunStatus",
+      "type": "string",
+      "enum": [
+        "proposed",
+        "starting",
+        "working",
+        "waiting",
+        "done",
+        "failed",
+        "stopped",
+        "timed_out",
+        "cancelled",
+        "unlinked"
+      ]
+    }
+  }
+}

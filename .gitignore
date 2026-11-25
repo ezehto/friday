@@ -6,3 +6,5 @@ secrets/
 frontend/node_modules/
 frontend/dist/
 .playwright-cli/
+# Local mock overlay built from personal projects: never commit (public repo)
+/frontend/src/mocks/local

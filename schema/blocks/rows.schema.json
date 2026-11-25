@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/blocks/rows.schema.json",
+  "title": "RowsBlock",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "const": "rows"
+    },
+    "variant": {
+      "type": "string",
+      "enum": [
+        "list",
+        "log"
+      ]
+    },
+    "heading": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "title": "RowsItem",
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "detail": {
+            "type": "string",
+            "maxLength": 400
+          },
+          "meta": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "tone": {
+            "$ref": "../common.schema.json#/$defs/Tone"
+          },
+          "link": {
+            "$ref": "../common.schema.json#/$defs/Link"
+          },
+          "source_ref": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "label"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 30
+    }
+  },
+  "required": [
+    "kind",
+    "items"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/blocks/value.schema.json",
+  "title": "ValueBlock",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "const": "value"
+    },
+    "label": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "value": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "unit": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "change": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "hint": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "tone": {
+      "$ref": "../common.schema.json#/$defs/Tone"
+    }
+  },
+  "required": [
+    "kind",
+    "label",
+    "value"
+  ],
+  "additionalProperties": false
+}

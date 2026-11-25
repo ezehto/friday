@@ -1,0 +1,72 @@
+{
+  "id": "state-error",
+  "group": "state",
+  "label": "Error",
+  "request": "Summarize my important emails",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "alert",
+        "title": "Alert",
+        "level": "bad",
+        "text": "A source is unavailable",
+        "view": "modules"
+      },
+      "envelope": {
+        "widget_id": "st-alert",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Alert",
+        "blocks": [
+          {
+            "kind": "alert",
+            "level": "bad",
+            "text": "A source is unavailable",
+            "view": "modules"
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 100,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-state-error"
+      }
+    },
+    {
+      "at_ms": 600,
+      "event": "alert.raised",
+      "data": {
+        "kind": "adapter_degraded",
+        "level": "bad",
+        "view": "modules"
+      }
+    },
+    {
+      "at_ms": 600,
+      "core": "error"
+    },
+    {
+      "at_ms": 700,
+      "board": [
+        "st-alert"
+      ]
+    },
+    {
+      "at_ms": 900,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-state-error"
+      }
+    }
+  ]
+}

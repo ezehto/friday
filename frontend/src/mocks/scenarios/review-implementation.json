@@ -1,0 +1,251 @@
+{
+  "id": "review-implementation",
+  "group": "request",
+  "label": "Review implementation",
+  "request": "Review this implementation",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "claude_run",
+        "title": "Claude Code run",
+        "run_id": "run-0143",
+        "repo": "orchard-api",
+        "mode": "ask",
+        "status": "done",
+        "started": "2026-11-24T08:51:00Z",
+        "duration": "3m 05s",
+        "usage": "9k tokens",
+        "excerpt": "Read the retry module and its tests. The backoff cap is not enforced after the fifth attempt."
+      },
+      "envelope": {
+        "widget_id": "ri-run",
+        "source": "sample",
+        "as_of": "2026-11-24T08:55:00Z",
+        "data_class": "work",
+        "title": "Claude Code run",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "done",
+                "tone": "good"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Run",
+                "value": "run-0143"
+              },
+              {
+                "label": "Repo",
+                "value": "orchard-api"
+              },
+              {
+                "label": "Mode",
+                "value": "ask"
+              },
+              {
+                "label": "Started",
+                "value": "2026-11-24T08:51:00Z"
+              },
+              {
+                "label": "Duration",
+                "value": "3m 05s"
+              },
+              {
+                "label": "Usage",
+                "value": "9k tokens"
+              }
+            ]
+          },
+          {
+            "kind": "text",
+            "text": "Read the retry module and its tests. The backoff cap is not enforced after the fifth attempt."
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "task_queue",
+        "title": "Task queue",
+        "items": [
+          {
+            "kind": "proposal",
+            "title": "Hand the Orchard retry brief to Claude Code",
+            "status": "awaiting approval",
+            "since": "2026-11-24T09:00:00Z",
+            "view": "approvals"
+          },
+          {
+            "kind": "run",
+            "title": "Orchard review",
+            "status": "done",
+            "since": "2026-11-24T08:51:00Z",
+            "view": "sessions"
+          },
+          {
+            "kind": "proposal",
+            "title": "Record the Orchard retry cap decision",
+            "status": "awaiting approval",
+            "since": "2026-11-24T08:48:00Z",
+            "view": "approvals"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "ri-queue",
+        "source": "sample",
+        "as_of": "2026-11-24T09:00:00Z",
+        "data_class": "work",
+        "title": "Task queue",
+        "blocks": [
+          {
+            "kind": "rows",
+            "variant": "log",
+            "items": [
+              {
+                "label": "Hand the Orchard retry brief to Claude Code",
+                "detail": "awaiting approval",
+                "meta": "2026-11-24T09:00:00Z"
+              },
+              {
+                "label": "Orchard review",
+                "detail": "done",
+                "meta": "2026-11-24T08:51:00Z"
+              },
+              {
+                "label": "Record the Orchard retry cap decision",
+                "detail": "awaiting approval",
+                "meta": "2026-11-24T08:48:00Z"
+              }
+            ]
+          },
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "2 proposals"
+              },
+              {
+                "label": "1 run"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 100,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-review-implementation"
+      }
+    },
+    {
+      "at_ms": 600,
+      "event": "approval.created",
+      "data": {
+        "proposal_id": "prop-handoff-01"
+      }
+    },
+    {
+      "at_ms": 700,
+      "core": "awaiting_approval"
+    },
+    {
+      "at_ms": 1500,
+      "board": [
+        "ri-run",
+        "ri-queue"
+      ]
+    },
+    {
+      "at_ms": 1600,
+      "reply": "The review is done. I drafted a hand-off brief that needs your approval."
+    },
+    {
+      "at_ms": 2090,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-review-implementation"
+      }
+    },
+    {
+      "at_ms": 2140,
+      "core": "idle"
+    }
+  ],
+  "views": {
+    "approvals": [
+      {
+        "proposal_id": "prop-demo-write",
+        "host_action": false,
+        "tool": "demo_write",
+        "title": "Save the Orchard retry checklist",
+        "target": "demo/notes/orchard-retry-checklist.md",
+        "data_class": "personal",
+        "content": "- Cap retries at five attempts\n- Log every attempt\n- Alert on the fifth failure\n",
+        "secret_scan": "clean",
+        "created": "2026-11-24T08:35:00Z",
+        "expires": "2026-11-24T09:35:00Z",
+        "args_sha256": "a1d8b9a02f896d31834e7c5b44a403063f1fc724b9d260fd5ae676d47b6bb164"
+      },
+      {
+        "proposal_id": "prop-vault-note",
+        "host_action": true,
+        "tool": "vault_write_note",
+        "title": "Record the Orchard retry cap decision",
+        "target": "Orchard/Decisions/retry-cap.md",
+        "target_folder": "Orchard/Decisions",
+        "data_class": "work",
+        "content": "# Retry cap decision\n\nOrchard webhook retries stop after five attempts with exponential backoff.\n",
+        "secret_scan": "clean",
+        "created": "2026-11-24T08:48:00Z",
+        "expires": "2026-11-24T09:48:00Z",
+        "args_sha256": "0a3bdaf3f8922a1cfbcf37e9f7beb0a004a2acb554c8a7dbb6f2245093e0a658"
+      },
+      {
+        "proposal_id": "prop-handoff-01",
+        "host_action": true,
+        "tool": "claude_handoff",
+        "title": "Hand the Orchard retry brief to Claude Code",
+        "target": "orchard-api",
+        "data_class": "work",
+        "content": "Implementation brief: Orchard webhook retry cap\n\nGoal: stop redelivering a failed webhook after five attempts.\nFiles: orchard-api/src/webhooks/retry.py and its tests.\nSteps:\n1. Add a MAX_ATTEMPTS constant set to 5.\n2. Use exponential backoff between attempts, starting at 2 seconds.\n3. Mark the delivery failed after the fifth attempt and log it.\nTests: one case per attempt number, one for the cap.\nOut of scope: changing the queue or the payload format.\n",
+        "secret_scan": "clean",
+        "created": "2026-11-24T09:00:00Z",
+        "expires": "2026-11-24T10:00:00Z",
+        "args_sha256": "c631a1e670a33ba79fe3a0327e4f32f8e707864be77f869661b849f8b7032f34"
+      }
+    ],
+    "tray": [
+      {
+        "kind": "approvals_waiting",
+        "count": 3,
+        "source": "approvals"
+      },
+      {
+        "kind": "session_waiting",
+        "count": 1,
+        "source": "sessions"
+      },
+      {
+        "kind": "run_finished",
+        "count": 1,
+        "source": "traces"
+      }
+    ]
+  }
+}

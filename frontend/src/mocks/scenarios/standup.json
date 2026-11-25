@@ -1,0 +1,151 @@
+{
+  "id": "standup",
+  "group": "request",
+  "label": "Prepare standup",
+  "request": "Prepare my standup",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "standup",
+        "title": "Standup",
+        "yesterday": [
+          {
+            "text": "Merged the Orchard webhook retry change after two rounds of review and confirmed the backoff caps at five attempts in the staging cluster logs.",
+            "source_ref": "Orchard/pull/412"
+          },
+          {
+            "text": "Paired with Tomas Reyes on the Lantern theme tokens.",
+            "source_ref": "Lantern/Notes/pairing"
+          }
+        ],
+        "today": [
+          {
+            "text": "Write the retry integration tests, then run them against the staging cluster with the rotated keys once they are available to the whole team.",
+            "source_ref": "Orchard/Plans/retry-tests"
+          },
+          {
+            "text": "Review the Lantern accessibility fixes.",
+            "source_ref": "Lantern/pull/88"
+          }
+        ],
+        "blockers": [
+          {
+            "text": "Staging key rotation has not landed yet.",
+            "source_ref": "Compass/Notes/key-rotation"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "su-standup",
+        "source": "sample",
+        "as_of": "2026-11-24T08:45:00Z",
+        "data_class": "work",
+        "title": "Standup",
+        "blocks": [
+          {
+            "kind": "rows",
+            "heading": "Yesterday",
+            "items": [
+              {
+                "label": "Merged the Orchard webhook retry change after two rounds of review and confirme…",
+                "detail": "Merged the Orchard webhook retry change after two rounds of review and confirmed the backoff caps at five attempts in the staging cluster logs.",
+                "source_ref": "Orchard/pull/412"
+              },
+              {
+                "label": "Paired with Tomas Reyes on the Lantern theme tokens.",
+                "source_ref": "Lantern/Notes/pairing"
+              }
+            ]
+          },
+          {
+            "kind": "rows",
+            "heading": "Today",
+            "items": [
+              {
+                "label": "Write the retry integration tests, then run them against the staging cluster wi…",
+                "detail": "Write the retry integration tests, then run them against the staging cluster with the rotated keys once they are available to the whole team.",
+                "source_ref": "Orchard/Plans/retry-tests"
+              },
+              {
+                "label": "Review the Lantern accessibility fixes.",
+                "source_ref": "Lantern/pull/88"
+              }
+            ]
+          },
+          {
+            "kind": "rows",
+            "heading": "Blockers",
+            "items": [
+              {
+                "label": "Staging key rotation has not landed yet.",
+                "source_ref": "Compass/Notes/key-rotation",
+                "tone": "bad"
+              }
+            ]
+          },
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "2 yesterday"
+              },
+              {
+                "label": "2 today"
+              },
+              {
+                "label": "1 blocker"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "listening"
+    },
+    {
+      "at_ms": 1200,
+      "core": "transcribing"
+    },
+    {
+      "at_ms": 1900,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 2000,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-standup"
+      }
+    },
+    {
+      "at_ms": 3000,
+      "board": [
+        "su-standup"
+      ]
+    },
+    {
+      "at_ms": 3100,
+      "reply": "Here is your standup. Jira is not connected, so it comes from your notes and commits only."
+    },
+    {
+      "at_ms": 3100,
+      "core": "speaking"
+    },
+    {
+      "at_ms": 4010,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-standup"
+      }
+    },
+    {
+      "at_ms": 4060,
+      "core": "idle"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "id": "edge-slow-source",
+  "group": "edge",
+  "label": "Slow source",
+  "request": "What should I focus on today?",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "daily_focus",
+        "title": "Today's focus",
+        "items": [
+          {
+            "title": "Check the Compass tile quota",
+            "why": "The source answered, but its data is a day and a half old.",
+            "source_ref": "Compass/Plans/tile-quota"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "sl-focus",
+        "source": "sample",
+        "as_of": "2026-11-23T03:00:00Z",
+        "data_class": "personal",
+        "title": "Today's focus",
+        "blocks": [
+          {
+            "kind": "rows",
+            "items": [
+              {
+                "label": "Check the Compass tile quota",
+                "detail": "The source answered, but its data is a day and a half old.",
+                "source_ref": "Compass/Plans/tile-quota"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-edge-slow-source"
+      }
+    },
+    {
+      "at_ms": 0,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 4000,
+      "board": [
+        "sl-focus"
+      ]
+    },
+    {
+      "at_ms": 4100,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-edge-slow-source"
+      }
+    },
+    {
+      "at_ms": 4150,
+      "core": "idle"
+    }
+  ]
+}

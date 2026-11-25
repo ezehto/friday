@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/blocks/block.schema.json",
+  "title": "Block",
+  "oneOf": [
+    {
+      "$ref": "value.schema.json"
+    },
+    {
+      "$ref": "chart.schema.json"
+    },
+    {
+      "$ref": "table.schema.json"
+    },
+    {
+      "$ref": "rows.schema.json"
+    },
+    {
+      "$ref": "meter.schema.json"
+    },
+    {
+      "$ref": "timeline.schema.json"
+    },
+    {
+      "$ref": "person.schema.json"
+    },
+    {
+      "$ref": "chips.schema.json"
+    },
+    {
+      "$ref": "text.schema.json"
+    },
+    {
+      "$ref": "facts.schema.json"
+    },
+    {
+      "$ref": "alert.schema.json"
+    },
+    {
+      "$ref": "kanban.schema.json"
+    }
+  ]
+}

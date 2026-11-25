@@ -1,0 +1,230 @@
+{
+  "id": "project-blockers",
+  "group": "request",
+  "label": "Project blockers",
+  "request": "What's blocking my projects?",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "project_status",
+        "title": "Lantern status",
+        "name": "Lantern",
+        "status": "blocked",
+        "blockers": [
+          "Design token sign-off is still pending"
+        ],
+        "next": "Apply the contrast fixes",
+        "last_commit": "2026-11-22"
+      },
+      "envelope": {
+        "widget_id": "pb-lantern",
+        "source": "sample",
+        "as_of": "2026-11-24T08:48:00Z",
+        "data_class": "work",
+        "title": "Lantern status",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "blocked",
+                "tone": "bad"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Next",
+                "value": "Apply the contrast fixes"
+              },
+              {
+                "label": "Last commit",
+                "value": "2026-11-22"
+              }
+            ]
+          },
+          {
+            "kind": "rows",
+            "heading": "Blockers and risks",
+            "items": [
+              {
+                "label": "Design token sign-off is still pending",
+                "tone": "bad"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "project_status",
+        "title": "Compass status",
+        "name": "Compass",
+        "status": "active",
+        "risks": [
+          "Map tile quota may run out in December",
+          "Offline cache needs a second test device"
+        ],
+        "milestones": [
+          {
+            "name": "Offline route cache prototype",
+            "due": "2026-12-05",
+            "status": "at_risk"
+          },
+          {
+            "name": "Beta invite list",
+            "due": "2026-12-19",
+            "status": "planned"
+          }
+        ],
+        "next": "Order the second test device",
+        "last_commit": "2026-11-23"
+      },
+      "envelope": {
+        "widget_id": "pb-compass",
+        "source": "sample",
+        "as_of": "2026-11-24T08:42:00Z",
+        "data_class": "work",
+        "title": "Compass status",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "active",
+                "tone": "neutral"
+              },
+              {
+                "label": "Offline route cache prototype 2026-12-05",
+                "tone": "attention"
+              },
+              {
+                "label": "Beta invite list 2026-12-19",
+                "tone": "neutral"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Next",
+                "value": "Order the second test device"
+              },
+              {
+                "label": "Last commit",
+                "value": "2026-11-23"
+              }
+            ]
+          },
+          {
+            "kind": "rows",
+            "heading": "Blockers and risks",
+            "items": [
+              {
+                "label": "Map tile quota may run out in December",
+                "tone": "attention"
+              },
+              {
+                "label": "Offline cache needs a second test device",
+                "tone": "attention"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "project_status",
+        "title": "Orchard status",
+        "name": "Orchard",
+        "status": "paused",
+        "milestones": [
+          {
+            "name": "Archive the old notes",
+            "due": "2026-12-10",
+            "status": "planned"
+          }
+        ],
+        "next": "Decide who owns the archive",
+        "last_commit": "2026-11-18"
+      },
+      "envelope": {
+        "widget_id": "pb-orchard",
+        "source": "sample",
+        "as_of": "2026-11-21T09:00:00Z",
+        "data_class": "work",
+        "title": "Orchard status",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "paused",
+                "tone": "attention"
+              },
+              {
+                "label": "Archive the old notes 2026-12-10",
+                "tone": "neutral"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Next",
+                "value": "Decide who owns the archive"
+              },
+              {
+                "label": "Last commit",
+                "value": "2026-11-18"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 100,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-project-blockers"
+      }
+    },
+    {
+      "at_ms": 1200,
+      "board": [
+        "pb-lantern",
+        "pb-compass",
+        "pb-orchard"
+      ]
+    },
+    {
+      "at_ms": 1300,
+      "reply": "Lantern is blocked, Compass has two risks, and Orchard has not been updated in three days."
+    },
+    {
+      "at_ms": 1880,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-project-blockers"
+      }
+    },
+    {
+      "at_ms": 1930,
+      "core": "idle"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/jira_attention.schema.json",
+  "title": "JiraAttentionWidget",
+  "$comment": "draft: finalized with its pack (L14 or L16)",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "jira_attention"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "priority": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "blocked",
+              "assigned",
+              "mentioned",
+              "due"
+            ]
+          }
+        },
+        "required": [
+          "key",
+          "summary",
+          "status",
+          "priority",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 20
+    }
+  },
+  "required": [
+    "type",
+    "items"
+  ],
+  "additionalProperties": false
+}

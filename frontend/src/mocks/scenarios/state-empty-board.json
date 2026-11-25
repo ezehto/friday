@@ -1,0 +1,17 @@
+{
+  "id": "state-empty-board",
+  "group": "state",
+  "label": "Empty board",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "idle"
+    },
+    {
+      "at_ms": 0,
+      "board": []
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "id": "edge-work-class",
+  "group": "edge",
+  "label": "Work data class",
+  "request": "How are my projects doing?",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "project_status",
+        "title": "Garden planner status",
+        "name": "Garden planner",
+        "status": "active",
+        "risks": [
+          "Seed catalog import is slow"
+        ],
+        "milestones": [
+          {
+            "name": "First harvest view",
+            "due": "2026-12-05",
+            "status": "planned"
+          }
+        ],
+        "next": "Add the frost date picker",
+        "last_commit": "2026-11-22"
+      },
+      "envelope": {
+        "widget_id": "wc-personal",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Garden planner status",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "active",
+                "tone": "neutral"
+              },
+              {
+                "label": "First harvest view 2026-12-05",
+                "tone": "neutral"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Next",
+                "value": "Add the frost date picker"
+              },
+              {
+                "label": "Last commit",
+                "value": "2026-11-22"
+              }
+            ]
+          },
+          {
+            "kind": "rows",
+            "heading": "Blockers and risks",
+            "items": [
+              {
+                "label": "Seed catalog import is slow",
+                "tone": "attention"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "project_status",
+        "title": "Orchard status",
+        "name": "Orchard",
+        "status": "blocked",
+        "blockers": [
+          "Waiting on the staging key rotation"
+        ],
+        "milestones": [
+          {
+            "name": "Release candidate",
+            "due": "2026-11-27",
+            "status": "at_risk"
+          }
+        ],
+        "next": "Finish the retry tests",
+        "last_commit": "2026-11-23"
+      },
+      "envelope": {
+        "widget_id": "wc-work",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "work",
+        "title": "Orchard status",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "blocked",
+                "tone": "bad"
+              },
+              {
+                "label": "Release candidate 2026-11-27",
+                "tone": "attention"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Next",
+                "value": "Finish the retry tests"
+              },
+              {
+                "label": "Last commit",
+                "value": "2026-11-23"
+              }
+            ]
+          },
+          {
+            "kind": "rows",
+            "heading": "Blockers and risks",
+            "items": [
+              {
+                "label": "Waiting on the staging key rotation",
+                "tone": "bad"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 100,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-edge-work-class"
+      }
+    },
+    {
+      "at_ms": 900,
+      "board": [
+        "wc-personal",
+        "wc-work"
+      ]
+    },
+    {
+      "at_ms": 1200,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-edge-work-class"
+      }
+    },
+    {
+      "at_ms": 1250,
+      "core": "idle"
+    }
+  ]
+}

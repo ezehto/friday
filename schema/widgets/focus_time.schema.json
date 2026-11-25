@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/focus_time.schema.json",
+  "title": "FocusTimeWidget",
+  "$comment": "draft: finalized with its pack (L14 or L16)",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "focus_time"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "day": {
+      "type": "string",
+      "format": "date"
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "string",
+            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+          },
+          "end": {
+            "type": "string",
+            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 60
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "label"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 20
+    },
+    "total_minutes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1440
+    }
+  },
+  "required": [
+    "type",
+    "day",
+    "blocks",
+    "total_minutes"
+  ],
+  "additionalProperties": false
+}

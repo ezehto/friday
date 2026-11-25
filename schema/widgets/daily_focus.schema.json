@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/daily_focus.schema.json",
+  "title": "DailyFocusWidget",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "daily_focus"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "why": {
+            "type": "string",
+            "maxLength": 400
+          },
+          "source_ref": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "title",
+          "why",
+          "source_ref"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 5
+    },
+    "note": {
+      "type": "string",
+      "maxLength": 400
+    }
+  },
+  "required": [
+    "type",
+    "items"
+  ],
+  "additionalProperties": false
+}

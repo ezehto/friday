@@ -1,0 +1,444 @@
+{
+  "id": "edge-empty-widgets",
+  "group": "edge",
+  "label": "Empty widgets",
+  "request": "Show me an empty board of every widget",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "stat",
+        "title": "Empty stat",
+        "label": "Open pull requests",
+        "value": "0"
+      },
+      "envelope": {
+        "widget_id": "em-stat",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Empty stat",
+        "blocks": [
+          {
+            "kind": "value",
+            "label": "Open pull requests",
+            "value": "0"
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "chart",
+        "title": "Empty chart",
+        "kind": "line",
+        "series": []
+      },
+      "envelope": {
+        "widget_id": "em-chart",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Empty chart",
+        "blocks": [
+          {
+            "kind": "chart",
+            "chart": "line",
+            "series": []
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "table",
+        "title": "Empty table",
+        "columns": [],
+        "rows": []
+      },
+      "envelope": {
+        "widget_id": "em-table",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Empty table",
+        "blocks": [
+          {
+            "kind": "table",
+            "columns": [],
+            "rows": []
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "task_list",
+        "title": "Empty task list",
+        "items": []
+      },
+      "envelope": {
+        "widget_id": "em-tasks",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Empty task list",
+        "blocks": [
+          {
+            "kind": "rows",
+            "items": []
+          },
+          {
+            "kind": "chips",
+            "items": []
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "progress",
+        "title": "Empty progress",
+        "label": "Nothing started",
+        "done": 0,
+        "total": 1,
+        "tone": "neutral"
+      },
+      "envelope": {
+        "widget_id": "em-progress",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Empty progress",
+        "blocks": [
+          {
+            "kind": "meter",
+            "items": [
+              {
+                "label": "Nothing started",
+                "done": 0,
+                "total": 1,
+                "tone": "neutral"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "daily_focus",
+        "title": "Empty focus",
+        "items": []
+      },
+      "envelope": {
+        "widget_id": "em-focus",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Empty focus",
+        "blocks": [
+          {
+            "kind": "rows",
+            "items": []
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "project_status",
+        "title": "Empty project",
+        "name": "Compass",
+        "status": "paused"
+      },
+      "envelope": {
+        "widget_id": "em-project",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Empty project",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "paused",
+                "tone": "attention"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": []
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "career_progress",
+        "title": "Empty career",
+        "target": "Staff engineer by 2027",
+        "week": 1,
+        "skills": []
+      },
+      "envelope": {
+        "widget_id": "em-career",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Empty career",
+        "blocks": [
+          {
+            "kind": "value",
+            "label": "Staff engineer by 2027",
+            "value": "Week 1 of 16"
+          },
+          {
+            "kind": "meter",
+            "items": []
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "work_timeline",
+        "title": "Empty timeline",
+        "items": []
+      },
+      "envelope": {
+        "widget_id": "em-timeline",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Empty timeline",
+        "blocks": [
+          {
+            "kind": "timeline",
+            "items": []
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "learning_roadmap",
+        "title": "Empty roadmap",
+        "target": "Staff engineer by 2027",
+        "week": 1,
+        "weeks": [],
+        "next": []
+      },
+      "envelope": {
+        "widget_id": "em-roadmap",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Empty roadmap",
+        "blocks": [
+          {
+            "kind": "timeline",
+            "items": []
+          },
+          {
+            "kind": "rows",
+            "heading": "Next",
+            "items": []
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "standup",
+        "title": "Empty standup",
+        "yesterday": [],
+        "today": []
+      },
+      "envelope": {
+        "widget_id": "em-standup",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Empty standup",
+        "blocks": [
+          {
+            "kind": "rows",
+            "heading": "Yesterday",
+            "items": []
+          },
+          {
+            "kind": "rows",
+            "heading": "Today",
+            "items": []
+          },
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "0 yesterday"
+              },
+              {
+                "label": "0 today"
+              },
+              {
+                "label": "0 blockers"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "alert",
+        "title": "Alert",
+        "level": "neutral",
+        "text": "A run finished"
+      },
+      "envelope": {
+        "widget_id": "em-alert",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Alert",
+        "blocks": [
+          {
+            "kind": "alert",
+            "level": "neutral",
+            "text": "A run finished"
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "task_queue",
+        "title": "Empty queue",
+        "items": []
+      },
+      "envelope": {
+        "widget_id": "em-queue",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Empty queue",
+        "blocks": [
+          {
+            "kind": "rows",
+            "variant": "log",
+            "items": []
+          },
+          {
+            "kind": "chips",
+            "items": []
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "claude_run",
+        "title": "Empty run",
+        "run_id": "run-0160",
+        "repo": "orchard-api",
+        "mode": "ask",
+        "status": "proposed"
+      },
+      "envelope": {
+        "widget_id": "em-run",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Empty run",
+        "blocks": [
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "proposed"
+              }
+            ]
+          },
+          {
+            "kind": "facts",
+            "items": [
+              {
+                "label": "Run",
+                "value": "run-0160"
+              },
+              {
+                "label": "Repo",
+                "value": "orchard-api"
+              },
+              {
+                "label": "Mode",
+                "value": "ask"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 100,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-edge-empty-widgets"
+      }
+    },
+    {
+      "at_ms": 1500,
+      "board": [
+        "em-stat",
+        "em-chart",
+        "em-table",
+        "em-tasks",
+        "em-progress",
+        "em-focus",
+        "em-project",
+        "em-career",
+        "em-timeline",
+        "em-roadmap",
+        "em-standup",
+        "em-alert"
+      ]
+    },
+    {
+      "at_ms": 3000,
+      "board": [
+        "em-table",
+        "em-tasks",
+        "em-progress",
+        "em-focus",
+        "em-project",
+        "em-career",
+        "em-timeline",
+        "em-roadmap",
+        "em-standup",
+        "em-alert",
+        "em-queue",
+        "em-run"
+      ]
+    },
+    {
+      "at_ms": 3300,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-edge-empty-widgets"
+      }
+    },
+    {
+      "at_ms": 3350,
+      "core": "idle"
+    }
+  ]
+}

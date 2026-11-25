@@ -1,0 +1,142 @@
+{
+  "id": "email-summary",
+  "group": "request",
+  "label": "Email summary",
+  "request": "Summarize my important emails",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "table",
+        "title": "Important emails",
+        "columns": [
+          "From",
+          "Subject",
+          "Received"
+        ],
+        "rows": [
+          [
+            "Mira Okafor",
+            "Orchard release sign-off",
+            "Mon"
+          ],
+          [
+            "Tomas Reyes",
+            "Lantern theme questions",
+            "Mon"
+          ],
+          [
+            "Ines Varga",
+            "Compass tile quota",
+            "Tue"
+          ],
+          [
+            "Orchard CI",
+            "Nightly build failed",
+            "Tue"
+          ]
+        ]
+      },
+      "envelope": {
+        "widget_id": "es-table",
+        "source": "sample",
+        "as_of": "2026-11-24T08:30:00Z",
+        "data_class": "personal",
+        "title": "Important emails",
+        "blocks": [
+          {
+            "kind": "table",
+            "columns": [
+              "From",
+              "Subject",
+              "Received"
+            ],
+            "rows": [
+              [
+                "Mira Okafor",
+                "Orchard release sign-off",
+                "Mon"
+              ],
+              [
+                "Tomas Reyes",
+                "Lantern theme questions",
+                "Mon"
+              ],
+              [
+                "Ines Varga",
+                "Compass tile quota",
+                "Tue"
+              ],
+              [
+                "Orchard CI",
+                "Nightly build failed",
+                "Tue"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "stat",
+        "title": "Unread important",
+        "label": "Unread important",
+        "value": "4",
+        "hint": "Sample count",
+        "tone": "attention"
+      },
+      "envelope": {
+        "widget_id": "es-stat",
+        "source": "sample",
+        "as_of": "2026-11-24T08:30:00Z",
+        "data_class": "personal",
+        "title": "Unread important",
+        "blocks": [
+          {
+            "kind": "value",
+            "label": "Unread important",
+            "value": "4",
+            "hint": "Sample count",
+            "tone": "attention"
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 100,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-email-summary"
+      }
+    },
+    {
+      "at_ms": 1200,
+      "board": [
+        "es-table",
+        "es-stat"
+      ]
+    },
+    {
+      "at_ms": 1300,
+      "reply": "The email pack is not designed yet, so these are sample core widgets."
+    },
+    {
+      "at_ms": 1790,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-email-summary"
+      }
+    },
+    {
+      "at_ms": 1840,
+      "core": "idle"
+    }
+  ]
+}

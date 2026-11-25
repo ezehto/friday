@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/blocks/chips.schema.json",
+  "title": "ChipsBlock",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "const": "chips"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "tone": {
+            "$ref": "../common.schema.json#/$defs/Tone"
+          }
+        },
+        "required": [
+          "label"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 12
+    }
+  },
+  "required": [
+    "kind",
+    "items"
+  ],
+  "additionalProperties": false
+}

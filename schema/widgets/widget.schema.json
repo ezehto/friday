@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/widget.schema.json",
+  "title": "Widget",
+  "oneOf": [
+    {
+      "$ref": "stat.schema.json"
+    },
+    {
+      "$ref": "chart.schema.json"
+    },
+    {
+      "$ref": "table.schema.json"
+    },
+    {
+      "$ref": "task_list.schema.json"
+    },
+    {
+      "$ref": "progress.schema.json"
+    },
+    {
+      "$ref": "daily_focus.schema.json"
+    },
+    {
+      "$ref": "project_status.schema.json"
+    },
+    {
+      "$ref": "career_progress.schema.json"
+    },
+    {
+      "$ref": "work_timeline.schema.json"
+    },
+    {
+      "$ref": "learning_roadmap.schema.json"
+    },
+    {
+      "$ref": "standup.schema.json"
+    },
+    {
+      "$ref": "alert.schema.json"
+    },
+    {
+      "$ref": "task_queue.schema.json"
+    },
+    {
+      "$ref": "claude_run.schema.json"
+    },
+    {
+      "$ref": "jira_ticket.schema.json"
+    },
+    {
+      "$ref": "jira_attention.schema.json"
+    },
+    {
+      "$ref": "sprint.schema.json"
+    },
+    {
+      "$ref": "sprint_burndown.schema.json"
+    },
+    {
+      "$ref": "schedule.schema.json"
+    },
+    {
+      "$ref": "meeting.schema.json"
+    },
+    {
+      "$ref": "focus_time.schema.json"
+    }
+  ]
+}

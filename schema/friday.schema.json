@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/friday.schema.json",
+  "title": "Friday",
+  "$defs": {
+    "envelope": {
+      "$ref": "envelope.schema.json"
+    },
+    "widget": {
+      "$ref": "widgets/widget.schema.json"
+    },
+    "common": {
+      "$ref": "common.schema.json"
+    },
+    "server_frame": {
+      "$ref": "frames/server-frame.schema.json"
+    }
+  }
+}

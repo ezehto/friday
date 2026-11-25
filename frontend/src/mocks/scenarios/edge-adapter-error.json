@@ -1,0 +1,130 @@
+{
+  "id": "edge-adapter-error",
+  "group": "edge",
+  "label": "Adapter error",
+  "request": "What is on my plate this week?",
+  "now": "2026-11-24T09:00:00Z",
+  "widgets": [
+    {
+      "widget": {
+        "type": "task_list",
+        "title": "Open tasks",
+        "items": [
+          {
+            "title": "Draft the Orchard release notes",
+            "status": "doing",
+            "due": "2026-11-26"
+          },
+          {
+            "title": "Review the Lantern theme PR",
+            "status": "todo",
+            "due": "2026-11-25"
+          }
+        ]
+      },
+      "envelope": {
+        "widget_id": "ad-tasks",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Open tasks",
+        "blocks": [
+          {
+            "kind": "rows",
+            "items": [
+              {
+                "label": "Draft the Orchard release notes",
+                "meta": "2026-11-26",
+                "tone": "attention"
+              },
+              {
+                "label": "Review the Lantern theme PR",
+                "meta": "2026-11-25",
+                "tone": "neutral"
+              }
+            ]
+          },
+          {
+            "kind": "chips",
+            "items": [
+              {
+                "label": "1 todo",
+                "tone": "neutral"
+              },
+              {
+                "label": "1 doing",
+                "tone": "attention"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "widget": {
+        "type": "alert",
+        "title": "Alert",
+        "level": "bad",
+        "text": "A source is unavailable"
+      },
+      "envelope": {
+        "widget_id": "ad-alert",
+        "source": "sample",
+        "as_of": "2026-11-24T08:50:00Z",
+        "data_class": "personal",
+        "title": "Alert",
+        "blocks": [
+          {
+            "kind": "alert",
+            "level": "bad",
+            "text": "A source is unavailable"
+          }
+        ]
+      }
+    }
+  ],
+  "script": [
+    {
+      "at_ms": 0,
+      "core": "thinking"
+    },
+    {
+      "at_ms": 100,
+      "event": "request.started",
+      "data": {
+        "request_id": "req-edge-adapter-error"
+      }
+    },
+    {
+      "at_ms": 800,
+      "event": "alert.raised",
+      "data": {
+        "kind": "adapter_degraded",
+        "level": "bad",
+        "view": "modules"
+      }
+    },
+    {
+      "at_ms": 900,
+      "board": [
+        "ad-tasks",
+        "ad-alert"
+      ]
+    },
+    {
+      "at_ms": 1000,
+      "reply": "One source did not answer, so this list may be incomplete."
+    },
+    {
+      "at_ms": 1500,
+      "event": "request.finished",
+      "data": {
+        "request_id": "req-edge-adapter-error"
+      }
+    },
+    {
+      "at_ms": 1550,
+      "core": "idle"
+    }
+  ]
+}

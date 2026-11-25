@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://friday.invalid/schema/widgets/jira_ticket.schema.json",
+  "title": "JiraTicketWidget",
+  "$comment": "draft: finalized with its pack (L14 or L16)",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "jira_ticket"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "key": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "status": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "priority": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "assignee": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "updated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "url": {
+      "type": "string",
+      "maxLength": 2048,
+      "pattern": "^https?://"
+    }
+  },
+  "required": [
+    "type",
+    "key",
+    "summary",
+    "status",
+    "priority",
+    "assignee",
+    "updated"
+  ],
+  "additionalProperties": false
+}
